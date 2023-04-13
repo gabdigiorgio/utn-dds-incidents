@@ -1,6 +1,6 @@
 package org.utn.estado;
 
-import org.utn.Incidencia;
+import org.utn.incidente.Incidencia;
 
 public class Confirmado implements Estado{
     @Override

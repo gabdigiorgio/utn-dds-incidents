@@ -1,4 +1,4 @@
-package org.utn;
+package org.utn.incidente;
 
 import org.utn.estado.Estado;
 
