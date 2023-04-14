@@ -1,16 +1,16 @@
-package org.utn.estado;
+package org.utn.dominio.estado;
 
-import org.utn.incidente.Incidencia;
+import org.utn.dominio.incidente.Incidencia;
 
-public class Asignado implements Estado{
+public class Confirmado implements Estado{
     @Override
     public void asignarEmpleado(Incidencia incidencia) {
-        //Agregar exception Ya hay un empleado asinado
+        // No hace nada, no es una transición válida
     }
 
     @Override
     public void confirmarIncidencia(Incidencia incidencia) {
-        incidencia.setEstado(new Confirmado());
+        // No hace nada, no es una transición válida
     }
 
     @Override
@@ -25,6 +25,6 @@ public class Asignado implements Estado{
 
     @Override
     public void resolverIncidencia(Incidencia incidencia) {
-        // No hace nada, no se puede resolver directamente desde este estado
+        // No hace nada, no es una transición válida
     }
 }

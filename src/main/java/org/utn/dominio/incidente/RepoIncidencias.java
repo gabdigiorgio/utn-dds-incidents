@@ -1,4 +1,4 @@
-package org.utn.incidente;
+package org.utn.dominio.incidente;
 
 import java.util.List;
 

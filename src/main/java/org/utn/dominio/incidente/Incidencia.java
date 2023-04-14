@@ -1,6 +1,6 @@
-package org.utn.incidente;
+package org.utn.dominio.incidente;
 
-import org.utn.estado.Estado;
+import org.utn.dominio.estado.Estado;
 
 public class Incidencia {
     private String codigoCatalogo;

@@ -1,4 +1,4 @@
-package org.utn.carga_incidentes;
+package org.utn.dominio.carga_incidentes;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

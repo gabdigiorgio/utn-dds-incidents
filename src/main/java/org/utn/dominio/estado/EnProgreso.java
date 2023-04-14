@@ -1,9 +1,8 @@
-package org.utn.estado;
+package org.utn.dominio.estado;
 
-import org.utn.incidente.Incidencia;
+import org.utn.dominio.incidente.Incidencia;
 
-public class Desestimado implements Estado {
-
+public class EnProgreso implements Estado {
     @Override
     public void asignarEmpleado(Incidencia incidencia) {
         // No hace nada, no es una transición válida
@@ -26,6 +25,6 @@ public class Desestimado implements Estado {
 
     @Override
     public void resolverIncidencia(Incidencia incidencia) {
-        // No hace nada, no es una transición válida
+        incidencia.setEstado(new Solucionado());
     }
 }
