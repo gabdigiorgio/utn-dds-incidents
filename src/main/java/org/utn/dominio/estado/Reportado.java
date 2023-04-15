@@ -1,6 +1,6 @@
-package org.utn.estado;
+package org.utn.dominio.estado;
 
-import org.utn.incidente.Incidencia;
+import org.utn.dominio.incidente.Incidencia;
 
 public class Reportado implements Estado {
 

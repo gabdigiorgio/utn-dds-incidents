@@ -1,19 +1,17 @@
-package org.utn.estado;
+package org.utn.dominio.estado;
 
-import org.utn.incidente.Incidencia;
+import org.utn.dominio.incidente.Incidencia;
 
-public class Asignado implements Estado{
+public class Confirmado implements Estado{
     @Override
     public void asignarEmpleado(Incidencia incidencia,String empleado) {
-        //Agregar exception Ya hay un empleado asinado
+        // No hace nada, no es una transición válida
+        //Comentario Test
     }
 
     @Override
     public void confirmarIncidencia(Incidencia incidencia) {
-       /* if(incidencia.getCreador().notequals(incidencia.getEmpleado()))
-                incidencia.setEstado(new Confirmado());*/
-        //ver como se valida en caso de que no sea el creador el empleado
-        incidencia.setEstado(new Confirmado());
+        // No hace nada, no es una transición válida
     }
 
     @Override
@@ -28,6 +26,6 @@ public class Asignado implements Estado{
 
     @Override
     public void resolverIncidencia(Incidencia incidencia) {
-        // No hace nada, no se puede resolver directamente desde este estado
+        // No hace nada, no es una transición válida
     }
 }
