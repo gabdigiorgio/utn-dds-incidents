@@ -11,6 +11,7 @@ public class Incidencia {
     private String fechaCierre;
     private String motivoRechazo;
     private Estado estado;
+    private String empleado;
 
     public Incidencia(String codigoCatalogo, String fechaReporte, String descripcion, String operador, String reportadoPor, String fechaCierre, String motivoRechazo, Estado estado) {
         this.codigoCatalogo = codigoCatalogo;
@@ -64,9 +65,9 @@ public class Incidencia {
     }
 
     /******   Inicio metodos que impactan a estados   ******/
-    public void asignarEmpleado() {
+    /*public void asignarEmpleado() {
         this.estado.asignarEmpleado(this);
-    }
+    }*/
 
     public void confirmarIncidencia() {
         this.estado.confirmarIncidencia(this);
@@ -83,6 +84,19 @@ public class Incidencia {
     public void resolverIncidencia() {
         this.estado.resolverIncidencia(this);
     }
+
+
+
+
     /******   Fin metodos que impactan a estados   ******/
+//////////////////////////////////////////
+    public String getEmpleado() { return empleado;}
+
+    public void setEmpleado(String empleado) {
+        this.empleado = empleado;
+    }
+
+
+
 
 }

@@ -4,7 +4,7 @@ import org.utn.incidente.Incidencia;
 
 public class Confirmado implements Estado{
     @Override
-    public void asignarEmpleado(Incidencia incidencia) {
+    public void asignarEmpleado(Incidencia incidencia,String empleado) {
         // No hace nada, no es una transición válida
         //Comentario Test
     }

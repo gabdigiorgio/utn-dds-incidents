@@ -4,12 +4,15 @@ import org.utn.incidente.Incidencia;
 
 public class Asignado implements Estado{
     @Override
-    public void asignarEmpleado(Incidencia incidencia) {
+    public void asignarEmpleado(Incidencia incidencia,String empleado) {
         //Agregar exception Ya hay un empleado asinado
     }
 
     @Override
     public void confirmarIncidencia(Incidencia incidencia) {
+       /* if(incidencia.getCreador().notequals(incidencia.getEmpleado()))
+                incidencia.setEstado(new Confirmado());*/
+        //ver como se valida en caso de que no sea el creador el empleado
         incidencia.setEstado(new Confirmado());
     }
 
