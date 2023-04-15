@@ -1,10 +1,11 @@
 import org.junit.After;
-import org.junit.Test;
-import org.utn.estado.*;
 import org.junit.Before;
-import org.utn.incidente.Incidencia;
+import org.junit.Test;
+import org.utn.dominio.estado.*;
+import org.utn.dominio.incidente.Incidencia;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestIncidente {
         protected Incidencia incidencia;
@@ -27,28 +28,23 @@ public class TestIncidente {
         /////*CASOS FELICES*///////
         @Test
     public void deReportadoAAsignado(){
-            String empleado="Jorge";
-            Asignado asignado=new Asignado();
+        String empleado="Jorge";
 
-            estado.asignarEmpleado(incidencia,empleado);
+        incidencia.asignarEmpleado(empleado);
 
-            assertEquals(incidencia.getEstado().getClass(),asignado.getClass());
-            assertEquals(incidencia.getEmpleado(),empleado);
-
-
-        }
+        assertTrue(incidencia.getEstado() instanceof Asignado);
+        assertEquals(incidencia.getEmpleado(),empleado);
+    }
     @Test //despues probar por validacion y por creador=empleado
     public void deAsignadoAConfirmado(){
         Asignado asignado=new Asignado();
         String empleado="Jorge";
         Confirmado confirmado=new Confirmado();
 
-        estado.asignarEmpleado(incidencia,empleado);
+        incidencia.asignarEmpleado(empleado);
         asignado.confirmarIncidencia(incidencia);
 
         assertEquals(incidencia.getEstado().getClass(),confirmado.getClass());
-
-
     }
 
     @Test
@@ -57,9 +53,9 @@ public class TestIncidente {
         String empleado="Jorge";
         Desestimado desestimado=new Desestimado();
 
-        estado.asignarEmpleado(incidencia,empleado);
+        incidencia.asignarEmpleado(empleado);
         asignado.desestimarIncidencia(incidencia);
-//hay que revisar por que se desestima
+        //hay que revisar por que se desestima
         assertEquals(incidencia.getEstado().getClass(),desestimado.getClass());
 
 

@@ -65,9 +65,10 @@ public class Incidencia {
     }
 
     /******   Inicio metodos que impactan a estados   ******/
-    /*public void asignarEmpleado() {
+    public void asignarEmpleado(String empleado) {
+        this.setEmpleado(empleado);
         this.estado.asignarEmpleado(this);
-    }*/
+    }
 
     public void confirmarIncidencia() {
         this.estado.confirmarIncidencia(this);

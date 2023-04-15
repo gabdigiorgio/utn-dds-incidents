@@ -4,8 +4,7 @@ import org.utn.dominio.incidente.Incidencia;
 
 public interface Estado {
 
-    void asignarEmpleado(Incidencia incidencia, String empleado);
-
+    void asignarEmpleado(Incidencia incidencia);
     void confirmarIncidencia(Incidencia incidencia);
     void desestimarIncidencia(Incidencia incidencia);
     void iniciarProgreso(Incidencia incidencia);

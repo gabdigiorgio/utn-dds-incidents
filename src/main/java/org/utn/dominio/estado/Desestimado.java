@@ -5,7 +5,7 @@ import org.utn.dominio.incidente.Incidencia;
 public class Desestimado implements Estado {
 
     @Override
-    public void asignarEmpleado(Incidencia incidencia,String empleado) {
+    public void asignarEmpleado(Incidencia incidencia) {
         // No hace nada, no es una transición válida
     }
 
