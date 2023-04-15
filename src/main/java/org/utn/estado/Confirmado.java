@@ -6,6 +6,7 @@ public class Confirmado implements Estado{
     @Override
     public void asignarEmpleado(Incidencia incidencia) {
         // No hace nada, no es una transición válida
+        //Comentario Test
     }
 
     @Override
