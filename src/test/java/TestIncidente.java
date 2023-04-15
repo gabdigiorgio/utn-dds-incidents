@@ -4,30 +4,29 @@ import org.junit.Test;
 import org.utn.dominio.estado.*;
 import org.utn.dominio.incidente.Incidencia;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestIncidente {
-        protected Incidencia incidencia;
-        protected Estado estado;
+    protected Incidencia incidencia;
+    protected Estado estado;
 
-        private void initializeIncidencia(){
-            this.estado=new Reportado();
-            this.incidencia= new Incidencia("1234-56","15042023","","Operador","reportador","29052023","",estado);
-        }
+    private void initializeIncidencia(){
+        this.estado=new Reportado();
+        this.incidencia= new Incidencia("1234-56","15042023","","Operador","reportador","29052023","",estado);
+    }
 
-        @Before
-        public void initialize() {
-            this.initializeIncidencia();
-        }
+    @Before
+    public void initialize() {
+        this.initializeIncidencia();
+    }
 
-        @After
-        public void clean(){
-        }
+    @After
+    public void clean(){
+    }
 
-        /////*CASOS FELICES*///////
-        @Test
-    public void deReportadoAAsignado(){
+    /////*CASOS FELICES*///////
+    @Test
+    public void deReportadoAAsignado() throws Exception {
         String empleado="Jorge";
 
         incidencia.asignarEmpleado(empleado);
@@ -36,30 +35,37 @@ public class TestIncidente {
         assertEquals(incidencia.getEmpleado(),empleado);
     }
     @Test //despues probar por validacion y por creador=empleado
-    public void deAsignadoAConfirmado(){
-        Asignado asignado=new Asignado();
+    public void deAsignadoAConfirmado() throws Exception {
         String empleado="Jorge";
-        Confirmado confirmado=new Confirmado();
 
         incidencia.asignarEmpleado(empleado);
-        asignado.confirmarIncidencia(incidencia);
+        incidencia.confirmarIncidencia();
 
-        assertEquals(incidencia.getEstado().getClass(),confirmado.getClass());
+        assertTrue(incidencia.getEstado() instanceof Confirmado);
     }
 
     @Test
-    public void deAsignadoADesestimado(){
-        Asignado asignado=new Asignado();
+    public void deAsignadoADesestimado() throws Exception {
         String empleado="Jorge";
-        Desestimado desestimado=new Desestimado();
 
         incidencia.asignarEmpleado(empleado);
-        asignado.desestimarIncidencia(incidencia);
+        incidencia.desestimarIncidencia();
+
         //hay que revisar por que se desestima
-        assertEquals(incidencia.getEstado().getClass(),desestimado.getClass());
-
-
+        assertTrue(incidencia.getEstado() instanceof Desestimado);
     }
-//casos no felices
+    //casos no felices
 
+    @Test
+    public void testAsignarEmpleadoException() throws Exception {
+        String empleado="Jorge";
+        incidencia.asignarEmpleado(empleado);
+
+        try {
+            incidencia.asignarEmpleado(empleado);
+            fail("Debería lanzar una excepción al intentar asignar un empleado dos veces");
+        } catch (Exception e) {
+            assertEquals("No es posible asignar empleado con la incidencia en estado: Asignado", e.getMessage());
+        }
+    }
 }

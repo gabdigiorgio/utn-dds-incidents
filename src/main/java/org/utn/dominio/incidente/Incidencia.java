@@ -65,28 +65,26 @@ public class Incidencia {
     }
 
     /******   Inicio metodos que impactan a estados   ******/
-    public void asignarEmpleado(String empleado) {
-        this.setEmpleado(empleado);
+    public void asignarEmpleado(String empleado) throws Exception {
         this.estado.asignarEmpleado(this);
+        this.setEmpleado(empleado);
     }
 
-    public void confirmarIncidencia() {
+    public void confirmarIncidencia() throws Exception {
         this.estado.confirmarIncidencia(this);
     }
 
-    public void desestimarIncidencia() {
+    public void desestimarIncidencia() throws Exception {
         this.estado.desestimarIncidencia(this);
     }
 
-    public void iniciarProgreso() {
+    public void iniciarProgreso() throws Exception {
         this.estado.iniciarProgreso(this);
     }
 
-    public void resolverIncidencia() {
+    public void resolverIncidencia() throws Exception {
         this.estado.resolverIncidencia(this);
     }
-
-
 
 
     /******   Fin metodos que impactan a estados   ******/
@@ -96,8 +94,6 @@ public class Incidencia {
     public void setEmpleado(String empleado) {
         this.empleado = empleado;
     }
-
-
 
 
 }

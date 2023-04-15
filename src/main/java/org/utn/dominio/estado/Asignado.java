@@ -4,8 +4,8 @@ import org.utn.dominio.incidente.Incidencia;
 
 public class Asignado implements Estado{
     @Override
-    public void asignarEmpleado(Incidencia incidencia) {
-        //Agregar exception Ya hay un empleado asinado
+    public String getNombreEstado(){
+        return "Asignado";
     }
 
     @Override
@@ -26,8 +26,4 @@ public class Asignado implements Estado{
         incidencia.setEstado(new EnProgreso());
     }
 
-    @Override
-    public void resolverIncidencia(Incidencia incidencia) {
-        // No hace nada, no se puede resolver directamente desde este estado
-    }
 }
