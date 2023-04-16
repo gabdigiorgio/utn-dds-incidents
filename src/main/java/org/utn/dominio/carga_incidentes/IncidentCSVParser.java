@@ -2,9 +2,11 @@ package org.utn.dominio.carga_incidentes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.text.SimpleDateFormat;
 
 public class IncidentCSVParser {
     String fileName;
@@ -79,12 +81,29 @@ public class IncidentCSVParser {
                 .findFirst()
                 .orElse(-1);
 
-        List<Integer> allIndexs = Arrays.asList(indexCode, indexReportDate, indexDescription, indexStatus, indexOperator, indexReporterName, indexResolvedDate, indexRejectedReason);
-        if (allIndexs.contains(-1)) return false;
+        List<Integer> allIndexes = Arrays.asList(indexCode, indexReportDate, indexDescription, indexStatus, indexOperator, indexReporterName, indexResolvedDate, indexRejectedReason);
+        if (allIndexes.contains(-1)) return false;
         return true;
     }
 
     private boolean validateRowIncident(String[] row) {
-       return true;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("ddmmaaaa");
+        dateFormat.setLenient(false);
+
+        // Validate contains non-nullable data
+        if (row[indexCode].trim().equals("")) return false;
+        if (row[indexReportDate].trim().equals("")) return false;
+        if (row[indexDescription].trim().equals("")) return false;
+        if (row[indexStatus].trim().equals("")) return false;
+        if (row[indexStatus].trim().equals("Abierto") && !row[indexResolvedDate].trim().equals("")) return false;
+
+        // Validate formats
+        try {
+           dateFormat.parse(row[indexReportDate]);
+        } catch(ParseException e) {
+           System.err.println("Fecha invalida" + row[indexReportDate]);
+           return false;
+        }
+        return true;
     }
 }
