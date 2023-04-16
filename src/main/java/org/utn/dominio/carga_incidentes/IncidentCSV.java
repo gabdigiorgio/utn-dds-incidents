@@ -1,9 +1,8 @@
 package org.utn.dominio.carga_incidentes;
 
+import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.File;
 import java.util.Scanner;
 
 public class IncidentCSV {
@@ -23,18 +22,37 @@ public class IncidentCSV {
         return checkFileExistance(new File(csv_path)) && checkFileExtension(csv_path);
     }
 
-    public static void pathInsertion(){
+    public static void userInteraction(){
         try{
 
             int tries = 0;
             Scanner input = new Scanner(System.in);
 
             do{
-                System.out.print("Ingrese la ruta del archivo: ");
+                System.out.print("Por favor, ingrese el nombre del archivo de incidencias : ");
                 String fileName = input.nextLine();
 
-                if(sourceValidation(fileName)){
+                String file_path = "src/main/resources/"+fileName;
+
+                if(sourceValidation(file_path)){
                     System.out.println("Archivo valido ! ! ! ! ");
+                    // Acá debe parsear el csv
+
+                    IncidentCSVParser parser = new IncidentCSVParser(fileName);
+                    BufferedReader reader = new BufferedReader(new FileReader(file_path));
+                    parser.readFile(reader);
+
+                    System.out.print("Desea cargar otro archivo de incidencias ? [S: si | N: no ] : ");
+                    String decision = input.nextLine();
+
+                    if (decision.equals("S") || decision.equals("s")){
+                        userInteraction();    // un poquito de recursion
+                        break;
+                    }
+                    else {
+                        tries += 5; // rompemos el while para salir en limpio
+                    }
+
                 }
                 else{
                     System.out.println("[ERROR] : Archivo no encontrado / formato incorrecto !");
@@ -59,9 +77,9 @@ public class IncidentCSV {
         System.out.print(sourceValidation(fileName));
         */
 
-        pathInsertion();
-        String projectDir = System.getProperty("user.dir");
-        /*
+        userInteraction();
+        /*String projectDir = System.getProperty("user.dir");
+
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             IncidentCSVParser parser = new IncidentCSVParser(fileName);
             parser.readFile(reader);
