@@ -11,6 +11,19 @@ import java.util.stream.Collectors;
 public class MemRepoIncidencias implements RepoIncidencias {
     private List<Incidencia> incidencias = new ArrayList<>();
 
+    private static MemRepoIncidencias instanciaUnica;
+
+    private MemRepoIncidencias() {
+
+    }
+
+    public static MemRepoIncidencias obtenerEstancia() {
+        if (instanciaUnica == null) {
+            instanciaUnica = new MemRepoIncidencias();
+        }
+        return instanciaUnica;
+    }
+
     @Override
     public void save(Incidencia incidencia) {
         incidencias.add(incidencia);
