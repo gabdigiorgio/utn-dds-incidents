@@ -95,13 +95,16 @@ public class IncidentCSVParser {
         if (row[indexReportDate].trim().equals("")) return false;
         if (row[indexDescription].trim().equals("")) return false;
         if (row[indexStatus].trim().equals("")) return false;
+
+        // TODO validar el estado ingresado será "Abierto"
         if (row[indexStatus].trim().equals("Abierto") && !row[indexResolvedDate].trim().equals("")) return false;
 
         // Validate formats
+        // TODO toma fecha errónea 15042023
         try {
            dateFormat.parse(row[indexReportDate]);
         } catch(ParseException e) {
-           System.err.println("Fecha invalida" + row[indexReportDate]);
+           System.err.println("Fecha invalida: " + row[indexReportDate] + e);
            return false;
         }
         return true;
