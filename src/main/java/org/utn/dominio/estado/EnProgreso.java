@@ -7,7 +7,6 @@ public class EnProgreso implements Estado {
         return "En progreso";
     }
 
-    @Override
     public void resolverIncidencia(Incidencia incidencia) {
         incidencia.setEstado(new Solucionado());
     }

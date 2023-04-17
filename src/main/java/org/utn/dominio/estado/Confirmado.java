@@ -7,12 +7,10 @@ public class Confirmado implements Estado{
         return "Confirmado";
     }
 
-    @Override
     public void desestimarIncidencia(Incidencia incidencia) {
         incidencia.setEstado(new Desestimado());
     }
 
-    @Override
     public void iniciarProgreso(Incidencia incidencia) {
         incidencia.setEstado(new EnProgreso());
     }

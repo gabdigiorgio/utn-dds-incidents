@@ -7,7 +7,6 @@ public class Reportado implements Estado {
         return "Reportado";
     }
 
-    @Override
     public void asignarEmpleado(Incidencia incidencia) {
         //Validar como dejar seteado quien es el empleado asignado ej:
         // incidencia.setEstado(new Asignado(empleado));
@@ -16,12 +15,10 @@ public class Reportado implements Estado {
         //evitar que otro empleado pueda leer el incidente que no corresponde
     }
 
-    @Override
     public void confirmarIncidencia(Incidencia incidencia) {
         incidencia.setEstado(new Confirmado());
     }
 
-    @Override
     public void desestimarIncidencia(Incidencia incidencia) {
         incidencia.setEstado(new Desestimado());
     }
