@@ -42,7 +42,7 @@ public class IncidentCSV {
                     BufferedReader reader = new BufferedReader(new FileReader(file_path));
                     parser.readFile(reader);
 
-                    System.out.print("Desea cargar otro archivo de incidencias ? [S: si | N: no ] : ");
+                    System.out.print("Desea cargar otro archivo de incidencias ? [S/s: si | Otros: no ] : ");
                     String decision = input.nextLine();
 
                     if (decision.equals("S") || decision.equals("s")){
@@ -62,7 +62,7 @@ public class IncidentCSV {
             }while (tries < 5 );    // Numero arbitrario, le di 5 de buena gente
         }
         catch(Exception e){
-            System.out.println(e);
+            System.err.println(e);
         }
     }
 
