@@ -2,10 +2,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.utn.dominio.estado.*;
+import org.utn.dominio.excepciones.constantesExepciones;
 import org.utn.dominio.incidente.*;
 import org.utn.infraestructura.persistencia.MemRepoIncidencias;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -14,20 +13,17 @@ public class TestIncidente {
     private Incidencia incidencia2;
     private Incidencia incidencia3;
     private Incidencia incidencia4;
-    private Estado estadoReportado;
-    private Estado estadoAsignado;
 
-    private MemRepoIncidencias repoIncidencias= new MemRepoIncidencias();
-
-    private String empleado="Jorge";
+    private final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
+    private final String empleado="Jorge";
 
     private void initializeIncidencia(){
-        this.estadoReportado =new Reportado();
-        this.estadoAsignado = new Asignado();
-        this.incidencia1 = new Incidencia("1234-56","15042023","","Operador1","reportador1","29052023","",estadoReportado);
-        this.incidencia2 = new Incidencia("1533-24","17042023","","Operador2","reportador2","29052023","",estadoAsignado);
-        this.incidencia3 = new Incidencia("7543-21","19042023","","Operador3","reportador3","29052023","",estadoAsignado);
-        this.incidencia4 = new Incidencia("5723-97","10042023","","Operador4","reportador4","29052023","",estadoAsignado);
+        Estado estadoReportado = new Reportado();
+        Estado estadoAsignado = new Asignado();
+        this.incidencia1 = new Incidencia("1234-56","15042023","","Operador1","reportador1","29052023","", estadoReportado);
+        this.incidencia2 = new Incidencia("1533-24","17042023","","Operador2","reportador2","29052023","", estadoAsignado);
+        this.incidencia3 = new Incidencia("7543-21","19042023","","Operador3","reportador3","29052023","", estadoAsignado);
+        this.incidencia4 = new Incidencia("5723-97","10042023","","Operador4","reportador4","29052023","", estadoAsignado);
     }
 
     @Before
@@ -78,6 +74,19 @@ public class TestIncidente {
             fail("Debería lanzar una excepción al intentar asignar un empleado dos veces");
         } catch (Exception e) {
             assertEquals("No es posible asignar empleado con la incidencia en estado: Asignado", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDesestimarIncidenciaSolucionadaException() throws Exception {
+        String msgException = String.format(constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA, "Solucionado");
+        Incidencia incidenciaSoluionada = new Incidencia("1234-56","15042023","","Operador1","reportador1","29052023","", new Solucionado());
+
+        try {
+            incidenciaSoluionada.desestimarIncidencia();
+            fail("Debería lanzar una excepción al intentar desestimar una incidencia solucionada");
+        } catch (Exception e) {
+            assertEquals(msgException, e.getMessage());
         }
     }
 
