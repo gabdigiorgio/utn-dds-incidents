@@ -8,21 +8,21 @@ import java.util.Scanner;
 public class IncidentCSV {
 
     // Metodo trivial para saber si el archivo existe o no
-    public static Boolean checkFileExistance(File file_to_find) {
+    private static Boolean checkFileExistance(File file_to_find) {
         return file_to_find.isFile();
     }
 
     // Segundo metodo trivial, este valida que el archivo sea un csv al leer su extension
-    public static Boolean checkFileExtension(String path){
+    private static Boolean checkFileExtension(String path){
         return path.substring(path.length() - 3).equals("csv");
     }
 
     // Nos fijamos si existe el archivo y si es un csv -> después nos fijamos si es valido o no como incidencia
-    public static Boolean sourceValidation(String csv_path){
+    private static Boolean sourceValidation(String csv_path){
         return checkFileExistance(new File(csv_path)) && checkFileExtension(csv_path);
     }
 
-    public static void userInteraction(){
+    public static void loadCSV(){
         try{
 
             int tries = 0;
@@ -46,7 +46,7 @@ public class IncidentCSV {
                     String decision = input.nextLine();
 
                     if (decision.equals("S") || decision.equals("s")){
-                        userInteraction();    // un poquito de recursion
+                        loadCSV();    // un poquito de recursion
                         break;
                     }
                     else {
@@ -77,7 +77,7 @@ public class IncidentCSV {
         System.out.print(sourceValidation(fileName));
         */
 
-        userInteraction();
+        loadCSV();
         /*String projectDir = System.getProperty("user.dir");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {

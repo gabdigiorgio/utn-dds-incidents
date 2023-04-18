@@ -1,5 +1,6 @@
 package org.utn.dominio.carga_incidentes;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
@@ -116,7 +117,7 @@ public class IncidentCSVParser {
         if (allIndexes.contains(-1)) return false;
         return true;
     }
-
+    /*
     private boolean validateRowIncident(String[] row) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
         dateFormat.setLenient(false);
@@ -133,6 +134,59 @@ public class IncidentCSVParser {
             if (row[indexStatus].trim().equals("Abierto") && !row[indexResolvedDate].trim().equals("")) return false;
 
             dateFormat.parse(row[indexReportDate]);
+        } catch(Exception e) {
+            System.err.println(e);
+            return false;
+        }
+        return true;
+    }
+    */
+
+    private boolean validateNullRow(String[] row){
+        for (int iter = 0; iter < row.length-4; iter ++){
+            if(row[iter].trim().equals("")){
+                System.err.println("<<< La fila contiene elementos vacios...");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean validateOpenStatus(String[] row){
+        if (row[indexStatus].trim().equals("Abierto")) return false;
+        return true;
+    }
+
+    private boolean validateIndexCode(String[] code){
+
+        boolean checker = false;
+
+        if (code.length != 7){
+            System.err.println("<<< Codigo invalido : mayor o menor a 7 dígitos");
+        }else if (!code[4].equals("-")){
+            System.err.println("<<< Codigo invalido : no respeta la codificación XXXX-XX");
+        }else{
+            checker = true;
+        }
+
+        return checker;
+    }
+
+    private boolean validateRowIncident(String[] row) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
+        dateFormat.setLenient(false);
+
+        try{
+            // TODO armar metodos para encontrar errores particulares
+            // Validate contains non-nullable data
+            if(validateNullRow(row)){
+                // TODO validar el estado ingresado será "Abierto" -> tiene sentido? Los importa un 3°
+                validateOpenStatus(row);
+
+                dateFormat.parse(row[indexReportDate]);
+            }else{
+                return false;
+            }
         } catch(Exception e) {
             System.err.println(e);
            return false;
