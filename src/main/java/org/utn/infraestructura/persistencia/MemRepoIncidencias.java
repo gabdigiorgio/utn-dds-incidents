@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MemRepoIncidencias implements RepoIncidencias {
+public final class MemRepoIncidencias implements RepoIncidencias {
     private List<Incidencia> incidencias = new ArrayList<>();
 
     private static MemRepoIncidencias instanciaUnica;
     private MemRepoIncidencias() {}
 
-    public static MemRepoIncidencias obtenerEstancia() {
+    public static MemRepoIncidencias obtenerInstancia() {
         if (instanciaUnica == null) {
             instanciaUnica = new MemRepoIncidencias();
         }
