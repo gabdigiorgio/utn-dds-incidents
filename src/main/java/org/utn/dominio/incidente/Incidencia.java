@@ -1,16 +1,17 @@
 package org.utn.dominio.incidente;
 
-import org.utn.dominio.estado.Estado;
+import org.utn.dominio.estado.*;
 
 public class Incidencia {
     private String codigoCatalogo;
     private String fechaReporte;
     private String descripcion;
     private String operador;
-    private String reportadoPor;
+    private String reportadoPor; // Posiblemente en un futuro sea una Clase (Pagina 7)
     private String fechaCierre;
     private String motivoRechazo;
     private Estado estado;
+    private String empleado; // Posiblemente en un futuro sea una Clase (Pagina 8)
 
     public Incidencia(String codigoCatalogo, String fechaReporte, String descripcion, String operador, String reportadoPor, String fechaCierre, String motivoRechazo, Estado estado) {
         this.codigoCatalogo = codigoCatalogo;
@@ -55,6 +56,8 @@ public class Incidencia {
         return estado;
     }
 
+    public String getNombreEstado(){return estado.getNombreEstado();}
+
     public String getCreador(){
         return reportadoPor;
     }
@@ -64,25 +67,35 @@ public class Incidencia {
     }
 
     /******   Inicio metodos que impactan a estados   ******/
-    public void asignarEmpleado() {
+    public void asignarEmpleado(String empleado) throws Exception {
         this.estado.asignarEmpleado(this);
+        this.setEmpleado(empleado);
     }
 
-    public void confirmarIncidencia() {
+    public void confirmarIncidencia() throws Exception {
         this.estado.confirmarIncidencia(this);
     }
 
-    public void desestimarIncidencia() {
+    public void desestimarIncidencia() throws Exception {
         this.estado.desestimarIncidencia(this);
     }
 
-    public void iniciarProgreso() {
+    public void iniciarProgreso() throws Exception {
         this.estado.iniciarProgreso(this);
     }
 
-    public void resolverIncidencia() {
+    public void resolverIncidencia() throws Exception {
         this.estado.resolverIncidencia(this);
     }
+
+
     /******   Fin metodos que impactan a estados   ******/
+//////////////////////////////////////////
+    public String getEmpleado() { return empleado;}
+
+    public void setEmpleado(String empleado) {
+        this.empleado = empleado;
+    }
+
 
 }
