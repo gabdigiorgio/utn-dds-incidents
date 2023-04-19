@@ -91,6 +91,203 @@ public class TestIncidente {
     }
 
     @Test
+    public void testTransicionReportadoExceptionsRefactor() {
+        String[][] testData = {
+                {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
+                {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
+                {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
+        };
+        Incidencia incidenciaReportada = new Incidencia("1234-56", "15042023", "", "Operador1", "reportador1", "29052023", "", new Reportado());
+
+        for (String[] data : testData) {
+            String transicion = data[0];
+            String msgException = String.format(data[1], "Reportado");
+
+            try{
+                switch (transicion) {
+                    case "Confirmar"       -> incidenciaReportada.confirmarIncidencia();
+                    case "IniciarProgreso" -> incidenciaReportada.iniciarProgreso();
+                    case "Resolver"        -> incidenciaReportada.resolverIncidencia();
+                }
+            }
+            catch (Exception e){
+                assertEquals(msgException, e.getMessage());
+            }
+        }
+    }
+
+    @Test
+    public void testTransicionAsignadoExceptions() {
+        String[][] testData = {
+                {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
+                {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO}
+                //{"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
+        };
+        Incidencia incidenciaReportada = new Incidencia("1234-56", "15042023", "", "Operador1", "reportador1", "29052023", "", new Asignado());
+
+        for (String[] data : testData) {
+            String transicion = data[0];
+            String msgException = String.format(data[1], "Asignado");
+
+            try{
+                switch (transicion) {
+                    case "Asignar"       -> incidenciaReportada.asignarEmpleado("");
+                    case "IniciarProgreso" -> incidenciaReportada.iniciarProgreso();
+                    case "Resolver"        -> incidenciaReportada.resolverIncidencia();
+                }
+            }
+            catch (Exception e){
+                assertEquals(msgException, e.getMessage());
+            }
+        }
+    }
+
+    @Test
+    public void testTransicionConfirmadoExceptions() {
+        String[][] testData = {
+                {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
+                {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
+                {"Desestimar", constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA},
+                {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
+        };
+        Incidencia incidenciaReportada = new Incidencia("1234-56", "15042023", "", "Operador1", "reportador1", "29052023", "", new Confirmado());
+
+        for (String[] data : testData) {
+            String transicion = data[0];
+            String msgException = String.format(data[1], "Confirmado");
+
+            try{
+                switch (transicion) {
+                    case "Asignar"       -> incidenciaReportada.asignarEmpleado("");
+                    case "Confirmar"       -> incidenciaReportada.confirmarIncidencia();
+                    case "Desestimar"       -> incidenciaReportada.desestimarIncidencia();
+                    case "Resolver"        -> incidenciaReportada.resolverIncidencia();
+                }
+            }
+            catch (Exception e){
+                assertEquals(msgException, e.getMessage());
+            }
+        }
+    }
+
+    @Test
+    public void testTransicionDesestimadoExceptions() {
+        String[][] testData = {
+                {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
+                {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
+                {"Desestimar", constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA},
+                {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
+                {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
+        };
+        Incidencia incidenciaReportada = new Incidencia("1234-56", "15042023", "", "Operador1", "reportador1", "29052023", "", new Desestimado());
+
+        for (String[] data : testData) {
+            String transicion = data[0];
+            String msgException = String.format(data[1], "Desestimado");
+
+            try{
+                switch (transicion) {
+                    case "Asignar"       -> incidenciaReportada.asignarEmpleado("");
+                    case "Confirmar"       -> incidenciaReportada.confirmarIncidencia();
+                    case "Desestimar"       -> incidenciaReportada.desestimarIncidencia();
+                    case "IniciarProgreso" -> incidenciaReportada.iniciarProgreso();
+                    case "Resolver"        -> incidenciaReportada.resolverIncidencia();
+                }
+            }
+            catch (Exception e){
+                assertEquals(msgException, e.getMessage());
+            }
+        }
+    }
+
+    @Test
+    public void testTransicionEnProgresoExceptions() {
+        String[][] testData = {
+                {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
+                {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
+                {"Desestimar", constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA},
+                {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
+        };
+        Incidencia incidenciaReportada = new Incidencia("1234-56", "15042023", "", "Operador1", "reportador1", "29052023", "", new EnProgreso());
+
+        for (String[] data : testData) {
+            String transicion = data[0];
+            String msgException = String.format(data[1], "En progreso");
+
+            try{
+                switch (transicion) {
+                    case "Asignar"       -> incidenciaReportada.asignarEmpleado("");
+                    case "Confirmar"       -> incidenciaReportada.confirmarIncidencia();
+                    case "Desestimar"       -> incidenciaReportada.desestimarIncidencia();
+                    case "IniciarProgreso" -> incidenciaReportada.iniciarProgreso();
+                }
+            }
+            catch (Exception e){
+                assertEquals(msgException, e.getMessage());
+            }
+
+        }
+    }
+
+    @Test
+    public void testTransicionSolucionadoExceptions() {
+        String[][] testData = {
+                {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
+                {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
+                {"Desestimar", constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA},
+                {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
+                {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
+        };
+        Incidencia incidenciaReportada = new Incidencia("1234-56", "15042023", "", "Operador1", "reportador1", "29052023", "", new Solucionado());
+
+        for (String[] data : testData) {
+            String transicion = data[0];
+            String msgException = String.format(data[1], "Solucionado");
+
+            Exception e = assertThrows(Exception.class, () -> {
+                switch (transicion) {
+                    case "Asignar"       -> incidenciaReportada.asignarEmpleado("");
+                    case "Confirmar"       -> incidenciaReportada.confirmarIncidencia();
+                    case "Desestimar"       -> incidenciaReportada.desestimarIncidencia();
+                    case "IniciarProgreso" -> incidenciaReportada.iniciarProgreso();
+                    case "Resolver"        -> incidenciaReportada.resolverIncidencia();
+                }
+            });
+            assertEquals(msgException, e.getMessage());
+        }
+    }
+
+
+
+    public void testTransicionExampleExceptions() {
+        String[][] testData = {
+                {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
+                {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
+                {"Desestimar", constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA},
+                {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
+                {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
+        };
+        Incidencia incidenciaReportada = new Incidencia("1234-56", "15042023", "", "Operador1", "reportador1", "29052023", "", new Reportado());
+
+        for (String[] data : testData) {
+            String transicion = data[0];
+            String msgException = String.format(data[1], "Reportado");
+
+            Exception e = assertThrows(Exception.class, () -> {
+                switch (transicion) {
+                    case "Asignar"       -> incidenciaReportada.asignarEmpleado("");
+                    case "Confirmar"       -> incidenciaReportada.confirmarIncidencia();
+                    case "Desestimar"       -> incidenciaReportada.desestimarIncidencia();
+                    case "IniciarProgreso" -> incidenciaReportada.iniciarProgreso();
+                    case "Resolver"        -> incidenciaReportada.resolverIncidencia();
+                }
+            });
+            assertEquals(msgException, e.getMessage());
+        }
+    }
+
+
+    @Test
     public void funcionalidadDeRepoIncidencia(){
         repoIncidencias.save(incidencia1);
         repoIncidencias.save(incidencia2);

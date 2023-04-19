@@ -15,10 +15,6 @@ public class Reportado implements Estado {
         //evitar que otro empleado pueda leer el incidente que no corresponde
     }
 
-    public void confirmarIncidencia(Incidencia incidencia) {
-        incidencia.setEstado(new Confirmado());
-    }
-
     public void desestimarIncidencia(Incidencia incidencia) {
         incidencia.setEstado(new Desestimado());
     }

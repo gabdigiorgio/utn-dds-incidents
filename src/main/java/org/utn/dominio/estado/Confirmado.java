@@ -7,10 +7,6 @@ public class Confirmado implements Estado{
         return "Confirmado";
     }
 
-    public void desestimarIncidencia(Incidencia incidencia) {
-        incidencia.setEstado(new Desestimado());
-    }
-
     public void iniciarProgreso(Incidencia incidencia) {
         incidencia.setEstado(new EnProgreso());
     }
