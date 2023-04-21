@@ -37,7 +37,7 @@ public class IncidentCSV {
                 String file_path = "src/main/resources/"+fileName;
 
                 if(sourceValidation(file_path)){
-                    System.out.println("Archivo valido ! ! ! ! ");
+                    System.out.println("Archivo encontrado ! ! ! ! ");
                     // Acá debe parsear el csv
 
                     IncidentCSVParser parser = new IncidentCSVParser(fileName);

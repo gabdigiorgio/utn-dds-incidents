@@ -65,7 +65,7 @@ public class IncidentCSVParser {
                 if (isHeader) {
                     boolean isValidHeaders = getIndexHeaders(list);
                     if (!isValidHeaders){
-                        System.err.println("[ERROR] El archivo no posee encabezados validos");
+                        throw new IOException("El archivo no posee encabezados validos");
                     }
 
                     isHeader = false;
@@ -77,7 +77,7 @@ public class IncidentCSVParser {
             }
             csvStats();
         } catch (IOException e) {   // TODO revisar este camino de ejecución
-            System.err.println("Error al leer linea" + e);
+            System.err.println("Error al leer archivo: " + e.getMessage());
         }
     }
     private boolean getIndexHeaders(String[] headers) {
