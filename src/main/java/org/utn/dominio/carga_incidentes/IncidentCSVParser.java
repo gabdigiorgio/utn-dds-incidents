@@ -1,12 +1,11 @@
 package org.utn.dominio.carga_incidentes;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.text.SimpleDateFormat;
 
@@ -65,7 +64,9 @@ public class IncidentCSVParser {
                 // We validate all headers are present and get its indexes
                 if (isHeader) {
                     boolean isValidHeaders = getIndexHeaders(list);
-                    if (!isValidHeaders) throw new IOException("[ERROR] El archivo no posee encabezados validos");
+                    if (!isValidHeaders){
+                        System.err.println("[ERROR] El archivo no posee encabezados validos");
+                    }
 
                     isHeader = false;
                 } else {
@@ -143,33 +144,48 @@ public class IncidentCSVParser {
     */
 
     private boolean validateNullRow(String[] row){
-        for (int iter = 0; iter < row.length-4; iter ++){
-            if(row[iter].trim().equals("")){
-                System.err.println("<<< La fila contiene elementos vacios...");
-                return false;
+        int cont = 0;
+
+        for (int iter = 0; iter < row.length-4; iter ++){   // los 4 primeros campos NO pueden estar vacios...
+            if(!row[iter].trim().equals("")){
+                cont ++;
             }
         }
-        return true;
+
+        return (cont < 4 && !row[0].equals(""));
     }
 
     private boolean validateOpenStatus(String[] row){
-        if (row[indexStatus].trim().equals("Abierto")) return false;
-        return true;
+        return !row[indexStatus].trim().equals("Abierto");
     }
 
-    private boolean validateIndexCode(String[] code){
+    private void validateIndexCode(String[] row){
 
-        boolean checker = false;
+        char token = '-';
 
-        if (code.length != 7){
-            System.err.println("<<< Codigo invalido : mayor o menor a 7 dígitos");
-        }else if (!code[4].equals("-")){
-            System.err.println("<<< Codigo invalido : no respeta la codificación XXXX-XX");
-        }else{
-            checker = true;
+        if (row[indexCode].length() != 7){
+            System.err.println("[ERROR] El codigo de incidencia es mayor o menor a 7 dígitos");
+        }else if (!(row[indexCode].charAt(4) == token)){
+            System.err.println("[ERROR] El codigo de incidencia no respeta la codificación XXXX-XX");
         }
+    }
 
-        return checker;
+    private void validateReportDate(String[] row){
+        if (row[indexReportDate].trim().equals("")){
+            System.err.println("[ERROR] La fecha de reporte se encuentra vacia...");
+        }
+    }
+
+    private void validateDescription(String[] row){
+        if (row[indexDescription].trim().equals("")){
+            System.err.println("[ERROR] La descripción se encuentra vacia...");
+        }
+    }
+
+    private void validateIndexStatus(String[] row){
+        if (row[indexStatus].trim().equals("")){
+            System.err.println("[ERROR] El index se encuentra vacio...");
+        }
     }
 
     private boolean validateRowIncident(String[] row) {
@@ -181,14 +197,23 @@ public class IncidentCSVParser {
             // Validate contains non-nullable data
             if(validateNullRow(row)){
                 // TODO validar el estado ingresado será "Abierto" -> tiene sentido? Los importa un 3°
-                validateOpenStatus(row);
+                // validateOpenStatus(row); No dice si hay que validar si esta abierto o cerrado
+                TimeUnit.MILLISECONDS.sleep(500);
+                validateIndexCode(row);
+                TimeUnit.MILLISECONDS.sleep(500);
+                validateReportDate(row);
+                TimeUnit.MILLISECONDS.sleep(500);
+                validateDescription(row);
+                TimeUnit.MILLISECONDS.sleep(500);
+                validateIndexStatus(row);
 
-                dateFormat.parse(row[indexReportDate]);
             }else{
+                TimeUnit.MILLISECONDS.sleep(500);
+                System.err.println("[ERROR] La fila se encuentra vacia...");
                 return false;
             }
         } catch(Exception e) {
-            System.err.println(e);
+            System.err.println("[ERROR] Inesperado : "+e);
            return false;
         }
         return true;
