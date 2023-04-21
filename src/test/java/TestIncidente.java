@@ -78,7 +78,7 @@ public class TestIncidente {
     }
 
     @Test
-    public void testDesestimarIncidenciaSolucionadaException() throws Exception {
+    public void testDesestimarIncidenciaSolucionadaException() {
         String msgException = String.format(constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA, "Solucionado");
         Incidencia incidenciaSoluionada = new Incidencia("1234-56","15042023","","Operador1","reportador1","29052023","", new Solucionado());
 
@@ -256,36 +256,6 @@ public class TestIncidente {
             assertEquals(msgException, e.getMessage());
         }
     }
-
-
-
-    public void testTransicionExampleExceptions() {
-        String[][] testData = {
-                {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
-                {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
-                {"Desestimar", constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA},
-                {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
-                {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
-        };
-        Incidencia incidenciaReportada = new Incidencia("1234-56", "15042023", "", "Operador1", "reportador1", "29052023", "", new Reportado());
-
-        for (String[] data : testData) {
-            String transicion = data[0];
-            String msgException = String.format(data[1], "Reportado");
-
-            Exception e = assertThrows(Exception.class, () -> {
-                switch (transicion) {
-                    case "Asignar"       -> incidenciaReportada.asignarEmpleado("");
-                    case "Confirmar"       -> incidenciaReportada.confirmarIncidencia();
-                    case "Desestimar"       -> incidenciaReportada.desestimarIncidencia();
-                    case "IniciarProgreso" -> incidenciaReportada.iniciarProgreso();
-                    case "Resolver"        -> incidenciaReportada.resolverIncidencia();
-                }
-            });
-            assertEquals(msgException, e.getMessage());
-        }
-    }
-
 
     @Test
     public void funcionalidadDeRepoIncidencia(){
