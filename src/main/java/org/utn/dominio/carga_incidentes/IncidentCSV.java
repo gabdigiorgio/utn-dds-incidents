@@ -55,7 +55,7 @@ public class IncidentCSV {
 
                 }
                 else{
-                    System.out.println("[ERROR] : Archivo no encontrado / formato incorrecto !");
+                    System.err.println("[ERROR] : Archivo no encontrado / formato incorrecto !");
                     System.out.println("Intentos restantes : "+(4-tries));
                     tries += 1;
                 }
