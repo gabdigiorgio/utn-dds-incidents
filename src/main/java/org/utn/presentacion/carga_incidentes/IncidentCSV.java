@@ -1,4 +1,6 @@
-package org.utn.dominio.carga_incidentes;
+package org.utn.presentacion.carga_incidentes;
+
+import org.utn.dominio.carga_incidentes.IncidentCSVParser;
 
 import java.io.File;
 import java.io.BufferedReader;
