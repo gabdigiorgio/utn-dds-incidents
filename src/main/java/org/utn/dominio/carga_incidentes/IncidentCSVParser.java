@@ -159,38 +159,63 @@ public class IncidentCSVParser {
         return !row[indexStatus].trim().equals("Abierto");
     }
 
-    private void validateIndexCode(String[] row){
+    private boolean validateIndexCode(String[] row){
 
+        boolean status = true;
         char token = '-';
 
         if (row[indexCode].length() != 7){
             System.err.println("[ERROR] El codigo de incidencia es mayor o menor a 7 dígitos");
+            status = false;
         }else if (!(row[indexCode].charAt(4) == token)){
             System.err.println("[ERROR] El codigo de incidencia no respeta la codificación XXXX-XX");
+            status = false;
         }
+
+        return status;
     }
 
-    private void validateReportDate(String[] row){
+    private boolean validateReportDate(String[] row){
+
+        boolean status = true;
+
         if (row[indexReportDate].trim().equals("")){
             System.err.println("[ERROR] La fecha de reporte se encuentra vacia...");
+            status = false;
         }
+
+        return status;
     }
 
-    private void validateDescription(String[] row){
+    private boolean validateDescription(String[] row){
+
+        boolean status = true;
+
         if (row[indexDescription].trim().equals("")){
             System.err.println("[ERROR] La descripción se encuentra vacia...");
+            status = false;
         }
+
+        return status;
     }
 
-    private void validateIndexStatus(String[] row){
+    private boolean validateIndexStatus(String[] row){
+
+        boolean status = true;
+
         if (row[indexStatus].trim().equals("")){
             System.err.println("[ERROR] El index se encuentra vacio...");
+            status = false;
         }
+
+        return status;
     }
 
     private boolean validateRowIncident(String[] row) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
         dateFormat.setLenient(false);
+        boolean[] status_array = new boolean[4];
+        int status_checker = 0;
 
         try{
             // TODO armar metodos para encontrar errores particulares
@@ -198,14 +223,14 @@ public class IncidentCSVParser {
             if(validateNullRow(row)){
                 // TODO validar el estado ingresado será "Abierto" -> tiene sentido? Los importa un 3°
                 // validateOpenStatus(row); No dice si hay que validar si esta abierto o cerrado
-                TimeUnit.MILLISECONDS.sleep(500);
-                validateIndexCode(row);
-                TimeUnit.MILLISECONDS.sleep(500);
-                validateReportDate(row);
-                TimeUnit.MILLISECONDS.sleep(500);
-                validateDescription(row);
-                TimeUnit.MILLISECONDS.sleep(500);
-                validateIndexStatus(row);
+                TimeUnit.MILLISECONDS.sleep(200);
+                status_array[0] = validateIndexCode(row);
+                TimeUnit.MILLISECONDS.sleep(200);
+                status_array[1] =validateReportDate(row);
+                TimeUnit.MILLISECONDS.sleep(200);
+                status_array[2] =validateDescription(row);
+                TimeUnit.MILLISECONDS.sleep(200);
+                status_array[3] =validateIndexStatus(row);
 
             }else{
                 TimeUnit.MILLISECONDS.sleep(500);
@@ -216,6 +241,13 @@ public class IncidentCSVParser {
             System.err.println("[ERROR] Inesperado : "+e);
            return false;
         }
-        return true;
+
+        for (boolean b : status_array) {
+            if (!b) {
+                status_checker++;
+            }
+        }
+
+        return status_checker == 0;
     }
 }
