@@ -3,9 +3,9 @@ package org.utn.presentacion.carga_incidentes;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -19,14 +19,20 @@ public class CsvReader {
     ));
 
     public static void main(String[] args) throws IOException, CsvException {
-        //TODO Actualmente se harcodeo el file name pero deberia ser ingresado por parametro
-
-        String fileName = "prueba.csv";
+        String fileName = args[0]; //Se recibe el nombre del archivo como argumento
         String file_path = "src/main/resources/"+fileName;
 
+        //VALIDA QUE EL ARCHIVO EXISTA
+        if ( ! Files.exists( Paths.get(file_path) )) {
+            System.err.println("'" + file_path + "' no existe...");
+            System.exit(1);
+        }
+
+        //SE HACE LA LECTURA DEL ARCHIVO
         Reader reader = new FileReader(file_path);
         CSVParser csvParser = new CSVParserBuilder()
-                .withSeparator(',')
+                .withSeparator('\t')
+                .withIgnoreLeadingWhiteSpace(true)
                 .withIgnoreQuotations(true)
                 .build();
 
@@ -35,40 +41,75 @@ public class CsvReader {
                 .withCSVParser(csvParser)
                 .build();
 
+        //SE OBTIENEN LOS HEADERS Y SE BORRA EL CARACTER DE INICIO DE ARCHIVO EN CASO DE QUE EXISTA
         String[] headers = csvReader.readNext();
+        deleteCharacterBOM(headers);
 
-        checkHeaders(headers);
+        //VALIDA QUE SE INGRESEN TODOS LOS HEADERS NECESARIOS
+        try {
+            checkHeaders(headers);
+        } catch (Exception e) {
+            csvReader.close();
+            throw new RuntimeException(e);
+        }
 
-        //Recorro cada linea del archivo CSV
+        //SE HACE UN MAPEO DE LOS HEADERS SEGÚN LA POSICIÓN INGRESADA EN EL CSV
+        Map<String, Integer> headerMap = new HashMap<>();
+        for (int i = 0; i < headers.length; i++) {
+            headerMap.put(headers[i], i);
+        }
+
         String[] record;
-
         int incidenciasCargadas = 0;
+
+        //COMIENZA LA LECTURA DE CADA LINEA DEL CSV
         while ((record = csvReader.readNext()) != null) {
-            GestorIncidencias gestor =new GestorIncidencias();
+            GestorIncidencia gestor =new GestorIncidencia();
+            if (record.length == 0 || Arrays.stream(record).allMatch(String::isEmpty)) {
+                continue; // Salta las líneas vacías
+            }
+
             try {
-                gestor.procesarLinea(record);
+                //SE COMPLETA CON STRINGS VACIOS SI LA LINEA NO FUE INGRESADA CON TODOS LOS CAMPOS
+                String[] filledRecord = Arrays.copyOf(record, 8);
+                Arrays.fill(filledRecord, record.length, filledRecord.length, "");
+
+                String codigoCatalogo = filledRecord[headerMap.get("Codigo de catalogo")];
+                String fechaReporte = filledRecord[headerMap.get("Fecha de reporte")];
+                String descripcion = filledRecord[headerMap.get("Descripcion")];
+                String estado = filledRecord[headerMap.get("Estado")];
+                String operador = filledRecord[headerMap.get("Operador")];
+                String personaReporto = filledRecord[headerMap.get("Persona que lo reporto")];
+                String fechaCierre = filledRecord[headerMap.get("Fecha cierre")];
+                String motivoRechazo = filledRecord[headerMap.get("Motivo rechazo")];
+
+                gestor.procesarLinea(codigoCatalogo,fechaReporte,descripcion,estado,operador,personaReporto,fechaCierre,motivoRechazo);
                 incidenciasCargadas++;
                 //SE CREO LA INCIDENCIA DE MANERA EXITOSA
             } catch (Exception e) {
-                //FALLO LA CREACION DE LA INCIDENCIA
-                System.err.println(e.getMessage());
+                //FALLO LA CREACIÓN DE LA INCIDENCIA
+                String msg = "No fue posible cargar la incidencia con estos datos: "+ Arrays.toString(record);
+                System.err.println(msg);
+                System.err.println("\t"+e.getMessage());
             }
         }
-        //Finalizo la lectura del CSV
-        csvReader.close();
+        System.out.printf("Se cargaron exitosamente %d incidencias",incidenciasCargadas);
     }
 
-    private static void checkHeaders(String[] headers){
-        //TODO VALIDAR HEADERS
-        /*Set<String> headerSet = new HashSet<>(Arrays.asList(headers));
+    private static void checkHeaders(String[] headers) throws Exception {
+        Set<String> headerSet = new HashSet<>(Arrays.asList(headers));
         Set<String> missingHeaders = new HashSet<>(HEADERS);
         missingHeaders.removeAll(headerSet);
         if (!missingHeaders.isEmpty()) {
-            System.out.println("El encabezado del archivo CSV no contiene los siguientes encabezados: " + missingHeaders);
-            String test = (String) missingHeaders.toArray()[0];
-            System.out.println("La variable:"+test+" tiene " + test.length() + " caracteres. El primer caracter es: "+ StringUtils.substring(test, 0, 1));
-        }*/
+            throw new Exception("El encabezado del archivo CSV no contiene los siguientes encabezados: " + missingHeaders);
+        }
+    }
 
+    private static void deleteCharacterBOM(String[] headers) {
+        if (headers[0].startsWith("\uFEFF")) {
+            // Eliminar el BOM del primer campo
+            headers[0] = headers[0].substring(1);
+        }
     }
 }
 
