@@ -1,4 +1,6 @@
-package org.utn.dominio.incidente;
+package org.utn.infraestructura.persistencia;
+
+import org.utn.dominio.incidente.Incidencia;
 
 import java.util.List;
 
