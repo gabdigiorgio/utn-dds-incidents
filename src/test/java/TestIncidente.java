@@ -6,6 +6,8 @@ import org.utn.dominio.excepciones.constantesExepciones;
 import org.utn.dominio.incidente.*;
 import org.utn.infraestructura.persistencia.MemRepoIncidencias;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class TestIncidente {
@@ -21,9 +23,9 @@ public class TestIncidente {
         Estado estadoReportado = new Reportado();
         Estado estadoAsignado = new Asignado();
         this.incidencia1 = new Incidencia("1234-56","15042023","","Operador1","reportador1","29052023","", estadoReportado);
-        this.incidencia2 = new Incidencia("1533-24","17042023","","Operador2","reportador2","29052023","", estadoAsignado);
-        this.incidencia3 = new Incidencia("7543-21","19042023","","Operador3","reportador3","29052023","", estadoAsignado);
-        this.incidencia4 = new Incidencia("5723-97","10042023","","Operador4","reportador4","29052023","", estadoAsignado);
+        this.incidencia2 = new Incidencia("1533-24","13042023","","Operador2","reportador2","29042023","", estadoAsignado);
+        this.incidencia3 = new Incidencia("7543-21","19042023","","Operador3","reportador3","29062023","", estadoAsignado);
+        this.incidencia4 = new Incidencia("1533-24","10042023","","Operador4","reportador4","29022023","", estadoAsignado);
     }
 
     @Before
@@ -267,5 +269,48 @@ public class TestIncidente {
         assertEquals(repoIncidencias.findByEstado("Asignado").size(),3);
         assertEquals(repoIncidencias.findByEstado("Reportado").size(),1);
         assertEquals(repoIncidencias.count(), 4);
+    }
+//TEST DDE FILTROS EN REPOINCIDENCIAS
+    @Test
+    public void ultimosReportados(){
+        repoIncidencias.save(incidencia1);
+        repoIncidencias.save(incidencia2);
+        repoIncidencias.save(incidencia3);
+        repoIncidencias.save(incidencia4);
+
+        assertEquals(repoIncidencias.obtenerIncidencias(3,"ultimasReportadas").size(),3);
+    }
+
+    @Test
+    public void desdeLaMasVieja(){
+        repoIncidencias.save(incidencia1);
+        repoIncidencias.save(incidencia2);
+        repoIncidencias.save(incidencia3);
+        repoIncidencias.save(incidencia4);
+
+
+        assertEquals(repoIncidencias.obtenerIncidencias(3,"ordenarPorLaMasVieja").size(),3);
+    }
+
+    @Test
+    public void ordenXestado(){
+        repoIncidencias.save(incidencia1);
+        repoIncidencias.save(incidencia2);
+        repoIncidencias.save(incidencia3);
+        repoIncidencias.save(incidencia4);
+
+        assertEquals(repoIncidencias.obtenerIncidencias(3,new Asignado()).size(),3);
+
+        assertEquals(repoIncidencias.obtenerIncidencias(1,new Reportado()).size(),1);
+    }
+
+    @Test
+    public void ordenXLugar(){
+        repoIncidencias.save(incidencia1);
+        repoIncidencias.save(incidencia2);
+        repoIncidencias.save(incidencia3);
+        repoIncidencias.save(incidencia4);
+
+        assertEquals(repoIncidencias.obtenerIncidencias(2,"1533-24").size(),2);
     }
 }
