@@ -35,31 +35,35 @@ public final class MemRepoIncidencias implements RepoIncidencias {
 
     //n= cantidad de incidencias que desea ver
     //ordenado desde la mas reciente
-    public List<Incidencia> ultimasReportadas(int n){
+    public List<Incidencia> ordenarPorMasReciente(){
        Collections.sort(incidencias, (unaIncidencia, otra) -> unaIncidencia.getFechaReporte().compareToIgnoreCase(otra.getFechaReporte()));
         Collections.reverse(incidencias);
         return incidencias;
     }
 
-    public List<Incidencia> ordenarPorLaMasVieja(int n){
+    public List<Incidencia> ordenarPorLaMasVieja(){
         Collections.sort(incidencias, (unaIncidencia, otra) -> unaIncidencia.getFechaReporte().compareToIgnoreCase(otra.getFechaReporte()));
 
         return incidencias;
     }
 
-    public List<Incidencia> ordenarPorLugar(int n,String lugar){
+    public List<Incidencia> incidenciasDeUnLugar(String lugar){
         return incidencias.stream().filter(i -> i.getCodigoCatalogo().equals(lugar)).collect(Collectors.toList());
     }
 
     public List<Incidencia> obtenerIncidencias(int cantidad,String orden){
-        List<Incidencia> lista=new ArrayList<>();
-        if(orden=="ultimasReportadas") lista=this.ultimasReportadas(cantidad).subList(0,cantidad);
-        else if(orden=="ordenarPorLaMasVieja") lista=this.ordenarPorLaMasVieja(cantidad).subList(0,cantidad);
-        else lista=this.ordenarPorLugar(cantidad,orden).subList(0,cantidad);
+        List<Incidencia> lista;
+        if(orden=="ordenarPorMasReciente") lista=this.ordenarPorMasReciente();
+        else if(orden=="ordenarPorLaMasVieja") lista=this.ordenarPorLaMasVieja();
+        else lista=this.incidenciasDeUnLugar(orden);
         //si orden no es un estado y no es ninguna de las anteriores, es un lugar especifico.
+        if (lista.size()>=cantidad) return lista.subList(0,cantidad);
         return lista;
     }
     public List<Incidencia> obtenerIncidencias(int cantidad,Estado estado){
-       return this.findByEstado(estado.getNombreEstado()).subList(0,cantidad);
+        List<Incidencia> lista;
+        lista=this.findByEstado(estado.getNombreEstado());
+        if (lista.size()>=cantidad) return lista.subList(0,cantidad);
+        return lista;
     }
 }

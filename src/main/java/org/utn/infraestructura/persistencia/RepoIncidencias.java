@@ -9,9 +9,9 @@ public interface RepoIncidencias {
     void save(Incidencia incidencia);
     List<Incidencia> findByEstado(String estado);
     int count();
-    List<Incidencia> ultimasReportadas(int n);
-    List<Incidencia> ordenarPorLaMasVieja(int n);
-    List<Incidencia> ordenarPorLugar(int n,String lugar);
+    List<Incidencia> ordenarPorMasReciente();
+    List<Incidencia> ordenarPorLaMasVieja();
+    List<Incidencia> incidenciasDeUnLugar(String lugar);
     List<Incidencia> obtenerIncidencias(int cantidad,String orden);
     List<Incidencia> obtenerIncidencias(int cantidad, Estado estado);
 }
