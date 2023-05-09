@@ -1,5 +1,6 @@
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.utn.dominio.estado.Asignado;
 import org.utn.dominio.estado.Estado;
@@ -11,33 +12,32 @@ import static org.junit.Assert.assertEquals;
 
 public class TestRepoIncidencias {
 
-    private Incidencia incidencia1;
-    private Incidencia incidencia2;
-    private Incidencia incidencia3;
-    private Incidencia incidencia4;
+    private static Incidencia incidencia1;
+    private static Incidencia incidencia2;
+    private static Incidencia incidencia3;
+    private static Incidencia incidencia4;
 
-    private final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
+    private static final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
     private final String empleado="Jorge";
 
-    private void initializeRepoIncidencia(){
+    private static void initializeRepoIncidencia(){
         Estado estadoReportado = new Reportado();
         Estado estadoAsignado = new Asignado();
-        this.incidencia1 = new Incidencia("1234-56","15042023","","Operador1","reportador1","29052023","", estadoReportado);
-        this.incidencia2 = new Incidencia("1533-24","13042023","","Operador2","reportador2","29042023","", estadoAsignado);
-        this.incidencia3 = new Incidencia("7543-21","19042023","","Operador3","reportador3","29062023","", estadoAsignado);
-        this.incidencia4 = new Incidencia("1533-24","10042023","","Operador4","reportador4","29022023","", estadoAsignado);
+        incidencia1 = new Incidencia("1234-56","15042023","","Operador1","reportador1","29052023","", estadoReportado);
+        incidencia2 = new Incidencia("1533-24","13042023","","Operador2","reportador2","29042023","", estadoAsignado);
+        incidencia3 = new Incidencia("7543-21","19042023","","Operador3","reportador3","29062023","", estadoAsignado);
+        incidencia4 = new Incidencia("1533-24","10042023","","Operador4","reportador4","29022023","", estadoAsignado);
 
+    }
+
+    @BeforeClass
+    public static void initialize() {
+        initializeRepoIncidencia();
         repoIncidencias.save(incidencia1);
         repoIncidencias.save(incidencia2);
         repoIncidencias.save(incidencia3);
         repoIncidencias.save(incidencia4);
 
-
-    }
-
-    @Before
-    public void initialize() {
-        this.initializeRepoIncidencia();
     }
 
     @After
