@@ -1,18 +1,32 @@
 package org.utn.bot;
 
 public class TelegramUserBot {
-    public TelegramUserBot(Long id, Integer status) {
+    private Long id;
+    private TelegramUserBotState status;
+    private int cantMensajes;
+
+    public TelegramUserBot(Long id, TelegramUserBotState status) {
         this.id = id;
         this.status = status;
+        this.cantMensajes = 0;
     }
-
-    private Long id;
-    private Integer status;
 
     public Long getId() {
         return id;
     }
-    public Integer getStatus() {
+
+    public void addMensaje(){
+        cantMensajes ++;
+    }
+    public int getCantMensajes(){
+        return cantMensajes;
+    }
+
+    public void setStatus(TelegramUserBotState state) {
+        status = state;
+    }
+
+    public TelegramUserBotState getStatus() {
         return status;
     }
 }

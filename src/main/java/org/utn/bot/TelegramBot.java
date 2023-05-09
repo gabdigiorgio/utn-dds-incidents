@@ -1,14 +1,5 @@
 package org.utn.bot;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,11 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-//java -cp target/copiame.jarwith dependencies
 public class TelegramBot extends TelegramLongPollingBot {
 
     public TelegramBot(String botToken) {
@@ -34,49 +24,39 @@ public class TelegramBot extends TelegramLongPollingBot {
         Long chatId = message.getChatId();
 
         TelegramUserUserBotRepo repoTelegramBots = TelegramUserUserBotRepo.obtenerInstancia();
-        Optional<TelegramUserBot> telegramUserBot = repoTelegramBots.getById(chatId);
+        TelegramUserBot telegramUserBot = repoTelegramBots.getById(chatId);
         if (telegramUserBot == null) {
-            TelegramUserBot newTelegramUserBot = new TelegramUserBot(chatId, 1);
-            repoTelegramBots.save(newTelegramUserBot);
+            telegramUserBot = new TelegramUserBot(chatId, TelegramUserBotState.WELCOME_CHAT);
+            repoTelegramBots.save(telegramUserBot);
         }
 
-        SendMessage responseMsg = new SendMessage();
-        responseMsg.setChatId(message.getChatId());
-        responseMsg.setText("" +
-                "*Asistente virtual para consulta de incidentes reportados* \n\n" +
-                "Por favor seleccione una opción: \r\n" +
-                "1) Obtener listado de incidencias \n" +
-                "2) Indicar lugar de incidencias requeridas \n");
-        responseMsg.setParseMode("Markdown");
+        telegramUserBot.addMensaje();
 
-        try {
-            execute(responseMsg);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            String messageText = update.getMessage().getText();
+
+            logger(message,telegramUserBot);
+            try {
+                //TODO Esto es solo para testear despues lo borramos
+                if (messageText.equals("/state")){
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setChatId(telegramUserBot.getId());
+                    String msg = String.format("El usuario se tiene el chat id: %d\n",telegramUserBot.getId())
+                            + String.format("Este es el mensaje #%d\n",telegramUserBot.getCantMensajes())
+                            + String.format("El user se encuentra en el estado [%s]",telegramUserBot.getStatus().toString());
+                    sendMessage.setText(msg);
+                    execute(sendMessage);
+                } else {
+
+                    TelegramHandler.handleUserState(telegramUserBot,messageText,this);
+                }
+
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+
+
         }
-    }
-    private String sendRequest(java.io.File downloadedFile) throws IOException, ClientProtocolException {
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(
-                "https://dds-copiame-webs.onrender.com/analisis");
-        MultipartEntityBuilder builder =
-                MultipartEntityBuilder.create();
-        builder.addBinaryBody( "file", downloadedFile,
-                ContentType.DEFAULT_BINARY, "data.zip");
-        HttpEntity multipart = builder.build();
-        httpPost.setEntity(multipart);
-        HttpResponse execute = httpClient.execute(httpPost);
-        String rta = IOUtils.toString(
-                execute.getEntity().getContent(),
-                StandardCharsets.UTF_8.name());
-        return rta;
-    }
-
-    @Override
-    public String getBotUsername() {
-        // Se devuelve el nombre que dimos al bot al crearlo con el BotFather
-        return System.getenv("TELEGRAM_BOT_NAME");
     }
 
     public static void main(String[] args) throws TelegramApiException {
@@ -89,9 +69,35 @@ public class TelegramBot extends TelegramLongPollingBot {
             String tokenbot = System.getenv("TELEGRAM_BOT_TOKEN");
             // Se registra el bot
             telegramBotsApi.registerBot(new TelegramBot(tokenbot));
+            System.out.println("Se inicio la ejecución del BOT correctamente.");
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public String getBotUsername() {
+        // Se devuelve el nombre que dimos al bot al crearlo con el BotFather
+        return System.getenv("TELEGRAM_BOT_NAME");
+    }
+
+    private void logger(Message message,TelegramUserBot userBot){
+        String userFirstName = message.getChat().getFirstName();
+        String userLastName = message.getChat().getLastName();
+        long userId = message.getChat().getId();
+        String messageText = message.getText();
+        String userState = userBot.getStatus().toString();
+
+        log(userFirstName, userLastName, Long.toString(userId), messageText,userState);
+    }
+
+    private void log(String firstName, String lastName, String userId, String txt,String userState) {
+        System.out.println("----------------------------");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date));
+        System.out.println("Message from " + firstName + " " + lastName + ". (id = " + userId + ") \n Text - " + txt);
+        System.out.println("User in state: " + userState);
+        //System.out.println("Bot answer: \n Text - " + bot_answer);
     }
 
 }
