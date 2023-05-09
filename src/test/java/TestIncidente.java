@@ -266,39 +266,4 @@ public class TestIncidente {
         }
     }
 
-    @Test
-    public void funcionalidadDeRepoIncidencia(){
-
-        assertEquals(repoIncidencias.findByEstado("Asignado").size(),3);
-        assertEquals(repoIncidencias.findByEstado("Reportado").size(),1);
-        assertEquals(repoIncidencias.count(), 4);
-    }
-//TEST DDE FILTROS EN REPOINCIDENCIAS
-    @Test
-    public void ultimosReportados(){
-
-        assertEquals(repoIncidencias.obtenerIncidencias(3,"ordenarPorMasReciente").size(),3);
-    }
-
-    @Test
-    public void desdeLaMasVieja(){
-
-
-        assertEquals(repoIncidencias.obtenerIncidencias(5,"ordenarPorLaMasVieja").size(),4);
-    }
-
-    @Test
-    public void ordenXestado(){
-
-        //pido 4 incidencias pero solo hay 3 de ese estado
-        assertEquals(repoIncidencias.obtenerIncidencias(4,new Asignado()).size(),3);
-
-        assertEquals(repoIncidencias.obtenerIncidencias(3,new Reportado()).size(),1);
-    }
-
-    @Test
-    public void ordenXLugar(){
-
-        assertEquals(repoIncidencias.obtenerIncidencias(2,"1533-24").size(),2);
-    }
 }

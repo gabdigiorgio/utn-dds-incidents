@@ -53,17 +53,17 @@ public final class MemRepoIncidencias implements RepoIncidencias {
 
     public List<Incidencia> obtenerIncidencias(int cantidad,String orden){
         List<Incidencia> lista;
-        if(orden=="ordenarPorMasReciente") lista=this.ordenarPorMasReciente();
-        else if(orden=="ordenarPorLaMasVieja") lista=this.ordenarPorLaMasVieja();
+        if(orden.equalsIgnoreCase("ordenarPorMasReciente")) lista=this.ordenarPorMasReciente();
+        else if(orden.equalsIgnoreCase("ordenarPorLaMasVieja")) lista=this.ordenarPorLaMasVieja();
         else lista=this.incidenciasDeUnLugar(orden);
         //si orden no es un estado y no es ninguna de las anteriores, es un lugar especifico.
-        if (lista.size()>cantidad) return lista.subList(0,cantidad);
-        return lista;
+        if (lista.size()<=cantidad) return lista;
+        return lista.subList(0,cantidad);
     }
     public List<Incidencia> obtenerIncidencias(int cantidad,Estado estado){
         List<Incidencia> lista;
         lista=this.findByEstado(estado.getNombreEstado());
-        if (lista.size()>cantidad) return lista.subList(0,cantidad);
-        return lista;
+        if (lista.size()<=cantidad) return lista;
+        return lista.subList(0,cantidad);
     }
 }
