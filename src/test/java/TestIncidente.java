@@ -15,7 +15,6 @@ public class TestIncidente {
     private Incidencia incidencia2;
     private Incidencia incidencia3;
     private Incidencia incidencia4;
-    private Incidencia incidencia5;
 
     private final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
     private final String empleado="Jorge";
@@ -27,7 +26,11 @@ public class TestIncidente {
         this.incidencia2 = new Incidencia("1533-24","13042023","","Operador2","reportador2","29042023","", estadoAsignado);
         this.incidencia3 = new Incidencia("7543-21","19042023","","Operador3","reportador3","29062023","", estadoAsignado);
         this.incidencia4 = new Incidencia("1533-24","10042023","","Operador4","reportador4","29022023","", estadoAsignado);
-        this.incidencia5 = new Incidencia("1533-24","10042023","","Operador4","reportador4","29022023","", estadoAsignado);
+
+        repoIncidencias.save(incidencia1);
+        repoIncidencias.save(incidencia2);
+        repoIncidencias.save(incidencia3);
+        repoIncidencias.save(incidencia4);
 
 
     }
@@ -265,10 +268,6 @@ public class TestIncidente {
 
     @Test
     public void funcionalidadDeRepoIncidencia(){
-        repoIncidencias.save(incidencia1);
-        repoIncidencias.save(incidencia2);
-        repoIncidencias.save(incidencia3);
-        repoIncidencias.save(incidencia4);
 
         assertEquals(repoIncidencias.findByEstado("Asignado").size(),3);
         assertEquals(repoIncidencias.findByEstado("Reportado").size(),1);
@@ -277,30 +276,19 @@ public class TestIncidente {
 //TEST DDE FILTROS EN REPOINCIDENCIAS
     @Test
     public void ultimosReportados(){
-        repoIncidencias.save(incidencia1);
-        repoIncidencias.save(incidencia2);
-        repoIncidencias.save(incidencia3);
-        repoIncidencias.save(incidencia4);
 
         assertEquals(repoIncidencias.obtenerIncidencias(3,"ordenarPorMasReciente").size(),3);
     }
 
     @Test
     public void desdeLaMasVieja(){
-        repoIncidencias.save(incidencia1);
-        repoIncidencias.save(incidencia2);
-        repoIncidencias.save(incidencia3);
 
 
-        assertEquals(repoIncidencias.obtenerIncidencias(4,"ordenarPorLaMasVieja").size(),3);
+        assertEquals(repoIncidencias.obtenerIncidencias(5,"ordenarPorLaMasVieja").size(),4);
     }
 
     @Test
     public void ordenXestado(){
-        repoIncidencias.save(incidencia1);
-        repoIncidencias.save(incidencia2);
-        repoIncidencias.save(incidencia3);
-        repoIncidencias.save(incidencia4);
 
         //pido 4 incidencias pero solo hay 3 de ese estado
         assertEquals(repoIncidencias.obtenerIncidencias(4,new Asignado()).size(),3);
@@ -310,10 +298,6 @@ public class TestIncidente {
 
     @Test
     public void ordenXLugar(){
-        repoIncidencias.save(incidencia1);
-        repoIncidencias.save(incidencia2);
-        repoIncidencias.save(incidencia3);
-        repoIncidencias.save(incidencia4);
 
         assertEquals(repoIncidencias.obtenerIncidencias(2,"1533-24").size(),2);
     }
