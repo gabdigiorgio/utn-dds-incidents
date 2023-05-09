@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import org.utn.bot.handlers.TelegramUserStateHandler;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -48,7 +49,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     execute(sendMessage);
                 } else {
 
-                    TelegramHandler.handleUserState(telegramUserBot,messageText,this);
+                    TelegramUserStateHandler.handleUserState(telegramUserBot,messageText,this);
                 }
 
             } catch (TelegramApiException e) {
