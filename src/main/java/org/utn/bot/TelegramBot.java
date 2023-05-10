@@ -1,5 +1,6 @@
 package org.utn.bot;
 
+import com.opencsv.exceptions.CsvException;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -8,7 +9,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.utn.bot.handlers.TelegramUserStateHandler;
+import org.utn.presentacion.carga_incidentes.CsvReader;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,8 +74,14 @@ public class TelegramBot extends TelegramLongPollingBot {
             // Se registra el bot
             telegramBotsApi.registerBot(new TelegramBot(tokenbot));
             System.out.println("Se inicio la ejecución del BOT correctamente.");
+
+            String[] fileNameCsv = {"incidenciasBOT.tsv"};
+            CsvReader.main(fileNameCsv);
+
         } catch (TelegramApiException e) {
             e.printStackTrace();
+        } catch (IOException | CsvException e) {
+            throw new RuntimeException(e);
         }
     }
     @Override

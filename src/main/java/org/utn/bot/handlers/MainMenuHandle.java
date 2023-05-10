@@ -26,32 +26,18 @@ public class MainMenuHandle {
 
         switch (message) {
             case "1" -> {
-                msg = "Selecciono la opción 1️⃣:\nObtener un listado de las últimas N incidencias ordenado por las últimas reportadas";
-                sendMessage.setText(msg);
-                bot.execute(sendMessage);
                 telegramUserBot.setStatus(TelegramUserBotState.MENU_GET_INCIDENTS_ORDER_BY_LAST_REPORT);
                 showGetQuantityIncidents(telegramUserBot,bot);
             }
-            //updateUserState(userId, UserState.State.SUBMENU_1);
-            //showSubmenu1(chatId);
             case "2" -> {
-                msg = "Selecciono la opción 2️⃣:";
-                sendMessage.setText(msg);
-                bot.execute(sendMessage);
                 telegramUserBot.setStatus(TelegramUserBotState.MENU_GET_INCIDENTS_ORDER_BY_FIRST_REPORT);
                 showGetQuantityIncidents(telegramUserBot,bot);
             }
-            //showSubmenu2(chatId);
             case "3" -> {
-                msg = "Selecciono la opción 3️⃣:";
-                sendMessage.setText(msg);
-                bot.execute(sendMessage);
                 telegramUserBot.setStatus(TelegramUserBotState.MENU_GET_INCIDENTS_BY_STATE);
+                showGetQuantityIncidents(telegramUserBot,bot);
             }
             case "4" -> {
-                msg = "Selecciono la opción 4️⃣:";
-                sendMessage.setText(msg);
-                bot.execute(sendMessage);
                 telegramUserBot.setStatus(TelegramUserBotState.MENU_GET_INCIDENTS_BY_PLACE);
             }
             default -> {

@@ -5,6 +5,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.bot.TelegramBot;
 import org.utn.bot.TelegramUserBot;
 import org.utn.bot.TelegramUserBotState;
+import org.utn.dominio.incidente.Incidencia;
+
+import java.util.List;
 
 public class Shows {
     static void showWelcomeMessage(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
@@ -50,14 +53,31 @@ public class Shows {
         bot.execute(sendMessage);
     }
 
-    public static void showIncidentsOrderByLastReport(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+    public static void showGetStatusIncidents(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg = "ACA SE MOSTRARIAN LAS ULTIMAS INCICENDIAS REPORTADAS";
+        String msg = "➡️ Escriba el estado de las incidencias que desea visualizar\n"
+                +"↩️ Si desea volver al menu principal escriba 0️⃣";
+
         sendMessage.setText(msg);
         bot.execute(sendMessage);
+    }
+
+    public static void showIncidents(TelegramUserBot telegramUserBot, TelegramBot bot, List<Incidencia> incidencias) throws TelegramApiException {
+
+        for (Incidencia incidencia : incidencias) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(telegramUserBot.getId());
+
+            String tmp_msg = msgFromIncidencia(incidencia);
+            sendMessage.setText(tmp_msg);
+            bot.execute(sendMessage);
+        }
+
+        //String msg = "ACA SE MOSTRARIAN LAS ULTIMAS INCICENDIAS REPORTADAS";
         showBackMainMenu(telegramUserBot,bot);
     }
+
 
     public static void invalidMessage(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
@@ -72,7 +92,24 @@ public class Shows {
         String msg = "✏️ Escribe \"/menu\" para volver al menú principal";
         sendMessage.setText(msg);
         bot.execute(sendMessage);
+        telegramUserBot.setStatus(TelegramUserBotState.INIT_CHAT);
     }
 
+
+    private static String msgFromIncidencia(Incidencia incidencia){
+        StringBuilder msg = new StringBuilder();
+
+        // Agregar encabezado de tabla
+        msg.append("Codigo de catalogo: ").append(incidencia.getCodigoCatalogo()).append("\n")
+            .append("Fecha de reporte: ").append(incidencia.getFechaReporte()).append("\n")
+            .append("Descripcion: ").append(incidencia.getDescripcion()).append("\n")
+            .append("Estado: ").append(incidencia.getEstado().getNombreEstado()).append("\n")
+            .append("Operador: ").append(incidencia.getOperador()).append("\n")
+            .append("Persona que lo reporto: ").append(incidencia.getReportadoPor()).append("\n")
+            .append("Fecha cierre: ").append(incidencia.getFechaCierre()).append("\n")
+            .append("Motivo rechazo: ").append(incidencia.getMotivoRechazo());
+
+        return msg.toString();
+    }
 
 }
