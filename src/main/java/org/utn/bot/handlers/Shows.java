@@ -73,7 +73,7 @@ public class Shows {
             sendMessage.setText(tmp_msg);
             bot.execute(sendMessage);
         }
-        
+
         showBackMainMenu(telegramUserBot,bot);
     }
 
@@ -92,6 +92,19 @@ public class Shows {
         sendMessage.setText(msg);
         bot.execute(sendMessage);
         telegramUserBot.setStatus(TelegramUserBotState.INIT_CHAT);
+    }
+    public static void showPossibleStates(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+        String msg = "Los estados posibles de una incidencia son los siguientes:\n"
+                +"▪️Asignado\n"
+                +"▪️Confirmado\n"
+                +"▪️Desestimado\n"
+                +"▪️En progreso\n"
+                +"▪️Reportado\n"
+                +"▪️Solucionado\n";
+        sendMessage.setText(msg);
+        bot.execute(sendMessage);
     }
 
 
