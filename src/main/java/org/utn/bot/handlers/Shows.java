@@ -21,7 +21,7 @@ public class Shows {
     public static void showInitMessage(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg = "✏️ Escribe \"/menu\" ver las opciones disponibles ";
+        String msg = "✏️ Escribe \"/menu\" para ver las opciones disponibles ";
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
@@ -73,8 +73,7 @@ public class Shows {
             sendMessage.setText(tmp_msg);
             bot.execute(sendMessage);
         }
-
-        //String msg = "ACA SE MOSTRARIAN LAS ULTIMAS INCICENDIAS REPORTADAS";
+        
         showBackMainMenu(telegramUserBot,bot);
     }
 
