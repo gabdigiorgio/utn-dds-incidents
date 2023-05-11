@@ -53,6 +53,16 @@ public class Shows {
         bot.execute(sendMessage);
     }
 
+    public static void showGetPlaceIncidents(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+        String msg = "➡️ Escriba el código del lugar de las incidencias que desea visualizar\n"
+                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+
+        sendMessage.setText(msg);
+        bot.execute(sendMessage);
+    }
+
     public static void showGetStatusIncidents(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());

@@ -3,7 +3,6 @@ package org.utn.bot.handlers;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.bot.TelegramBot;
 import org.utn.bot.TelegramUserBot;
-import static org.utn.bot.handlers.IncidentsByPlaceHandle.incidentsByPlaceHandle;
 import static org.utn.bot.handlers.IncidentsOrderByFirstReportHandle.handleIncidentsOrderByFirstReport;
 import static org.utn.bot.handlers.IncidentsOrderByLastReportHandle.handleIncidentsOrderByLastReport;
 
@@ -17,7 +16,8 @@ public class TelegramUserStateHandler {
             case MENU_GET_INCIDENTS_ORDER_BY_FIRST_REPORT -> handleIncidentsOrderByFirstReport(telegramUserBot,messageText,bot);
             case MENU_GET_INCIDENTS_BY_STATE -> IncidentsByStateHandle.quantityInput(telegramUserBot,messageText,bot);
             case MENU_GET_INCIDENTS_BY_STATE_WAITING_RESPONSE_STATE -> IncidentsByStateHandle.stateInput(telegramUserBot,messageText,bot);
-            case MENU_GET_INCIDENTS_BY_PLACE -> incidentsByPlaceHandle(telegramUserBot,messageText,bot);
+            case MENU_GET_INCIDENTS_BY_PLACE -> IncidentsByPlaceHandle.placeInput(telegramUserBot,messageText,bot);
+
         }
     }
 }

@@ -39,6 +39,7 @@ public class MainMenuHandle {
             }
             case "4" -> {
                 telegramUserBot.setStatus(TelegramUserBotState.MENU_GET_INCIDENTS_BY_PLACE);
+                showGetPlaceIncidents(telegramUserBot,bot);
             }
             default -> {
                 invalidMessage(telegramUserBot,bot);

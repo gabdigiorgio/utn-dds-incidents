@@ -72,4 +72,9 @@ public final class MemRepoIncidencias implements RepoIncidencias {
         if (lista.size()<=cantidad) return lista;
         return lista.subList(0,cantidad);
     }
+
+    public List<Incidencia> obtenerIncidenciasByPlace(String code){
+        List<Incidencia> lista = incidencias.stream().filter(i -> i.getCodigoCatalogo().equals(code)).collect(Collectors.toList());
+        return lista;
+    }
 }

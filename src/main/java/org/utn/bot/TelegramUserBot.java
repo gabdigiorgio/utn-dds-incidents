@@ -6,9 +6,6 @@ public class TelegramUserBot {
     private int cantMensajes;
     private int incidentsQuantity;
 
-
-
-
     public TelegramUserBot(Long id, TelegramUserBotState status) {
         this.id = id;
         this.status = status;
