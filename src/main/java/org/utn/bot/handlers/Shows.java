@@ -95,6 +95,13 @@ public class Shows {
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
+    public static void invalidFormatCode(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+        String msg = "❌ El código ingresado no cumple con el formato";
+        sendMessage.setText(msg);
+        bot.execute(sendMessage);
+    }
     public static void showBackMainMenu(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
