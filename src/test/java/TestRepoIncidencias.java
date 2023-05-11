@@ -60,13 +60,11 @@ public class TestRepoIncidencias {
     @Test
     public void desdeLaMasVieja(){
 
-
         assertEquals(repoIncidencias.obtenerIncidencias(5,"ordenarPorLaMasVieja").size(),4);
     }
 
     @Test
     public void ordenXestado(){
-
         //pido 4 incidencias pero solo hay 3 de ese estado
         assertEquals(repoIncidencias.obtenerIncidencias(4,new Asignado()).size(),3);
 
