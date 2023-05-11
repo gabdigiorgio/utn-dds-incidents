@@ -21,6 +21,15 @@ public class TelegramBot extends TelegramLongPollingBot {
     public TelegramBot(String botToken) {
         super(botToken);
     }
+    private static boolean isBotStarted = false;
+
+    public static boolean isBotStarted() {
+        return isBotStarted;
+    }
+
+    public static void setBotStarted(boolean started) {
+        isBotStarted = started;
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -77,6 +86,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             String[] fileNameCsv = {"incidenciasBOT.tsv"};
             CsvReader.main(fileNameCsv);
+            setBotStarted(true);
 
         } catch (TelegramApiException e) {
             e.printStackTrace();
