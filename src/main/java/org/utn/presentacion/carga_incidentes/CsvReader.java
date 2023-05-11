@@ -27,6 +27,10 @@ public class CsvReader {
             System.err.println("'" + file_path + "' no existe...");
             System.exit(1);
         }
+        System.out.println(readerCsv(file_path));
+    }
+
+    public static String readerCsv(String file_path) throws IOException, CsvException {
 
         //SE HACE LA LECTURA DEL ARCHIVO
         Reader reader = new FileReader(file_path);
@@ -93,8 +97,10 @@ public class CsvReader {
                 System.err.println("\t"+e.getMessage());
             }
         }
-        System.out.printf("Se cargaron exitosamente %d incidencias",incidenciasCargadas);
+        return String.format("Se cargaron exitosamente %d incidencias",incidenciasCargadas);
+
     }
+
 
     private static void checkHeaders(String[] headers) throws Exception {
         Set<String> headerSet = new HashSet<>(Arrays.asList(headers));
