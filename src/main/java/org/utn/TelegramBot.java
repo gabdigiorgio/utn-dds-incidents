@@ -4,6 +4,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -90,6 +91,32 @@ public class TelegramBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
+
+
+        if (message.hasDocument()) {
+            Document document = message.getDocument();
+            try {
+                // Obtiene el archivo
+                GetFile getFile = new GetFile();
+                getFile.setFileId(message.getDocument().getFileId());
+                org.telegram.telegrambots.meta.api.objects.File file = execute(getFile);
+                java.io.File downloadedFile = downloadFile(file);
+
+                String filePath = downloadedFile.getAbsolutePath();
+
+                String result = new ReaderCsv().execute(filePath);
+
+                // Envia el mensaje al usuario
+                SendMessage responseMsg = new SendMessage();
+                responseMsg.setChatId(message.getChatId());
+                responseMsg.setText(result);
+                execute(responseMsg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     public static void main(String[] args) throws TelegramApiException {

@@ -18,7 +18,6 @@ public class ReaderCsv {
     ));
 
     public String execute(String file_path) throws IOException, CsvException {
-
         //SE HACE LA LECTURA DEL ARCHIVO
         Reader reader = new FileReader(file_path);
         CSVParser csvParser = new CSVParserBuilder()
