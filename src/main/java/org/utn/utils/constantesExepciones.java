@@ -1,4 +1,4 @@
-package org.utn.dominio.excepciones;
+package org.utn.utils;
 
 public class constantesExepciones {
     public static final String ERROR_LECTURA_ARCHIVO = "Error al leer el archivo";

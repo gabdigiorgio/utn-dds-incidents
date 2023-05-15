@@ -1,7 +1,7 @@
 package org.utn.dominio.estado;
 
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.dominio.excepciones.constantesExepciones;
+import org.utn.utils.constantesExepciones;
 public interface Estado {
     String getNombreEstado();
     default void asignarEmpleado(Incidencia incidencia) throws Exception {

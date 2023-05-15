@@ -2,7 +2,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.utn.dominio.estado.*;
-import org.utn.dominio.excepciones.constantesExepciones;
+import org.utn.utils.constantesExepciones;
 import org.utn.dominio.incidencia.*;
 import org.utn.persistencia.MemRepoIncidencias;
 

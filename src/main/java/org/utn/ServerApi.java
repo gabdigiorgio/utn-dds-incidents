@@ -1,7 +1,7 @@
-package org.utn.api;
+package org.utn;
 
 import io.javalin.Javalin;
-import org.utn.api.controllers.IniciarBotController;
+import org.utn.presentacion.api.controllers.IniciarBotController;
 
 public class ServerApi {
     public static void main(String[] args) {
