@@ -1,6 +1,6 @@
 package org.utn.dominio.estado;
 
-import org.utn.dominio.incidente.Incidencia;
+import org.utn.dominio.incidencia.Incidencia;
 import org.utn.dominio.excepciones.constantesExepciones;
 public interface Estado {
     String getNombreEstado();
