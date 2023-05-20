@@ -6,7 +6,7 @@
 
   <groupId>org.utn</groupId>
   <artifactId>2023-tpa-sama-grupo-1</artifactId>
-  <version>3.0-SNAPSHOT</version>
+  <version>2.1-SNAPSHOT</version>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>

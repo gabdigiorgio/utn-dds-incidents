@@ -1,6 +1,6 @@
 package org.utn.dominio.estado;
 
-import org.utn.dominio.incidente.Incidencia;
+import org.utn.dominio.incidencia.Incidencia;
 
 public class Reportado implements Estado {
     public String getNombreEstado(){
