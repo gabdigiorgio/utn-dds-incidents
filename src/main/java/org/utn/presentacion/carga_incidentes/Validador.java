@@ -1,12 +1,11 @@
 package org.utn.presentacion.carga_incidentes;
 
-import org.utn.exceptions.validador.DatosIncompletosException;
-import org.utn.exceptions.validador.EstadoInvalidoException;
-import org.utn.exceptions.validador.FormatoCodigoCatalogInvalidoException;
-import org.utn.exceptions.validador.FormatoFechaInvalidaException;
+import org.utn.utils.StringValidatorUtils;
+import org.utn.utils.exceptions.validador.DatosIncompletosException;
+import org.utn.utils.exceptions.validador.EstadoInvalidoException;
+import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
+import org.utn.utils.exceptions.validador.FormatoFechaInvalidaException;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Validador {
@@ -35,34 +34,17 @@ public class Validador {
 
     private static void validadorDeFormatos(String codigoCatalogo, String fechaReporte, String estado,String fechaCierre) throws Exception {
         //VALIDA CON EXPRESIONES REGULARES QUE LOS FORMATOS INGRESADOS SEAN CORRECTOS
-        validarFormatoCodigoCatalogo(codigoCatalogo);
-        validarFormatoFecha(fechaReporte);
-        validarFormatoEstado(estado);
+        if (!StringValidatorUtils.isCodigoCatalogo(codigoCatalogo)) throw new FormatoCodigoCatalogInvalidoException(codigoCatalogo);
+        if (!StringValidatorUtils.isFecha(fechaReporte)) throw new FormatoFechaInvalidaException(fechaReporte);
+        if (!StringValidatorUtils.isUserState(estado)) throw new EstadoInvalidoException(estado);
+
         if (!fechaCierre.isEmpty()){
-            validarFormatoFecha(fechaReporte);
+            if (!StringValidatorUtils.isFecha(fechaCierre)) throw new FormatoFechaInvalidaException(fechaCierre);
         }
     }
 
-    private static void validarFormatoCodigoCatalogo(String codigoCatalogo) throws Exception {
-        validarExpresionRegular(codigoCatalogo, "^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{2}$",
-                FormatoCodigoCatalogInvalidoException.class);
-    }
 
-    private static void validarFormatoFecha(String fecha) throws Exception {
-        validarExpresionRegular(fecha, "^(0?[1-9]|[12][0-9]|3[01])(0?[1-9]|1[0-2])[0-9]{4}$",
-                FormatoFechaInvalidaException.class);
-    }
-    private static void validarFormatoEstado(String estado) throws Exception {
-        validarExpresionRegular(estado, "^(Asignado|Confirmado|Desestimado|En progreso|Reportado|Solucionado)$",
-                EstadoInvalidoException.class);
-    }
 
-    private static void validarExpresionRegular(String valor, String expresionRegular,Class<? extends Exception> excepcion) throws Exception {
-        Pattern regex = Pattern.compile(expresionRegular);
-        Matcher matcher = regex.matcher(valor);
-        if (!matcher.matches()) {
-            throw excepcion.getConstructor(String.class).newInstance(valor);
-        }
-    }
+
 
 }

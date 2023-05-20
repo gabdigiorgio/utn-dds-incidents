@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.utn.dominio.estado.Asignado;
 import org.utn.dominio.estado.Estado;
 import org.utn.dominio.estado.Reportado;
-import org.utn.dominio.incidente.Incidencia;
-import org.utn.infraestructura.persistencia.MemRepoIncidencias;
+import org.utn.dominio.incidencia.Incidencia;
+import org.utn.persistencia.MemRepoIncidencias;
 
 import static org.junit.Assert.assertEquals;
 

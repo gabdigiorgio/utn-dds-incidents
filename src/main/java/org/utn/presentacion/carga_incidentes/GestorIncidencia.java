@@ -1,8 +1,8 @@
 package org.utn.presentacion.carga_incidentes;
 
-import org.utn.dominio.incidente.Incidencia;
-import org.utn.dominio.incidente.factory.IncidenciaFactory;
-import org.utn.infraestructura.persistencia.MemRepoIncidencias;
+import org.utn.dominio.incidencia.Incidencia;
+import org.utn.dominio.incidencia.factory.IncidenciaFactory;
+import org.utn.persistencia.MemRepoIncidencias;
 
 import java.util.HashMap;
 import java.util.Map;
