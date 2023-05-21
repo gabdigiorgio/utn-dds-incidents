@@ -48,8 +48,7 @@ public class GetIncidentsByPlace extends UserBotEstado{
             if (messageText.isEmpty()){ invalidMessage(telegramUserBot,bot); }
             if (!UtilsBot.validateCodePlaceFormat(telegramUserBot,messageText,bot)){return;}
 
-            MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
-            List<Incidencia> incidencias =  repoIncidencias.obtenerIncidenciasByPlace(messageText);
+            List<Incidencia> incidencias =  obtenedorIncidencias.obtenerIncidenciasByPlace(messageText);
             showIncidents(telegramUserBot,bot,incidencias);
         }
     }

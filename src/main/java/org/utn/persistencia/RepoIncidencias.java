@@ -14,4 +14,5 @@ public interface RepoIncidencias {
     List<Incidencia> incidenciasDeUnLugar(String lugar);
     List<Incidencia> obtenerIncidencias(int cantidad,String orden);
     List<Incidencia> obtenerIncidencias(int cantidad, Estado estado);
+    List<Incidencia> obtenerIncidenciasByPlace(String code);
 }
