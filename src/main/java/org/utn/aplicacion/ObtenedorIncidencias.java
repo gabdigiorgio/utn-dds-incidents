@@ -15,4 +15,8 @@ public class ObtenedorIncidencias {
     public List<Incidencia> obtenerIncidenciasByPlace(String code) {
         return repoIncidencias.obtenerIncidenciasByPlace(code);
     }
+
+    public List<Incidencia> obtenerIncidenciasOrdenadasPorLasMasViejas(int cantidad) {
+        return repoIncidencias.obtenerIncidencias(cantidad,"ordenarPorLaMasVieja");
+    }
 }
