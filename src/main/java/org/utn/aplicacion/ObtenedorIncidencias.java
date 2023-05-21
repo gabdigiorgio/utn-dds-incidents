@@ -19,4 +19,8 @@ public class ObtenedorIncidencias {
     public List<Incidencia> obtenerIncidenciasOrdenadasPorLasMasViejas(int cantidad) {
         return repoIncidencias.obtenerIncidencias(cantidad,"ordenarPorLaMasVieja");
     }
+
+    public List<Incidencia> obtenerIncidenciasOrdenadasPorLasMasRecientes(int cantidad) {
+        return repoIncidencias.obtenerIncidencias(cantidad,"ordenarPorMasReciente");
+    }
 }

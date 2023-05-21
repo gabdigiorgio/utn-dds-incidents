@@ -45,8 +45,7 @@ public class GetIncidentsLastReport extends UserBotEstado{
             telegramUserBot.execute(messageText,bot);
         } else{
             if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)){return;}
-            final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
-            List<Incidencia> incidencias =  repoIncidencias.obtenerIncidencias(Integer.parseInt(messageText),"ordenarPorMasReciente");
+            List<Incidencia> incidencias =  obtenedorIncidencias.obtenerIncidenciasOrdenadasPorLasMasRecientes(Integer.parseInt(messageText));
             Shows.showIncidents(telegramUserBot,bot,incidencias);
         }
     }
