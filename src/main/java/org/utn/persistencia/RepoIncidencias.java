@@ -7,12 +7,22 @@ import java.util.List;
 
 public interface RepoIncidencias {
     void save(Incidencia incidencia);
+
     List<Incidencia> findByEstado(String estado);
+
     int count();
+
     List<Incidencia> ordenarPorMasReciente();
+
     List<Incidencia> ordenarPorLaMasVieja();
+
     List<Incidencia> incidenciasDeUnLugar(String lugar);
-    List<Incidencia> obtenerIncidencias(int cantidad,String orden);
+
+    List<Incidencia> obtenerIncidencias(int cantidad, String orden);
+
     List<Incidencia> obtenerIncidencias(int cantidad, Estado estado);
+
     List<Incidencia> obtenerIncidenciasByPlace(String code);
+
+    List<Incidencia> obtenerIncidenciasByEstado(int cantidad, String estado);
 }

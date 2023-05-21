@@ -31,44 +31,45 @@ public class GetIncidentsByState extends UserBotEstado {
 
     @Override
     public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
-        switch (subEstado){
-            case START -> startExecute(telegramUserBot,bot);
-            case WAITING_RESPONSE_QUANTITY -> waitingResponseQuantityExecute(telegramUserBot,messageText,bot);
-            case WAITING_RESPONSE_STATE -> waitingResponseStateExecute(telegramUserBot,messageText,bot);
+        switch (subEstado) {
+            case START -> startExecute(telegramUserBot, bot);
+            case WAITING_RESPONSE_QUANTITY -> waitingResponseQuantityExecute(telegramUserBot, messageText, bot);
+            case WAITING_RESPONSE_STATE -> waitingResponseStateExecute(telegramUserBot, messageText, bot);
         }
     }
 
     private void startExecute(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
-        showGetQuantityIncidents(telegramUserBot,bot);
+        showGetQuantityIncidents(telegramUserBot, bot);
         this.setSubEstado(SubEstado.WAITING_RESPONSE_QUANTITY);
     }
 
     private void waitingResponseQuantityExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
         if (messageText.equals("/menu")) {
-            Shows.showMainMenu(telegramUserBot,bot);
-        } else{
-            if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)){return;}
+            Shows.showMainMenu(telegramUserBot, bot);
+        } else {
+            if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)) {
+                return;
+            }
             telegramUserBot.setIncidentsQuantity(Integer.parseInt(messageText));
-            showGetStatusIncidents(telegramUserBot,bot);
+            showGetStatusIncidents(telegramUserBot, bot);
             this.setSubEstado(SubEstado.WAITING_RESPONSE_STATE);
         }
     }
+
     private void waitingResponseStateExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
         if (messageText.equals("/menu")) {
             telegramUserBot.setEstado(new MainMenu(obtenedorIncidencias));
-            telegramUserBot.execute(messageText,bot);
-        } else{
-            if (!StringValidatorUtils.isUserState(messageText)){
-                invalidMessage(telegramUserBot,bot);
-                showPossibleStates(telegramUserBot,bot);
+            telegramUserBot.execute(messageText, bot);
+        } else {
+            if (!StringValidatorUtils.isUserState(messageText)) {
+                invalidMessage(telegramUserBot, bot);
+                showPossibleStates(telegramUserBot, bot);
                 return;
             }
 
-            final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
-            List<Incidencia> incidencias =  repoIncidencias.obtenerIncidenciasByEstado(telegramUserBot.getIncidentsQuantity(),messageText);
-            showIncidents(telegramUserBot,bot,incidencias);
+            List<Incidencia> incidencias = obtenedorIncidencias.obtenerIncidenciasByEstado(telegramUserBot.getIncidentsQuantity(), messageText);
+            showIncidents(telegramUserBot, bot, incidencias);
         }
     }
-
 
 }
