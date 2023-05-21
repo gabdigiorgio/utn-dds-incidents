@@ -1,8 +1,9 @@
-package org.utn.presentacion.carga_incidentes;
+package org.utn.aplicacion;
 
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.dominio.incidencia.factory.IncidenciaFactory;
-import org.utn.persistencia.MemRepoIncidencias;
+import org.utn.persistencia.RepoIncidencias;
+import org.utn.presentacion.carga_incidentes.Validador;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,14 +11,17 @@ import java.util.function.Supplier;
 
 public class GestorIncidencia {
 
-    public GestorIncidencia() {}
+    private final RepoIncidencias repoIncidencias;
 
-    public void procesarLinea(String codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws Exception {
+    public GestorIncidencia(RepoIncidencias repoIncidencias) {
+        this.repoIncidencias = repoIncidencias;
+    }
 
-        MemRepoIncidencias repoIncidencias = MemRepoIncidencias.obtenerInstancia();
+    public void crearIncidencia(String codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws Exception {
+
 
         // Validamos los datos de la línea
-       Validador.validar(codigoCatalogo,fechaReporte,descripcion,estado,operador,personaReporto,fechaCierre,motivoRechazo);
+        Validador.validar(codigoCatalogo, fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
 
         // Creamos la instancia de la incidencia correspondiente
         Map<String, Supplier<Incidencia>> factoryMethods = new HashMap<>();

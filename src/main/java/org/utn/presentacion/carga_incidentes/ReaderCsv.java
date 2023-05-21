@@ -5,6 +5,8 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import org.utn.aplicacion.GestorIncidencia;
+import org.utn.persistencia.MemRepoIncidencias;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -54,7 +56,7 @@ public class ReaderCsv {
 
         //COMIENZA LA LECTURA DE CADA LINEA DEL CSV
         while ((record = csvReader.readNext()) != null) {
-            GestorIncidencia gestor =new GestorIncidencia();
+            GestorIncidencia gestor =new GestorIncidencia(MemRepoIncidencias.obtenerInstancia());
             if (record.length == 0 || Arrays.stream(record).allMatch(String::isEmpty)) {
                 continue; // Salta las líneas vacías
             }
@@ -73,7 +75,7 @@ public class ReaderCsv {
                 String fechaCierre = filledRecord[headerMap.get("Fecha cierre")];
                 String motivoRechazo = filledRecord[headerMap.get("Motivo rechazo")];
 
-                gestor.procesarLinea(codigoCatalogo,fechaReporte,descripcion,estado,operador,personaReporto,fechaCierre,motivoRechazo);
+                gestor.crearIncidencia(codigoCatalogo,fechaReporte,descripcion,estado,operador,personaReporto,fechaCierre,motivoRechazo);
                 incidenciasCargadas++;
                 //SE CREO LA INCIDENCIA DE MANERA EXITOSA
             } catch (Exception e) {
