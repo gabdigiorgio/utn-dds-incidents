@@ -3,6 +3,7 @@ package org.utn.persistencia;
 import org.utn.dominio.estado.Estado;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
+import org.utn.dominio.incidencia.RepoIncidencias;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -1,8 +1,6 @@
-package org.utn.persistencia;
+package org.utn.dominio.incidencia;
 
 import org.utn.dominio.estado.Estado;
-import org.utn.dominio.incidencia.CodigoCatalogo;
-import org.utn.dominio.incidencia.Incidencia;
 
 import java.util.List;
 

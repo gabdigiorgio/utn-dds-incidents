@@ -2,7 +2,7 @@ package org.utn.aplicacion;
 
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.persistencia.RepoIncidencias;
+import org.utn.dominio.incidencia.RepoIncidencias;
 import org.utn.utils.exceptions.validador.DatosIncompletosException;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
 

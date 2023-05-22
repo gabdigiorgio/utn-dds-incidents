@@ -4,13 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.dominio.incidencia.factory.IncidenciaFactory;
-import org.utn.persistencia.RepoIncidencias;
+import org.utn.dominio.incidencia.RepoIncidencias;
 import org.utn.presentacion.carga_incidentes.Validador;
 import org.utn.utils.exceptions.validador.DatosIncompletosException;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class GestorIncidencia {
 
