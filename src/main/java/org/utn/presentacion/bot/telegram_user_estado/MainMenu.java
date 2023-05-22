@@ -23,7 +23,7 @@ public class MainMenu extends UserBotEstado{
     }
 
     @Override
-    public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         switch (subEstado){
             case START -> startExecute(telegramUserBot,bot);
             case WAITING_RESPONSE_OPTION -> waitingResponseExecute(telegramUserBot,messageText,bot);
@@ -48,7 +48,7 @@ public class MainMenu extends UserBotEstado{
 
     }
 
-    private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg;

@@ -8,6 +8,8 @@ import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 import org.utn.presentacion.bot.UtilsBot;
 import org.utn.presentacion.bot.Shows;
+import org.utn.utils.exceptions.validador.DatosIncompletosException;
+import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class GetIncidentsByPlace extends UserBotEstado{
     }
 
     @Override
-    public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         switch (subEstado){
             case START -> startExecute(telegramUserBot,bot);
             case WAITING_RESPONSE -> waitingResponseExecute(telegramUserBot,messageText,bot);
@@ -40,7 +42,7 @@ public class GetIncidentsByPlace extends UserBotEstado{
         this.setSubEstado(SubEstado.WAITING_RESPONSE);
     }
 
-    private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         if (messageText.equals("/menu")) {
             telegramUserBot.setEstado(new MainMenu(obtenedorIncidencias));
             telegramUserBot.execute(messageText,bot);

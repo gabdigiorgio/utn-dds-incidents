@@ -43,7 +43,9 @@ public class Validador {
         }
     }
 
-
+    public static void validarNoVacio(String valor) throws DatosIncompletosException {
+        if(valor.isEmpty()) throw new DatosIncompletosException();
+    }
 
 
 

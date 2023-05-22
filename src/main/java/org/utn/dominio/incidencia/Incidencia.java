@@ -3,7 +3,7 @@ package org.utn.dominio.incidencia;
 import org.utn.dominio.estado.*;
 
 public class Incidencia {
-    private String codigoCatalogo;
+    private CodigoCatalogo codigoCatalogo;
     private String fechaReporte;
     private String descripcion;
     private String operador;
@@ -13,7 +13,14 @@ public class Incidencia {
     private Estado estado;
     private String empleado; // Posiblemente en un futuro sea una Clase (Pagina 8)
 
-    public Incidencia(String codigoCatalogo, String fechaReporte, String descripcion, String operador, String reportadoPor, String fechaCierre, String motivoRechazo, Estado estado) {
+    public Incidencia(CodigoCatalogo codigoCatalogo,
+                      String fechaReporte,
+                      String descripcion,
+                      String operador,
+                      String reportadoPor,
+                      String fechaCierre,
+                      String motivoRechazo,
+                      Estado estado) {
         this.codigoCatalogo = codigoCatalogo;
         this.fechaReporte = fechaReporte;
         this.descripcion = descripcion;
@@ -24,7 +31,7 @@ public class Incidencia {
         this.estado = estado;
     }
 
-    public String getCodigoCatalogo() {
+    public CodigoCatalogo getCodigoCatalogo() {
         return codigoCatalogo;
     }
 

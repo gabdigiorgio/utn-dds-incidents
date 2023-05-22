@@ -1,6 +1,7 @@
 package org.utn.persistencia;
 
 import org.utn.dominio.estado.Estado;
+import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 
 import java.time.LocalDate;
@@ -70,7 +71,7 @@ public final class MemRepoIncidencias implements RepoIncidencias {
                 lista = this.ordenarPorLaMasVieja();
                 break;
             default:
-                lista = this.incidenciasDeUnLugar(orden);
+                lista = this.incidenciasDeUnLugar(orden); // TODO estan mezclados casos de usos, obtencion por orden != obtencion por lugar
         }
         return filtrarPorCantidad(lista, cantidad);
     }
@@ -95,7 +96,7 @@ public final class MemRepoIncidencias implements RepoIncidencias {
         return lista.subList(0,cantidad);
     }
 
-    public List<Incidencia> obtenerIncidenciasByPlace(String code){
+    public List<Incidencia> obtenerIncidenciasByPlace(CodigoCatalogo code){
         List<Incidencia> lista = incidencias.stream().filter(i -> i.getCodigoCatalogo().equals(code)).collect(Collectors.toList());
         return lista;
     }

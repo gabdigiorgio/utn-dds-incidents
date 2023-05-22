@@ -1,6 +1,7 @@
 package org.utn.persistencia;
 
 import org.utn.dominio.estado.Estado;
+import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface RepoIncidencias {
 
     List<Incidencia> obtenerIncidencias(int cantidad, Estado estado);
 
-    List<Incidencia> obtenerIncidenciasByPlace(String code);
+    List<Incidencia> obtenerIncidenciasByPlace(CodigoCatalogo codigoCatalogo);
 
     List<Incidencia> obtenerIncidenciasByEstado(int cantidad, String estado);
 }

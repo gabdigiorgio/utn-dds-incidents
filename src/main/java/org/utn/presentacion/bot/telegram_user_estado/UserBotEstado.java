@@ -17,6 +17,6 @@ public abstract class UserBotEstado {
     }
 
     public abstract String getNombreEstado();
-    public abstract void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException;
+    public abstract void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception;
 
 }

@@ -1,6 +1,7 @@
 package org.utn.aplicacion;
 
 import org.jetbrains.annotations.NotNull;
+import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.dominio.incidencia.factory.IncidenciaFactory;
 import org.utn.persistencia.RepoIncidencias;
@@ -21,12 +22,12 @@ public class GestorIncidencia {
 
     public void crearIncidencia(String codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws Exception {
         Validador.validar(codigoCatalogo, fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
-        Incidencia nuevaIncidencia = nuevaIncidencia(codigoCatalogo, fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
+        Incidencia nuevaIncidencia = nuevaIncidencia(new CodigoCatalogo(codigoCatalogo), fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
         repoIncidencias.save(nuevaIncidencia);
     }
 
     @NotNull
-    private static Incidencia nuevaIncidencia(String codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws DatosIncompletosException {
+    private static Incidencia nuevaIncidencia(CodigoCatalogo codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws DatosIncompletosException {
         Incidencia nuevaIncidencia;
         switch (estado) {
             case "Reportado":

@@ -1,7 +1,10 @@
 package org.utn.aplicacion;
 
+import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.RepoIncidencias;
+import org.utn.utils.exceptions.validador.DatosIncompletosException;
+import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
 
 import java.util.List;
 
@@ -12,8 +15,8 @@ public class ObtenedorIncidencias {
         this.repoIncidencias = repoIncidencias;
     }
 
-    public List<Incidencia> obtenerIncidenciasByPlace(String code) {
-        return repoIncidencias.obtenerIncidenciasByPlace(code);
+    public List<Incidencia> obtenerIncidenciasByPlace(String codigoCatalogo) throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+        return repoIncidencias.obtenerIncidenciasByPlace(new CodigoCatalogo(codigoCatalogo));
     }
 
     public List <Incidencia> obtenerIncidenciasByEstado(int cantidad, String estado) {

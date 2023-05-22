@@ -27,7 +27,7 @@ public class GetIncidentsLastReport extends UserBotEstado{
     }
 
     @Override
-    public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         switch (subEstado){
             case START -> startExecute(telegramUserBot,bot);
             case WAITING_RESPONSE_QUANTITY -> waitingResponseExecute(telegramUserBot,messageText,bot);
@@ -39,7 +39,7 @@ public class GetIncidentsLastReport extends UserBotEstado{
         this.setSubEstado(SubEstado.WAITING_RESPONSE_QUANTITY);
     }
 
-    private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         if (messageText.equals("/menu")) {
             telegramUserBot.setEstado(new MainMenu(obtenedorIncidencias));
             telegramUserBot.execute(messageText,bot);
