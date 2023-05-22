@@ -21,7 +21,7 @@ public class GestorIncidencia {
     }
 
     public void crearIncidencia(String codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws Exception {
-        Validador.validar(codigoCatalogo, fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
+        Validador.validar(fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo); // TODO: llevar validaciones a value objects
         Incidencia nuevaIncidencia = nuevaIncidencia(new CodigoCatalogo(codigoCatalogo), fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
         repoIncidencias.save(nuevaIncidencia);
     }
