@@ -10,6 +10,7 @@ import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.utils.exceptions.validador.DatosIncompletosException;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
+import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,10 +27,35 @@ public class TestRepoIncidencias {
     private static void initializeRepoIncidencia() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
         Estado estadoReportado = new Reportado();
         Estado estadoAsignado = new Asignado();
-        incidencia1 = new Incidencia(new CodigoCatalogo("1234-56"),"15042023","","Operador1","reportador1","29052023","", estadoReportado);
-        incidencia2 = new Incidencia(new CodigoCatalogo("1533-24"),"13042023","","Operador2","reportador2","29042023","", estadoAsignado);
-        incidencia3 = new Incidencia(new CodigoCatalogo("7543-21"),"19042023","","Operador3","reportador3","29062023","", estadoAsignado);
-        incidencia4 = new Incidencia(new CodigoCatalogo("1533-24"),"10042023","","Operador4","reportador4","29022023","", estadoAsignado);
+        incidencia1 = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4, 15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                estadoReportado);
+        incidencia2 = new Incidencia(new CodigoCatalogo("1533-24"),
+                LocalDate.of(2023, 4, 13),
+                "",
+                "Operador2",
+                "reportador2",
+                LocalDate.of(2023, 4, 29),
+                "", estadoAsignado);
+        incidencia3 = new Incidencia(new CodigoCatalogo("7543-21"),
+                LocalDate.of(2023, 4, 19),
+                "",
+                "Operador3",
+                "reportador3",
+                LocalDate.of(2023, 6, 29),
+                "", estadoAsignado);
+        incidencia4 = new Incidencia(new CodigoCatalogo("1533-24"),
+                LocalDate.of(2023, 4, 10),
+                "",
+                "Operador4",
+                "reportador4",
+                LocalDate.of(2023, 2, 28),
+                "", estadoAsignado);
 
     }
 

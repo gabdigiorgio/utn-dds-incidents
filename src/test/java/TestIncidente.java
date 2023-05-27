@@ -7,6 +7,7 @@ import org.utn.dominio.incidencia.*;
 import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.utils.exceptions.validador.DatosIncompletosException;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
+import java.time.LocalDate;
 
 import static org.junit.Assert.*;
 
@@ -19,13 +20,41 @@ public class TestIncidente {
     private final MemRepoIncidencias repoIncidencias = MemRepoIncidencias.obtenerInstancia();
     private final String empleado = "Jorge";
 
-    private void initializeIncidencia() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    private void initializeIncidencia() throws FormatoCodigoCatalogInvalidoException {
         Estado estadoReportado = new Reportado();
         Estado estadoAsignado = new Asignado();
-        this.incidencia1 = new Incidencia(new CodigoCatalogo("1234-56"), "15042023", "", "Operador1", "reportador1", "29052023", "", estadoReportado);
-        this.incidencia2 = new Incidencia(new CodigoCatalogo("1533-24"), "13042023", "", "Operador2", "reportador2", "29042023", "", estadoAsignado);
-        this.incidencia3 = new Incidencia(new CodigoCatalogo("7543-21"), "19042023", "", "Operador3", "reportador3", "29062023", "", estadoAsignado);
-        this.incidencia4 = new Incidencia(new CodigoCatalogo("1533-24"), "10042023", "", "Operador4", "reportador4", "29022023", "", estadoAsignado);
+        this.incidencia1 = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4, 15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                estadoReportado);
+        this.incidencia2 = new Incidencia(new CodigoCatalogo("1533-24"),
+                LocalDate.of(2023, 4, 13),
+                "",
+                "Operador2",
+                "reportador2",
+                LocalDate.of(2023, 4, 29),
+                "",
+                estadoAsignado);
+        this.incidencia3 = new Incidencia(new CodigoCatalogo("7543-21"),
+                LocalDate.of(2023, 4, 19),
+                "",
+                "Operador3",
+                "reportador3",
+                LocalDate.of(2023, 6, 29),
+                "",
+                estadoAsignado);
+        this.incidencia4 = new Incidencia(new CodigoCatalogo("1533-24"),
+                LocalDate.of(2023, 4, 10),
+                "",
+                "Operador4",
+                "reportador4",
+                LocalDate.of(2023, 2, 28),
+                "",
+                estadoAsignado);
 
         repoIncidencias.save(incidencia1);
         repoIncidencias.save(incidencia2);
@@ -88,7 +117,14 @@ public class TestIncidente {
     @Test
     public void testDesestimarIncidenciaSolucionadaException() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
         String msgException = String.format(constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA, "Solucionado");
-        Incidencia incidenciaSoluionada = new Incidencia(new CodigoCatalogo("1234-56"), "15042023", "", "Operador1", "reportador1", "29052023", "", new Solucionado());
+        Incidencia incidenciaSoluionada = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4,15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                new Solucionado());
 
         try {
             incidenciaSoluionada.desestimarIncidencia();
@@ -105,7 +141,14 @@ public class TestIncidente {
                 {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
                 {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
         };
-        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"), "15042023", "", "Operador1", "reportador1", "29052023", "", new Reportado());
+        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4, 15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                new Reportado());
 
         for (String[] data : testData) {
             String transicion = data[0];
@@ -130,7 +173,14 @@ public class TestIncidente {
                 {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO}
                 //{"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
         };
-        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"), "15042023", "", "Operador1", "reportador1", "29052023", "", new Asignado());
+        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4, 15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                new Asignado());
 
         for (String[] data : testData) {
             String transicion = data[0];
@@ -156,7 +206,14 @@ public class TestIncidente {
                 {"Desestimar", constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA},
                 {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
         };
-        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"), "15042023", "", "Operador1", "reportador1", "29052023", "", new Confirmado());
+        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4, 15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                new Confirmado());
 
         for (String[] data : testData) {
             String transicion = data[0];
@@ -184,7 +241,14 @@ public class TestIncidente {
                 {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
                 {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
         };
-        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"), "15042023", "", "Operador1", "reportador1", "29052023", "", new Desestimado());
+        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4, 15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                new Desestimado());
 
         for (String[] data : testData) {
             String transicion = data[0];
@@ -212,7 +276,14 @@ public class TestIncidente {
                 {"Desestimar", constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA},
                 {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
         };
-        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"), "15042023", "", "Operador1", "reportador1", "29052023", "", new EnProgreso());
+        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4, 15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                new EnProgreso());
 
         for (String[] data : testData) {
             String transicion = data[0];
@@ -241,7 +312,14 @@ public class TestIncidente {
                 {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
                 {"Resolver", constantesExepciones.ERROR_TRANSICION_RESOLVER_INCIDENCIA}
         };
-        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"), "15042023", "", "Operador1", "reportador1", "29052023", "", new Solucionado());
+        Incidencia incidenciaReportada = new Incidencia(new CodigoCatalogo("1234-56"),
+                LocalDate.of(2023, 4, 15),
+                "",
+                "Operador1",
+                "reportador1",
+                LocalDate.of(2023, 5, 29),
+                "",
+                new Solucionado());
 
         for (String[] data : testData) {
             String transicion = data[0];

@@ -8,13 +8,12 @@ import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
 public class CodigoCatalogo {
     private final String codigo;
 
-    public CodigoCatalogo(String codigo) throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public CodigoCatalogo(String codigo) throws FormatoCodigoCatalogInvalidoException {
         validar(codigo);
         this.codigo = codigo;
     }
 
-    private void validar(String codigo) throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
-        Validador.validarNoVacio(codigo);
+    private void validar(String codigo) throws FormatoCodigoCatalogInvalidoException {
         if (!StringValidatorUtils.isCodigoCatalogo(codigo)) throw new FormatoCodigoCatalogInvalidoException(codigo);
     }
 

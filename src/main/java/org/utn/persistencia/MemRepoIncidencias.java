@@ -52,10 +52,8 @@ public final class MemRepoIncidencias implements RepoIncidencias {
         return incidencias;
     }
 
-    public int compararFechas(String fecha1, String fecha2) {
-        LocalDate localDate1 = LocalDate.parse(fecha1, DateTimeFormatter.ofPattern("ddMMyyyy"));
-        LocalDate localDate2 = LocalDate.parse(fecha2, DateTimeFormatter.ofPattern("ddMMyyyy"));
-        return localDate1.compareTo(localDate2);
+    public int compararFechas(LocalDate unaFecha, LocalDate otraFecha) {
+        return unaFecha.compareTo(otraFecha);
     }
 
     public List<Incidencia> incidenciasDeUnLugar(String lugar) {

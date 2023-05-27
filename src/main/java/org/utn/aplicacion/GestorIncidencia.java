@@ -3,10 +3,11 @@ package org.utn.aplicacion;
 import org.jetbrains.annotations.NotNull;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.dominio.incidencia.factory.IncidenciaFactory;
 import org.utn.dominio.incidencia.RepoIncidencias;
-import org.utn.presentacion.carga_incidentes.Validador;
-import org.utn.utils.exceptions.validador.DatosIncompletosException;
+import org.utn.dominio.incidencia.factory.IncidenciaFactory;
+import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
+
+import java.time.LocalDate;
 
 public class GestorIncidencia {
 
@@ -16,14 +17,34 @@ public class GestorIncidencia {
         this.repoIncidencias = repoIncidencias;
     }
 
-    public void crearIncidencia(String codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws Exception {
-        Validador.validar(fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo); // TODO: llevar validaciones a value objects
-        Incidencia nuevaIncidencia = nuevaIncidencia(new CodigoCatalogo(codigoCatalogo), fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
+    public void crearIncidencia(String codigoCatalogo,
+                                LocalDate fechaReporte,
+                                String descripcion,
+                                String estado,
+                                String operador,
+                                String personaReporto,
+                                LocalDate fechaCierre,
+                                String motivoRechazo) throws FormatoCodigoCatalogInvalidoException {
+        Incidencia nuevaIncidencia = nuevaIncidencia(new CodigoCatalogo(codigoCatalogo),
+                fechaReporte,
+                descripcion,
+                estado,
+                operador,
+                personaReporto,
+                fechaCierre,
+                motivoRechazo);
         repoIncidencias.save(nuevaIncidencia);
     }
 
     @NotNull
-    private static Incidencia nuevaIncidencia(CodigoCatalogo codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws DatosIncompletosException {
+    private static Incidencia nuevaIncidencia(CodigoCatalogo codigoCatalogo,
+                                              LocalDate fechaReporte,
+                                              String descripcion,
+                                              String estado,
+                                              String operador,
+                                              String personaReporto,
+                                              LocalDate fechaCierre,
+                                              String motivoRechazo) {
         Incidencia nuevaIncidencia;
         switch (estado) {
             case "Reportado":

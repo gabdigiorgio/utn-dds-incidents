@@ -4,35 +4,42 @@ import org.utn.dominio.estado.*;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 
+import java.time.LocalDate;
+
 public class IncidenciaFactory {
-    public static Incidencia crearIncidenciaReportado(CodigoCatalogo codigoCatalogo, String fechaReporte, String descripcion,
-                                                      String operador, String personaReporto){
+    public static Incidencia crearIncidenciaReportado(CodigoCatalogo codigoCatalogo, LocalDate fechaReporte, String descripcion,
+                                                      String operador, String personaReporto) {
         Estado estado = new Reportado();
-        return new Incidencia(codigoCatalogo,fechaReporte,descripcion,operador,personaReporto,"","",estado);
+        return new Incidencia(codigoCatalogo, fechaReporte, descripcion, operador, personaReporto, null, "", estado);
     }
-    public static Incidencia crearIncidenciaAsignado(CodigoCatalogo codigoCatalogo, String fechaReporte, String descripcion,
-                                                     String operador, String personaReporto, String fechaCierre, String motivoRechazo){
+
+    public static Incidencia crearIncidenciaAsignado(CodigoCatalogo codigoCatalogo, LocalDate fechaReporte, String descripcion,
+                                                     String operador, String personaReporto, LocalDate fechaCierre, String motivoRechazo) {
         Estado estado = new Asignado();
-        return new Incidencia(codigoCatalogo,fechaReporte,descripcion,operador,personaReporto,fechaCierre,motivoRechazo,estado);
+        return new Incidencia(codigoCatalogo, fechaReporte, descripcion, operador, personaReporto, fechaCierre, motivoRechazo, estado);
     }
-    public static Incidencia crearIncidenciaConfirmado(CodigoCatalogo codigoCatalogo, String fechaReporte, String descripcion,
-                                                     String operador, String personaReporto, String fechaCierre){
+
+    public static Incidencia crearIncidenciaConfirmado(CodigoCatalogo codigoCatalogo, LocalDate fechaReporte, String descripcion,
+                                                       String operador, String personaReporto, LocalDate fechaCierre) {
         Estado estado = new Confirmado();
-        return new Incidencia(codigoCatalogo,fechaReporte,descripcion,operador,personaReporto,fechaCierre,"",estado);
+        return new Incidencia(codigoCatalogo, fechaReporte, descripcion, operador, personaReporto, fechaCierre, "", estado);
     }
-    public static Incidencia crearIncidenciaDesestimado(CodigoCatalogo codigoCatalogo, String fechaReporte, String descripcion,
-                                                     String operador, String personaReporto, String fechaCierre, String motivoRechazo){
+
+    public static Incidencia crearIncidenciaDesestimado(CodigoCatalogo codigoCatalogo, LocalDate fechaReporte, String descripcion,
+                                                        String operador, String personaReporto, LocalDate fechaCierre, String motivoRechazo) {
         Estado estado = new Desestimado();
-        return new Incidencia(codigoCatalogo,fechaReporte,descripcion,operador,personaReporto,fechaCierre,motivoRechazo,estado);
+        return new Incidencia(codigoCatalogo, fechaReporte, descripcion, operador, personaReporto, fechaCierre, motivoRechazo, estado);
     }
-    public static Incidencia crearIncidenciaEnProgreso(CodigoCatalogo codigoCatalogo, String fechaReporte, String descripcion,
-                                                     String operador, String personaReporto, String fechaCierre, String motivoRechazo){
+
+    public static Incidencia crearIncidenciaEnProgreso(CodigoCatalogo codigoCatalogo, LocalDate fechaReporte, String descripcion,
+                                                       String operador, String personaReporto, LocalDate fechaCierre, String motivoRechazo) {
         Estado estado = new EnProgreso();
-        return new Incidencia(codigoCatalogo,fechaReporte,descripcion,operador,personaReporto,fechaCierre,motivoRechazo,estado);
+        return new Incidencia(codigoCatalogo, fechaReporte, descripcion, operador, personaReporto, fechaCierre, motivoRechazo, estado);
     }
-    public static Incidencia crearIncidenciaSolucionado(CodigoCatalogo codigoCatalogo, String fechaReporte, String descripcion,
-                                                     String operador, String personaReporto, String fechaCierre, String motivoRechazo){
+
+    public static Incidencia crearIncidenciaSolucionado(CodigoCatalogo codigoCatalogo, LocalDate fechaReporte, String descripcion,
+                                                        String operador, String personaReporto, LocalDate fechaCierre, String motivoRechazo) {
         Estado estado = new Solucionado();
-        return new Incidencia(codigoCatalogo,fechaReporte,descripcion,operador,personaReporto,fechaCierre,motivoRechazo,estado);
+        return new Incidencia(codigoCatalogo, fechaReporte, descripcion, operador, personaReporto, fechaCierre, motivoRechazo, estado);
     }
 }
