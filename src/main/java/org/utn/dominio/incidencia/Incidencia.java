@@ -2,18 +2,27 @@ package org.utn.dominio.incidencia;
 
 import org.utn.dominio.estado.*;
 
+import java.time.LocalDate;
+
 public class Incidencia {
-    private String codigoCatalogo;
-    private String fechaReporte;
+    private CodigoCatalogo codigoCatalogo;
+    private LocalDate fechaReporte;
     private String descripcion;
     private String operador;
     private String reportadoPor; // Posiblemente en un futuro sea una Clase (Pagina 7)
-    private String fechaCierre;
+    private LocalDate fechaCierre;
     private String motivoRechazo;
     private Estado estado;
     private String empleado; // Posiblemente en un futuro sea una Clase (Pagina 8)
 
-    public Incidencia(String codigoCatalogo, String fechaReporte, String descripcion, String operador, String reportadoPor, String fechaCierre, String motivoRechazo, Estado estado) {
+    public Incidencia(CodigoCatalogo codigoCatalogo,
+                      LocalDate fechaReporte,
+                      String descripcion,
+                      String operador,
+                      String reportadoPor,
+                      LocalDate fechaCierre,
+                      String motivoRechazo,
+                      Estado estado) {
         this.codigoCatalogo = codigoCatalogo;
         this.fechaReporte = fechaReporte;
         this.descripcion = descripcion;
@@ -24,11 +33,11 @@ public class Incidencia {
         this.estado = estado;
     }
 
-    public String getCodigoCatalogo() {
+    public CodigoCatalogo getCodigoCatalogo() {
         return codigoCatalogo;
     }
 
-    public String getFechaReporte() {
+    public LocalDate getFechaReporte() {
         return fechaReporte;
     }
 
@@ -44,7 +53,7 @@ public class Incidencia {
         return reportadoPor;
     }
 
-    public String getFechaCierre() {
+    public LocalDate getFechaCierre() {
         return fechaCierre;
     }
 

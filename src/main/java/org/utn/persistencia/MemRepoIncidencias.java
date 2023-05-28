@@ -1,7 +1,9 @@
 package org.utn.persistencia;
 
 import org.utn.dominio.estado.Estado;
+import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
+import org.utn.dominio.incidencia.RepoIncidencias;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -50,10 +52,8 @@ public final class MemRepoIncidencias implements RepoIncidencias {
         return incidencias;
     }
 
-    public int compararFechas(String fecha1, String fecha2) {
-        LocalDate localDate1 = LocalDate.parse(fecha1, DateTimeFormatter.ofPattern("ddMMyyyy"));
-        LocalDate localDate2 = LocalDate.parse(fecha2, DateTimeFormatter.ofPattern("ddMMyyyy"));
-        return localDate1.compareTo(localDate2);
+    public int compararFechas(LocalDate unaFecha, LocalDate otraFecha) {
+        return unaFecha.compareTo(otraFecha);
     }
 
     public List<Incidencia> incidenciasDeUnLugar(String lugar) {
@@ -70,7 +70,7 @@ public final class MemRepoIncidencias implements RepoIncidencias {
                 lista = this.ordenarPorLaMasVieja();
                 break;
             default:
-                lista = this.incidenciasDeUnLugar(orden);
+                lista = this.incidenciasDeUnLugar(orden); // TODO estan mezclados casos de usos, obtencion por orden != obtencion por lugar
         }
         return filtrarPorCantidad(lista, cantidad);
     }
@@ -95,7 +95,7 @@ public final class MemRepoIncidencias implements RepoIncidencias {
         return lista.subList(0,cantidad);
     }
 
-    public List<Incidencia> obtenerIncidenciasByPlace(String code){
+    public List<Incidencia> obtenerIncidenciasByPlace(CodigoCatalogo code){
         List<Incidencia> lista = incidencias.stream().filter(i -> i.getCodigoCatalogo().equals(code)).collect(Collectors.toList());
         return lista;
     }

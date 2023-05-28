@@ -42,7 +42,7 @@ public class TelegramUserBot {
         this.incidentsQuantity = incidentsQuantity;
     }
 
-    public void execute(String msg, TelegramBot bot) throws TelegramApiException {
+    public void execute(String msg, TelegramBot bot) throws Exception {
         this.estado.execute(this,msg,bot);
     }
 

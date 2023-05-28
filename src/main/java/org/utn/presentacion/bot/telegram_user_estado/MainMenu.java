@@ -3,18 +3,27 @@ package org.utn.presentacion.bot.telegram_user_estado;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
+import org.utn.aplicacion.ObtenedorIncidencias;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 
 import static org.utn.presentacion.bot.Shows.*;
 
 public class MainMenu extends UserBotEstado{
+
+    private final ObtenedorIncidencias obtenedorIncidencias;
+
+    public MainMenu(ObtenedorIncidencias obtenedorIncidencias){
+
+        this.obtenedorIncidencias = obtenedorIncidencias;
+    }
+
     @Override
     public String getNombreEstado() {
         return "MainMenu";
     }
 
     @Override
-    public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         switch (subEstado){
             case START -> startExecute(telegramUserBot,bot);
             case WAITING_RESPONSE_OPTION -> waitingResponseExecute(telegramUserBot,messageText,bot);
@@ -39,26 +48,26 @@ public class MainMenu extends UserBotEstado{
 
     }
 
-    private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg;
 
         switch (messageText) {
             case "1" -> {
-                telegramUserBot.setEstado(new GetIncidentsLastReport());
+                telegramUserBot.setEstado(new GetIncidentsLastReport(obtenedorIncidencias));
                 telegramUserBot.execute(messageText,bot);
             }
             case "2" -> {
-                telegramUserBot.setEstado(new GetIncidentsFirstReport());
+                telegramUserBot.setEstado(new GetIncidentsFirstReport(obtenedorIncidencias));
                 telegramUserBot.execute(messageText,bot);
             }
             case "3" -> {
-                telegramUserBot.setEstado(new GetIncidentsByState());
+                telegramUserBot.setEstado(new GetIncidentsByState(obtenedorIncidencias));
                 telegramUserBot.execute(messageText,bot);
             }
             case "4" -> {
-                telegramUserBot.setEstado(new GetIncidentsByPlace());
+                telegramUserBot.setEstado(new GetIncidentsByPlace(obtenedorIncidencias));
                 telegramUserBot.execute(messageText,bot);
             }
             default -> invalidMessage(telegramUserBot,bot);

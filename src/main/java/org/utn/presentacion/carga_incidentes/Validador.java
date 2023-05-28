@@ -3,20 +3,26 @@ package org.utn.presentacion.carga_incidentes;
 import org.utn.utils.StringValidatorUtils;
 import org.utn.utils.exceptions.validador.DatosIncompletosException;
 import org.utn.utils.exceptions.validador.EstadoInvalidoException;
-import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
 import org.utn.utils.exceptions.validador.FormatoFechaInvalidaException;
 
 import java.util.stream.Stream;
 
 public class Validador {
 
-    public static void validar(String codigoCatalogo, String fechaReporte, String descripcion, String estado, String operador, String personaReporto, String fechaCierre, String motivoRechazo) throws Exception {
+    public static void validar(String codigoCatalogo,
+                               String fechaReporte,
+                               String descripcion,
+                               String estado,
+                               String operador,
+                               String personaReporto,
+                               String fechaCierre,
+                               String motivoRechazo) throws Exception {
         // SE VALIDA QUE LOS CAMPOS MANDATORIOS NO ESTEN VACIOS
         if (Stream.of(codigoCatalogo, fechaReporte, descripcion, estado).anyMatch(String::isEmpty)) {
             throw new DatosIncompletosException();
         }
 
-        validadorDeFormatos(codigoCatalogo,fechaReporte,estado,fechaCierre);
+        validadorDeFormatos(fechaReporte, estado, fechaCierre);
 
         switch (estado) {
             case "Reportado" -> {
@@ -32,9 +38,8 @@ public class Validador {
         }
     }
 
-    private static void validadorDeFormatos(String codigoCatalogo, String fechaReporte, String estado,String fechaCierre) throws Exception {
+    private static void validadorDeFormatos(String fechaReporte, String estado,String fechaCierre) throws Exception {
         //VALIDA CON EXPRESIONES REGULARES QUE LOS FORMATOS INGRESADOS SEAN CORRECTOS
-        if (!StringValidatorUtils.isCodigoCatalogo(codigoCatalogo)) throw new FormatoCodigoCatalogInvalidoException(codigoCatalogo);
         if (!StringValidatorUtils.isFecha(fechaReporte)) throw new FormatoFechaInvalidaException(fechaReporte);
         if (!StringValidatorUtils.isUserState(estado)) throw new EstadoInvalidoException(estado);
 
@@ -42,9 +47,5 @@ public class Validador {
             if (!StringValidatorUtils.isFecha(fechaCierre)) throw new FormatoFechaInvalidaException(fechaCierre);
         }
     }
-
-
-
-
 
 }

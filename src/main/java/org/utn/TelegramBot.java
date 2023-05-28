@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import org.utn.aplicacion.ObtenedorIncidencias;
+import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 
 import org.utn.presentacion.bot.telegram_user.TelegramUserUserBotRepo;
@@ -43,7 +45,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         UserBotRepo repoTelegramBots = TelegramUserUserBotRepo.obtenerInstancia();
         TelegramUserBot telegramUserBot = repoTelegramBots.getById(chatId);
         if (telegramUserBot == null) {
-            telegramUserBot = new TelegramUserBot(chatId, new WelcomeChat());
+            telegramUserBot = new TelegramUserBot(chatId, new WelcomeChat(new ObtenedorIncidencias(MemRepoIncidencias.obtenerInstancia())));
             repoTelegramBots.save(telegramUserBot);
         }
 
@@ -66,7 +68,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 } else {
                     telegramUserBot.execute(messageText,this);
                 }
-            } catch (TelegramApiException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
