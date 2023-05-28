@@ -1,8 +1,6 @@
 package org.utn.dominio.incidencia;
 
-import org.utn.presentacion.carga_incidentes.Validador;
 import org.utn.utils.StringValidatorUtils;
-import org.utn.utils.exceptions.validador.DatosIncompletosException;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
 
 public class CodigoCatalogo {
