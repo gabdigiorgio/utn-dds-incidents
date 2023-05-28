@@ -1,5 +1,4 @@
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.utn.dominio.estado.Asignado;
@@ -9,7 +8,7 @@ import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.utils.exceptions.validador.DatosIncompletosException;
-import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
+import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +23,7 @@ public class TestRepoIncidencias {
     private static final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
     private final String empleado="Jorge";
 
-    private static void initializeRepoIncidencia() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    private static void initializeRepoIncidencia() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         Estado estadoReportado = new Reportado();
         Estado estadoAsignado = new Asignado();
         incidencia1 = new Incidencia(new CodigoCatalogo("1234-56"),
@@ -60,7 +59,7 @@ public class TestRepoIncidencias {
     }
 
     @BeforeClass
-    public static void initialize() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public static void initialize() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         initializeRepoIncidencia();
         repoIncidencias.save(incidencia1);
         repoIncidencias.save(incidencia2);

@@ -4,16 +4,17 @@ package org.utn.presentacion;
 import org.junit.Test;
 import org.utn.presentacion.carga_incidentes.Validador;
 import org.utn.utils.exceptions.validador.DatosIncompletosException;
+import org.utn.utils.exceptions.validador.FormatoFechaInvalidaException;
 
 public class TestValidarDatos {
     private String codigoCatalogo = "1234-56";
     private String fechaReporte = "28052023";
     private String descripcion = "Descripcion de prueba";
     private String estado = "Asignado";
-    private String operador = "Operador";
-    private String personaReporto = "Persona que reporto";
-    private String fechaCierre = "29052023";
-    private String motivoRechazo = "Motivo de rechazo";
+    private String operador = "";
+    private String personaReporto = "";
+    private String fechaCierre = "";
+    private String motivoRechazo = "";
 
     @Test
     public void noDebeLanzarDatosIncompletosExcepcion() throws Exception {
@@ -52,6 +53,39 @@ public class TestValidarDatos {
         whenValidate();
     }
 
+    @Test(expected = Exception.class)
+    public void debeLanzarExceptionPorEstadoReportadoConMotivoRechazo() throws Exception {
+
+        givenEstado("Reportado");
+        givenMotivoRechazo("Motivo de rechazo");
+
+        whenValidate();
+    }
+
+    @Test(expected = Exception.class)
+    public void debeLanzarExceptionPorEstadoDesestimadoSinMotivoRechazo() throws Exception {
+
+        givenEstado("Desestimado");
+
+        whenValidate();
+    }
+
+    @Test(expected = FormatoFechaInvalidaException.class)
+    public void debeLanzarFormatoFechaInvalidaExceptionPorFechaReporte() throws Exception {
+
+        givenFechaReporte("123");
+
+        whenValidate();
+    }
+
+    @Test(expected = FormatoFechaInvalidaException.class)
+    public void debeLanzarFormatoFechaInvalidaExceptionPorFechaCierre() throws Exception {
+
+        givenFechaCierre("123");
+
+        whenValidate();
+    }
+
     private void givenCodigoCatalogo(String codigoCatalogo) {
         this.codigoCatalogo = codigoCatalogo;
     }
@@ -64,8 +98,16 @@ public class TestValidarDatos {
         this.fechaReporte = fechaReporte;
     }
 
+    private void givenFechaCierre(String fechaCierre) {
+        this.fechaCierre = fechaCierre;
+    }
+
     private void givenEstado(String estado) {
         this.estado = estado;
+    }
+
+    private void  givenMotivoRechazo(String motivoRechazo){
+        this.motivoRechazo = motivoRechazo;
     }
 
     private void whenValidate() throws Exception {

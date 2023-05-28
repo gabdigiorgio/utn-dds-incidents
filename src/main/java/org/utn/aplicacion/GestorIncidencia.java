@@ -5,7 +5,7 @@ import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.dominio.incidencia.RepoIncidencias;
 import org.utn.dominio.incidencia.factory.IncidenciaFactory;
-import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
+import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
 
 import java.time.LocalDate;
 
@@ -24,7 +24,7 @@ public class GestorIncidencia {
                                 String operador,
                                 String personaReporto,
                                 LocalDate fechaCierre,
-                                String motivoRechazo) throws FormatoCodigoCatalogInvalidoException {
+                                String motivoRechazo) throws FormatoCodigoCatalogoInvalidoException {
         Incidencia nuevaIncidencia = nuevaIncidencia(new CodigoCatalogo(codigoCatalogo),
                 fechaReporte,
                 descripcion,

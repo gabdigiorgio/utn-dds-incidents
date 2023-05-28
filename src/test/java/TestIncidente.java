@@ -6,7 +6,7 @@ import org.utn.utils.constantesExepciones;
 import org.utn.dominio.incidencia.*;
 import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.utils.exceptions.validador.DatosIncompletosException;
-import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
+import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
 import java.time.LocalDate;
 
 import static org.junit.Assert.*;
@@ -20,7 +20,7 @@ public class TestIncidente {
     private final MemRepoIncidencias repoIncidencias = MemRepoIncidencias.obtenerInstancia();
     private final String empleado = "Jorge";
 
-    private void initializeIncidencia() throws FormatoCodigoCatalogInvalidoException {
+    private void initializeIncidencia() throws FormatoCodigoCatalogoInvalidoException {
         Estado estadoReportado = new Reportado();
         Estado estadoAsignado = new Asignado();
         this.incidencia1 = new Incidencia(new CodigoCatalogo("1234-56"),
@@ -63,7 +63,7 @@ public class TestIncidente {
     }
 
     @Before
-    public void initialize() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public void initialize() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         this.initializeIncidencia();
     }
 
@@ -115,7 +115,7 @@ public class TestIncidente {
     }
 
     @Test
-    public void testDesestimarIncidenciaSolucionadaException() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public void testDesestimarIncidenciaSolucionadaException() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         String msgException = String.format(constantesExepciones.ERROR_TRANSICION_DESESTIMAR_INCIDENCIA, "Solucionado");
         Incidencia incidenciaSoluionada = new Incidencia(new CodigoCatalogo("1234-56"),
                 LocalDate.of(2023, 4,15),
@@ -135,7 +135,7 @@ public class TestIncidente {
     }
 
     @Test
-    public void testTransicionReportadoExceptionsRefactor() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public void testTransicionReportadoExceptionsRefactor() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         String[][] testData = {
                 {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
                 {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO},
@@ -167,7 +167,7 @@ public class TestIncidente {
     }
 
     @Test
-    public void testTransicionAsignadoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public void testTransicionAsignadoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         String[][] testData = {
                 {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
                 {"IniciarProgreso", constantesExepciones.ERROR_TRANSICION_INICIAR_PROGRESO}
@@ -199,7 +199,7 @@ public class TestIncidente {
     }
 
     @Test
-    public void testTransicionConfirmadoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public void testTransicionConfirmadoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         String[][] testData = {
                 {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
                 {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
@@ -233,7 +233,7 @@ public class TestIncidente {
     }
 
     @Test
-    public void testTransicionDesestimadoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public void testTransicionDesestimadoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         String[][] testData = {
                 {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
                 {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
@@ -269,7 +269,7 @@ public class TestIncidente {
     }
 
     @Test
-    public void testTransicionEnProgresoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public void testTransicionEnProgresoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         String[][] testData = {
                 {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
                 {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
@@ -304,7 +304,7 @@ public class TestIncidente {
     }
 
     @Test
-    public void testTransicionSolucionadoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogInvalidoException {
+    public void testTransicionSolucionadoExceptions() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         String[][] testData = {
                 {"Asignar", constantesExepciones.ERROR_TRANSICION_ASIGNAR_EMPLEADO},
                 {"Confirmar", constantesExepciones.ERROR_TRANSICION_CONFIRMAR_INCIDENCIA},
