@@ -7,8 +7,8 @@ import org.utn.dominio.estado.Reportado;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.MemRepoIncidencias;
-import org.utn.utils.exceptions.validador.DatosIncompletosException;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
+
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
@@ -23,7 +23,7 @@ public class TestRepoIncidencias {
     private static final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia();
     private final String empleado="Jorge";
 
-    private static void initializeRepoIncidencia() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
+    private static void initializeRepoIncidencia() throws FormatoCodigoCatalogoInvalidoException {
         Estado estadoReportado = new Reportado();
         Estado estadoAsignado = new Asignado();
         incidencia1 = new Incidencia(new CodigoCatalogo("1234-56"),
@@ -59,7 +59,7 @@ public class TestRepoIncidencias {
     }
 
     @BeforeClass
-    public static void initialize() throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
+    public static void initialize() throws FormatoCodigoCatalogoInvalidoException {
         initializeRepoIncidencia();
         repoIncidencias.save(incidencia1);
         repoIncidencias.save(incidencia2);

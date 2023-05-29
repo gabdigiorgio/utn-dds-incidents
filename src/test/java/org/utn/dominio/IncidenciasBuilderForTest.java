@@ -1,4 +1,4 @@
-package org.utn.aplicacion;
+package org.utn.dominio;
 
 import org.utn.dominio.estado.Desestimado;
 import org.utn.dominio.estado.Estado;

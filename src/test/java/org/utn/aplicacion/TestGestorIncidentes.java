@@ -2,6 +2,7 @@ package org.utn.aplicacion;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.utn.dominio.IncidenciasBuilderForTest;
 import org.utn.dominio.estado.*;
 import org.utn.dominio.incidencia.Incidencia;
 
