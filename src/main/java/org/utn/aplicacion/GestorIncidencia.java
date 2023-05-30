@@ -17,7 +17,7 @@ public class GestorIncidencia {
         this.repoIncidencias = repoIncidencias;
     }
 
-    public void crearIncidencia(String codigoCatalogo,
+    public Incidencia crearIncidencia(String codigoCatalogo,
                                 LocalDate fechaReporte,
                                 String descripcion,
                                 String estado,
@@ -34,6 +34,7 @@ public class GestorIncidencia {
                 fechaCierre,
                 motivoRechazo);
         repoIncidencias.save(nuevaIncidencia);
+        return nuevaIncidencia;
     }
 
     @NotNull

@@ -5,24 +5,28 @@ import org.utn.dominio.estado.*;
 import java.time.LocalDate;
 
 public class Incidencia {
-    private CodigoCatalogo codigoCatalogo;
-    private LocalDate fechaReporte;
-    private String descripcion;
-    private String operador;
-    private String reportadoPor; // Posiblemente en un futuro sea una Clase (Pagina 7)
-    private LocalDate fechaCierre;
-    private String motivoRechazo;
-    private Estado estado;
-    private String empleado; // Posiblemente en un futuro sea una Clase (Pagina 8)
+    private Integer id;
+    public CodigoCatalogo codigoCatalogo;
+    public LocalDate fechaReporte;
+    public String descripcion;
+    public String operador;
+    public String reportadoPor; // Posiblemente en un futuro sea una Clase (Pagina 7)
+    public LocalDate fechaCierre;
+    public String motivoRechazo;
+    public Estado estado;
+    public String empleado; // Posiblemente en un futuro sea una Clase (Pagina 8)
 
-    public Incidencia(CodigoCatalogo codigoCatalogo,
-                      LocalDate fechaReporte,
-                      String descripcion,
-                      String operador,
-                      String reportadoPor,
-                      LocalDate fechaCierre,
-                      String motivoRechazo,
-                      Estado estado) {
+    public Incidencia(
+        CodigoCatalogo codigoCatalogo,
+        LocalDate fechaReporte,
+        String descripcion,
+        String operador,
+        String reportadoPor,
+        LocalDate fechaCierre,
+        String motivoRechazo,
+        Estado estado
+    ) {
+        this.id = 1;
         this.codigoCatalogo = codigoCatalogo;
         this.fechaReporte = fechaReporte;
         this.descripcion = descripcion;
@@ -31,6 +35,10 @@ public class Incidencia {
         this.fechaCierre = fechaCierre;
         this.motivoRechazo = motivoRechazo;
         this.estado = estado;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public CodigoCatalogo getCodigoCatalogo() {
