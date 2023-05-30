@@ -93,18 +93,6 @@ public class TestGestorIncidentes {
         debeCrearIncidenciaCorrectamente();
     }
 
-    private void debeCrearIncidenciaCorrectamente() {
-        Incidencia incidenciaActual = repo.getIncidenciaGuardada();
-        Assert.assertEquals(incidenciaEsperada.getCodigoCatalogo(), incidenciaActual.getCodigoCatalogo());
-        Assert.assertEquals(incidenciaEsperada.getFechaReporte(), incidenciaActual.getFechaReporte());
-        Assert.assertEquals(incidenciaEsperada.getDescripcion(), incidenciaActual.getDescripcion());
-        Assert.assertEquals(incidenciaEsperada.getOperador(), incidenciaActual.getOperador());
-        Assert.assertEquals(incidenciaEsperada.getReportadoPor(), incidenciaActual.getReportadoPor());
-        Assert.assertEquals(incidenciaEsperada.getFechaCierre(), incidenciaActual.getFechaCierre());
-        Assert.assertEquals(incidenciaEsperada.getMotivoRechazo(), incidenciaActual.getMotivoRechazo());
-        Assert.assertEquals(incidenciaEsperada.getNombreEstado(), incidenciaActual.getNombreEstado());
-    }
-
     private void givenIncidenciaEsperada(Incidencia incidenciaEsperada) {
         this.incidenciaEsperada = incidenciaEsperada;
     }
@@ -118,6 +106,18 @@ public class TestGestorIncidentes {
                 incidenciaEsperada.getReportadoPor(),
                 incidenciaEsperada.getFechaCierre(),
                 incidenciaEsperada.getMotivoRechazo());
+    }
+
+    private void debeCrearIncidenciaCorrectamente() {
+        Incidencia incidenciaActual = repo.getIncidenciaGuardada();
+        Assert.assertEquals(incidenciaEsperada.getCodigoCatalogo(), incidenciaActual.getCodigoCatalogo());
+        Assert.assertEquals(incidenciaEsperada.getFechaReporte(), incidenciaActual.getFechaReporte());
+        Assert.assertEquals(incidenciaEsperada.getDescripcion(), incidenciaActual.getDescripcion());
+        Assert.assertEquals(incidenciaEsperada.getOperador(), incidenciaActual.getOperador());
+        Assert.assertEquals(incidenciaEsperada.getReportadoPor(), incidenciaActual.getReportadoPor());
+        Assert.assertEquals(incidenciaEsperada.getFechaCierre(), incidenciaActual.getFechaCierre());
+        Assert.assertEquals(incidenciaEsperada.getMotivoRechazo(), incidenciaActual.getMotivoRechazo());
+        Assert.assertEquals(incidenciaEsperada.getNombreEstado(), incidenciaActual.getNombreEstado());
     }
 
 }
