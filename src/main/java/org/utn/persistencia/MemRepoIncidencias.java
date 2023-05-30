@@ -20,9 +20,20 @@ public final class MemRepoIncidencias implements RepoIncidencias {
     private MemRepoIncidencias() {
     }
 
+    private MemRepoIncidencias(List<Incidencia> incidencias){
+        this.incidencias = incidencias;
+    }
+
+    public static MemRepoIncidencias obtenerInstancia(List<Incidencia> incidencias) {
+        if (instanciaUnica == null) {
+            instanciaUnica = new MemRepoIncidencias(incidencias);
+        }
+        return instanciaUnica;
+    }
+
     public static MemRepoIncidencias obtenerInstancia() {
         if (instanciaUnica == null) {
-            instanciaUnica = new MemRepoIncidencias();
+            instanciaUnica = new MemRepoIncidencias(new ArrayList<>());
         }
         return instanciaUnica;
     }

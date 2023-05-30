@@ -1,20 +1,18 @@
 package org.utn.dominio.incidencia;
 
-import org.utn.presentacion.carga_incidentes.Validador;
 import org.utn.utils.StringValidatorUtils;
-import org.utn.utils.exceptions.validador.DatosIncompletosException;
-import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
+import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
 
 public class CodigoCatalogo {
     private final String codigo;
 
-    public CodigoCatalogo(String codigo) throws FormatoCodigoCatalogInvalidoException {
+    public CodigoCatalogo(String codigo) throws FormatoCodigoCatalogoInvalidoException {
         validar(codigo);
         this.codigo = codigo;
     }
 
-    private void validar(String codigo) throws FormatoCodigoCatalogInvalidoException {
-        if (!StringValidatorUtils.isCodigoCatalogo(codigo)) throw new FormatoCodigoCatalogInvalidoException(codigo);
+    private void validar(String codigo) throws FormatoCodigoCatalogoInvalidoException {
+        if (!StringValidatorUtils.isCodigoCatalogo(codigo)) throw new FormatoCodigoCatalogoInvalidoException(codigo);
     }
 
     public String getCodigo() {

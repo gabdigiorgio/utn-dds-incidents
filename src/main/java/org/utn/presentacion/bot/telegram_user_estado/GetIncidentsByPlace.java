@@ -4,12 +4,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
 import org.utn.aplicacion.ObtenedorIncidencias;
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 import org.utn.presentacion.bot.UtilsBot;
 import org.utn.presentacion.bot.Shows;
-import org.utn.utils.exceptions.validador.DatosIncompletosException;
-import org.utn.utils.exceptions.validador.FormatoCodigoCatalogInvalidoException;
 
 import java.util.List;
 

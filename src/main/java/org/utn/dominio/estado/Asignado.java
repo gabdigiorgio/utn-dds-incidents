@@ -19,8 +19,8 @@ public class Asignado implements Estado{
         incidencia.setEstado(new Desestimado());
     }
 
-    public void iniciarProgreso(Incidencia incidencia) {
+   /* public void iniciarProgreso(Incidencia incidencia) {
         incidencia.setEstado(new EnProgreso());
-    }
+    }*/
 
 }
