@@ -6,11 +6,12 @@ import org.utn.dominio.incidencia.Incidencia;
 import org.utn.dominio.incidencia.RepoIncidencias;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class MemRepoIncidencias implements RepoIncidencias {
     private List<Incidencia> incidencias = new ArrayList<>();
@@ -39,7 +40,26 @@ public final class MemRepoIncidencias implements RepoIncidencias {
     }
 
     public void save(Incidencia incidencia) {
+        Integer lastId = incidencias.stream().mapToInt(i -> i.getId()).max().orElse(0);
+        incidencia.setId(lastId + 1);
         incidencias.add(incidencia);
+    }
+
+    public void update(Incidencia incidencia) {
+        OptionalInt incidentToRemove = IntStream.range(0, incidencias.size()).filter(i -> incidencias.get(i).getId().equals(incidencia.getId())).findFirst();
+        if (incidentToRemove.isPresent()) incidencias.remove(incidentToRemove.getAsInt());
+        this.save(incidencia);
+    }
+
+    public void remove(Integer id) {
+        OptionalInt incidentToRemove = IntStream.range(0, incidencias.size()).filter(i -> incidencias.get(i).getId().equals(id)).findFirst();
+        if (incidentToRemove.isPresent()) incidencias.remove(incidentToRemove.getAsInt());
+    }
+
+    public Incidencia getById(Integer id) {
+        List<Incidencia> result = incidencias.stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList());
+        if (result.size() != 1) return null;
+        return result.get(0);
     }
 
     public List<Incidencia> findByEstado(String estado) {

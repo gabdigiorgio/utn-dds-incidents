@@ -15,6 +15,10 @@ public class ObtenedorIncidencias {
         this.repoIncidencias = repoIncidencias;
     }
 
+    public Incidencia getIncidentById(Integer id) {
+        return repoIncidencias.getById(id);
+    }
+
     public List<Incidencia> obtenerIncidenciasByPlace(String codigoCatalogo) throws DatosIncompletosException, FormatoCodigoCatalogoInvalidoException {
         return repoIncidencias.obtenerIncidenciasByPlace(new CodigoCatalogo(codigoCatalogo));
     }

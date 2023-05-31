@@ -7,6 +7,12 @@ import java.util.List;
 public interface RepoIncidencias {
     void save(Incidencia incidencia);
 
+    void update(Incidencia incidencia);
+
+    void remove(Integer id);
+
+    Incidencia getById(Integer id);
+
     List<Incidencia> findByEstado(String estado);
 
     int count();

@@ -2,9 +2,9 @@ package org.utn.controllers;
 
 import java.util.Objects;
 
-import org.utn.ServerApi;
 import org.utn.aplicacion.GestorIncidencia;
 import org.utn.controllers.inputs.CreateIncident;
+import org.utn.controllers.inputs.EditIncident;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.utils.DateUtils;
@@ -43,7 +43,7 @@ public class IncidentsController {
       DateUtils.parsearFecha(data.reportDate),
       data.description,
       data.status,
-      data.operator,
+      data.employeeId,
       data.reporterId,
       DateUtils.parsearFecha(data.closedDate),
       data.rejectedReason
@@ -54,27 +54,35 @@ public class IncidentsController {
   };
 
   public static Handler editIncident = ctx -> {
-    int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-    CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
-
-    // create incident
-    gestor.crearIncidencia(
-      data.code,
-      DateUtils.parsearFecha(data.reportDate),
-      data.description,
-      data.status,
-      data.operator,
-      data.reporterId,
-      DateUtils.parsearFecha(data.closedDate),
-      data.rejectedReason
-    );
-    // edit incident
-    ctx.status(200);
+    try {
+      Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+      EditIncident data = ctx.bodyAsClass(EditIncident.class);
+  
+      // edit incident
+      Incidencia editedIncident = gestor.editIncident(id, data);
+  
+      ctx.json("id: " + editedIncident.getId());
+      ctx.status(200);
+      
+    } catch(Exception error) {
+      ctx.json("error: " + error.getMessage());
+      ctx.status(400);
+    }
   };
 
   public static Handler deleteIncident = ctx -> {
-    int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-    // delete incident
-    ctx.status(200);
+    try {
+      int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+  
+      // delete incident
+      gestor.deleteIncident(id);
+
+      ctx.json("result: true");
+      ctx.status(200);
+
+    } catch(Exception error) {
+      ctx.json("error: " + error.getMessage());
+      ctx.status(400);
+    }
   };
 }

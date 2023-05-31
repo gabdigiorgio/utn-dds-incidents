@@ -1,10 +1,12 @@
 package org.utn.aplicacion;
 
 import org.jetbrains.annotations.NotNull;
+import org.utn.controllers.inputs.EditIncident;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.dominio.incidencia.RepoIncidencias;
 import org.utn.dominio.incidencia.factory.IncidenciaFactory;
+import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
 
 import java.time.LocalDate;
@@ -17,14 +19,16 @@ public class GestorIncidencia {
         this.repoIncidencias = repoIncidencias;
     }
 
-    public Incidencia crearIncidencia(String codigoCatalogo,
-                                LocalDate fechaReporte,
-                                String descripcion,
-                                String estado,
-                                String operador,
-                                String personaReporto,
-                                LocalDate fechaCierre,
-                                String motivoRechazo) throws FormatoCodigoCatalogoInvalidoException {
+    public Incidencia crearIncidencia(
+        String codigoCatalogo,
+        LocalDate fechaReporte,
+        String descripcion,
+        String estado,
+        String operador,
+        String personaReporto,
+        LocalDate fechaCierre,
+        String motivoRechazo
+    ) throws FormatoCodigoCatalogoInvalidoException {
         Incidencia nuevaIncidencia = nuevaIncidencia(new CodigoCatalogo(codigoCatalogo),
                 fechaReporte,
                 descripcion,
@@ -35,6 +39,26 @@ public class GestorIncidencia {
                 motivoRechazo);
         repoIncidencias.save(nuevaIncidencia);
         return nuevaIncidencia;
+    }
+
+    public Incidencia editIncident(Integer id, EditIncident data) throws Exception {
+        Incidencia incident = repoIncidencias.getById(id);
+        if (incident == null) throw new Exception("INCIDENT_NOT_FOUND");
+
+        // data.status,
+        if (data.employeeId != null) incident.setEmpleado(data.employeeId);
+        if (data.closedDate != null) incident.setClosedDate(DateUtils.parsearFecha(data.closedDate));
+        if (data.rejectedReason != null) incident.setRejectedReason(data.rejectedReason);
+
+        // repoIncidencias
+        repoIncidencias.update(incident);
+        return incident;
+    }
+
+    public void deleteIncident(Integer id) throws Exception {
+        Incidencia incident = repoIncidencias.getById(id);
+        if (incident == null) throw new Exception("INCIDENT_NOT_FOUND");
+        repoIncidencias.remove(id);
     }
 
     @NotNull

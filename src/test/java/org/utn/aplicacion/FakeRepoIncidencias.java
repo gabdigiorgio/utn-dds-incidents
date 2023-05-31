@@ -17,6 +17,21 @@ public class FakeRepoIncidencias implements RepoIncidencias {
     }
 
     @Override
+    public void update(Incidencia incidencia) {
+        incidenciaGuardada = incidencia;
+    }
+
+    @Override
+    public void remove(Integer id) {
+        return;
+    }
+
+    @Override
+    public Incidencia getById(Integer id) {
+        return null;
+    }
+
+    @Override
     public List<Incidencia> findByEstado(String estado) {
         return null;
     }

@@ -1,10 +1,6 @@
 package org.utn.controllers.inputs;
 
-public class CreateIncident {
-  public String code;
-  public String reportDate;
-  public String description;
-  public String reporterId; 
+public class EditIncident {
   public String closedDate;
   public String rejectedReason;
   public String status;

@@ -26,7 +26,6 @@ public class Incidencia {
         String motivoRechazo,
         Estado estado
     ) {
-        this.id = 1;
         this.codigoCatalogo = codigoCatalogo;
         this.fechaReporte = fechaReporte;
         this.descripcion = descripcion;
@@ -35,6 +34,10 @@ public class Incidencia {
         this.fechaCierre = fechaCierre;
         this.motivoRechazo = motivoRechazo;
         this.estado = estado;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -112,6 +115,14 @@ public class Incidencia {
 
     public void setEmpleado(String empleado) {
         this.empleado = empleado;
+    }
+
+    public void setClosedDate(LocalDate date) {
+        this.fechaCierre = date;
+    }
+
+    public void setRejectedReason(String rejectedReason) {
+        this.motivoRechazo = rejectedReason;
     }
 
 
