@@ -7,7 +7,6 @@ import org.utn.dominio.IncidenciasBuilderForTest;
 import org.utn.dominio.estado.*;
 import org.utn.dominio.incidencia.Incidencia;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,7 +124,7 @@ public class TestMemRepoIncidencias {
     }
 
     private List<Incidencia> whenFindByEstado(Estado estado) {
-        return repoIncidencias.findByEstado(estado.getNombreEstado());
+        return repoIncidencias.findByEstado(estado.getNombreEstado(), repoIncidencias.incidencias);
     }
 
     private void debeGuardarIncidencia() {

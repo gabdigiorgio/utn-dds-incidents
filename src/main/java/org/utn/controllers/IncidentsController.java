@@ -1,5 +1,6 @@
 package org.utn.controllers;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.utn.aplicacion.GestorIncidencia;
@@ -7,7 +8,6 @@ import org.utn.controllers.inputs.CreateIncident;
 import org.utn.controllers.inputs.EditIncident;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.MemRepoIncidencias;
-import org.utn.utils.DateUtils;
 
 import io.javalin.http.Handler;
 
@@ -26,31 +26,30 @@ public class IncidentsController {
 //         .getOrThrow();
 
   public static Handler getIncidents = ctx -> {
-    String place = ctx.pathParam("place");
-    String limit = ctx.pathParam("limit");
-    String status = ctx.pathParam("status");
-    String orderBy = ctx.pathParam("orderBy");
+    Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
+    String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
+    String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
+    String place = ctx.queryParamAsClass("place", String.class).getOrDefault(null);
+
     // get incidents
+    List<Incidencia> incidents = gestor.getIncidents(limit, orderBy, status, place);
+    ctx.json("result: " + incidents);
     ctx.status(200);
   };
 
   public static Handler createIncident = ctx -> {
-    CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
+    try {
+      CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
-    // create incident
-    Incidencia newIncident = gestor.crearIncidencia(
-      data.code,
-      DateUtils.parsearFecha(data.reportDate),
-      data.description,
-      data.status,
-      data.employeeId,
-      data.reporterId,
-      DateUtils.parsearFecha(data.closedDate),
-      data.rejectedReason
-    );
+      // create incident
+      Incidencia newIncident = gestor.createIncident(data);
 
-    ctx.json("id: " + newIncident.getId());
-    ctx.status(200);
+      ctx.json("id: " + newIncident.getId());
+      ctx.status(200);
+    } catch(Exception error) {
+      ctx.json("error: " + error.getMessage());
+      ctx.status(400);
+    }
   };
 
   public static Handler editIncident = ctx -> {
@@ -61,7 +60,7 @@ public class IncidentsController {
       // edit incident
       Incidencia editedIncident = gestor.editIncident(id, data);
   
-      ctx.json("id: " + editedIncident.getId());
+      ctx.json("id: " + editedIncident.toString());
       ctx.status(200);
       
     } catch(Exception error) {

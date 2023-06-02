@@ -16,7 +16,7 @@ public class ServerApi {
         // incidents
         server.get("/incidents", IncidentsController.getIncidents);
         server.post("/incidents", IncidentsController.createIncident);
-        server.post("/incidents/{id}", IncidentsController.editIncident);
+        server.put("/incidents/{id}", IncidentsController.editIncident);
         server.delete("/incidents/{id}", IncidentsController.deleteIncident);
     }
 
