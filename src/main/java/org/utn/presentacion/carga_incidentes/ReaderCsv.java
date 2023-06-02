@@ -7,25 +7,14 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import org.utn.aplicacion.GestorIncidencia;
 import org.utn.persistencia.MemRepoIncidencias;
+import org.utn.utils.DateUtils;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ReaderCsv {
-
-    public static LocalDate parsearFecha(String fechaString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
-        if (!fechaString.isEmpty()) {
-            LocalDate fecha = LocalDate.parse(fechaString, formatter);
-            return fecha;
-        } else {
-            return null;
-        }
-    }
 
     private static final Set<String> HEADERS = new HashSet<>(Arrays.asList(
             "Codigo de catalogo", "Fecha de reporte", "Descripcion", "Estado", "Operador", "Persona que lo reporto", "Fecha cierre", "Motivo rechazo"
@@ -89,13 +78,14 @@ public class ReaderCsv {
 
                 Validador.validar(codigoCatalogo, fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
                 gestor.crearIncidencia(codigoCatalogo,
-                        parsearFecha(fechaReporte),
-                        descripcion,
-                        estado,
-                        operador,
-                        personaReporto,
-                        parsearFecha(fechaCierre),
-                        motivoRechazo);
+                    DateUtils.parsearFecha(fechaReporte),
+                    descripcion,
+                    estado,
+                    operador,
+                    personaReporto,
+                    DateUtils.parsearFecha(fechaCierre),
+                    motivoRechazo
+                );
                 incidenciasCargadas++;
                 //SE CREO LA INCIDENCIA DE MANERA EXITOSA
             } catch (Exception e) {

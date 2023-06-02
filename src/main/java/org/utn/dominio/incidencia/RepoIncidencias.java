@@ -7,7 +7,15 @@ import java.util.List;
 public interface RepoIncidencias {
     void save(Incidencia incidencia);
 
-    List<Incidencia> findByEstado(String estado);
+    void update(Incidencia incidencia);
+
+    void remove(Integer id);
+
+    Incidencia getById(Integer id);
+
+    List<Incidencia> findIncidents(int quantity, String status, String orderBy, String place);
+
+    List<Incidencia> findByEstado(String estado, List<Incidencia> incidents);
 
     int count();
 
@@ -15,11 +23,11 @@ public interface RepoIncidencias {
 
     List<Incidencia> ordenarPorLaMasVieja();
 
-    List<Incidencia> incidenciasDeUnLugar(String lugar);
-
     List<Incidencia> obtenerIncidencias(int cantidad, String orden);
 
     List<Incidencia> obtenerIncidencias(int cantidad, Estado estado);
+
+    List<Incidencia> findByPlace(String codigoCatalogo, List<Incidencia> incidents);
 
     List<Incidencia> obtenerIncidenciasByPlace(CodigoCatalogo codigoCatalogo);
 

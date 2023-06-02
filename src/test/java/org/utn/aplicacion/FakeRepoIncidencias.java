@@ -17,7 +17,32 @@ public class FakeRepoIncidencias implements RepoIncidencias {
     }
 
     @Override
-    public List<Incidencia> findByEstado(String estado) {
+    public void update(Incidencia incidencia) {
+        incidenciaGuardada = incidencia;
+    }
+
+    @Override
+    public void remove(Integer id) {
+        return;
+    }
+
+    @Override
+    public Incidencia getById(Integer id) {
+        return null;
+    }
+
+    @Override
+    public List<Incidencia> findIncidents(int quantity, String status, String orderBy, String place) {
+        return null;
+    }
+
+    @Override
+    public List<Incidencia> findByEstado(String estado, List<Incidencia> incidents) {
+        return null;
+    }
+
+    @Override
+    public List<Incidencia> findByPlace(String codigoCatalogo, List<Incidencia> incidents) {
         return null;
     }
 
@@ -33,11 +58,6 @@ public class FakeRepoIncidencias implements RepoIncidencias {
 
     @Override
     public List<Incidencia> ordenarPorLaMasVieja() {
-        return null;
-    }
-
-    @Override
-    public List<Incidencia> incidenciasDeUnLugar(String lugar) {
         return null;
     }
 
