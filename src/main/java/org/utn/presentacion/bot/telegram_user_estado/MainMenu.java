@@ -51,7 +51,6 @@ public class MainMenu extends UserBotEstado{
     private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg;
 
         switch (messageText) {
             case "1" -> {
