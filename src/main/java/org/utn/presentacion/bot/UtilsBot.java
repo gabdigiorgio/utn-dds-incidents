@@ -5,7 +5,6 @@ import org.utn.TelegramBot;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 import org.utn.utils.StringValidatorUtils;
 
-
 import static org.utn.presentacion.bot.Shows.*;
 
 public class UtilsBot {

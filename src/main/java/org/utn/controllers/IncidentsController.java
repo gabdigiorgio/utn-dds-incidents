@@ -8,6 +8,8 @@ import org.utn.controllers.inputs.CreateIncident;
 import org.utn.controllers.inputs.EditIncident;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.MemRepoIncidencias;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import io.javalin.http.Handler;
 
@@ -33,7 +35,23 @@ public class IncidentsController {
 
     // get incidents
     List<Incidencia> incidents = gestor.getIncidents(limit, orderBy, status, place);
-    ctx.json("result: " + incidents);
+
+    JSONObject result = new JSONObject();
+    JSONArray array = new JSONArray();
+    incidents.forEach((incident) -> {
+      JSONObject item = new JSONObject();
+      item.put("id", incident.getId());
+      item.put("code", incident.getCodigoCatalogo().getCodigo());
+      item.put("description", incident.getDescripcion());
+      item.put("status", incident.getEstado().getNombreEstado());
+      item.put("employeeId", incident.getEmpleado());
+      item.put("closedDate", incident.getFechaCierre());
+      item.put("rejectedReason", incident.getMotivoRechazo());
+      array.put(item);
+    });
+
+    result.put("result", array);
+    ctx.json(result.toString());
     ctx.status(200);
   };
 
@@ -43,8 +61,10 @@ public class IncidentsController {
 
       // create incident
       Incidencia newIncident = gestor.createIncident(data);
+      JSONObject item = new JSONObject();
+      item.put("id", newIncident.getId());
 
-      ctx.json("id: " + newIncident.getId());
+      ctx.json(item.toString());
       ctx.status(200);
     } catch(Exception error) {
       ctx.json("error: " + error.getMessage());
@@ -59,8 +79,17 @@ public class IncidentsController {
   
       // edit incident
       Incidencia editedIncident = gestor.editIncident(id, data);
-  
-      ctx.json("id: " + editedIncident.toString());
+
+      JSONObject item = new JSONObject();
+      item.put("id", editedIncident.getId());
+      item.put("code", editedIncident.getCodigoCatalogo().getCodigo());
+      item.put("description", editedIncident.getDescripcion());
+      item.put("status", editedIncident.getEstado().getNombreEstado());
+      item.put("employeeId", editedIncident.getEmpleado());
+      item.put("closedDate", editedIncident.getFechaCierre());
+      item.put("rejectedReason", editedIncident.getMotivoRechazo());
+
+      ctx.json(item.toString());
       ctx.status(200);
       
     } catch(Exception error) {
@@ -76,7 +105,10 @@ public class IncidentsController {
       // delete incident
       gestor.deleteIncident(id);
 
-      ctx.json("result: true");
+      JSONObject result = new JSONObject();
+      result.put("result", true);
+
+      ctx.json(result.toString());
       ctx.status(200);
 
     } catch(Exception error) {
