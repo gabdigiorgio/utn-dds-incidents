@@ -32,7 +32,7 @@ public class Incidencia {
         this.operador = operador;
         this.reportadoPor = reportadoPor;
         this.fechaCierre = fechaCierre;
-        if (!motivoRechazo.isEmpty()) this.motivoRechazo = motivoRechazo;
+        if (!motivoRechazo.isEmpty()) this.motivoRechazo = "";
         this.estado = estado;
     }
 
