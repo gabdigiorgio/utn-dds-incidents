@@ -2,15 +2,21 @@ package org.utn.aplicacion;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.utn.dominio.IncidenciasBuilderForTest;
 import org.utn.dominio.estado.*;
 import org.utn.dominio.incidencia.Incidencia;
+import org.utn.dominio.incidencia.RepoIncidencias;
 
 import java.time.LocalDate;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 public class TestGestorIncidentes {
 
-    private FakeRepoIncidencias repo = new FakeRepoIncidencias();
+    private RepoIncidencias repo = mock(RepoIncidencias.class);
     private GestorIncidencia gestor = new GestorIncidencia(repo);
     private Incidencia incidenciaEsperada;
 
@@ -21,9 +27,7 @@ public class TestGestorIncidentes {
 
         whenCrearIncidencia();
 
-        Incidencia incidenciaActual = repo.getIncidenciaGuardada();
-
-        Assert.assertNotNull(incidenciaActual);
+        debeGuardarEnRepo();
     }
 
     @Test
@@ -109,7 +113,10 @@ public class TestGestorIncidentes {
     }
 
     private void debeCrearIncidenciaCorrectamente() {
-        Incidencia incidenciaActual = repo.getIncidenciaGuardada();
+        ArgumentCaptor<Incidencia> argumentCaptor = ArgumentCaptor.forClass(Incidencia.class);
+        verify(repo).save(argumentCaptor.capture());
+
+        Incidencia incidenciaActual = argumentCaptor.getValue();
         Assert.assertEquals(incidenciaEsperada.getCodigoCatalogo(), incidenciaActual.getCodigoCatalogo());
         Assert.assertEquals(incidenciaEsperada.getFechaReporte(), incidenciaActual.getFechaReporte());
         Assert.assertEquals(incidenciaEsperada.getDescripcion(), incidenciaActual.getDescripcion());
@@ -120,4 +127,7 @@ public class TestGestorIncidentes {
         Assert.assertEquals(incidenciaEsperada.getNombreEstado(), incidenciaActual.getNombreEstado());
     }
 
+    private void debeGuardarEnRepo() {
+        verify(repo).save(ArgumentMatchers.any());
+    }
 }
