@@ -20,7 +20,6 @@ public class TestMemRepoIncidencias {
     private static List<Incidencia> listaIncidencias = new ArrayList<>();
 
     private static final MemRepoIncidencias repoIncidencias= MemRepoIncidencias.obtenerInstancia(listaIncidencias);
-    private final String empleado="Jorge";
 
     @After
     public void limpiarListaIncidencias() {
@@ -124,7 +123,7 @@ public class TestMemRepoIncidencias {
     }
 
     private List<Incidencia> whenFindByEstado(Estado estado) {
-        return repoIncidencias.findByEstado(estado.getNombreEstado(), repoIncidencias.incidencias);
+        return repoIncidencias.findIncidents(10, estado.getNombreEstado(), null, null);
     }
 
     private void debeGuardarIncidencia() {

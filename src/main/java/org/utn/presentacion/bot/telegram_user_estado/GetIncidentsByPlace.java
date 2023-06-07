@@ -2,7 +2,7 @@ package org.utn.presentacion.bot.telegram_user_estado;
 
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
-import org.utn.aplicacion.ObtenedorIncidencias;
+import org.utn.aplicacion.GestorIncidencia;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 import org.utn.presentacion.bot.UtilsBot;
@@ -14,11 +14,9 @@ import static org.utn.presentacion.bot.Shows.invalidMessage;
 import static org.utn.presentacion.bot.Shows.showIncidents;
 
 public class GetIncidentsByPlace extends UserBotEstado{
-    private final ObtenedorIncidencias obtenedorIncidencias;
-
-    public GetIncidentsByPlace(ObtenedorIncidencias obtenedorIncidencias) {
-
-        this.obtenedorIncidencias = obtenedorIncidencias;
+    private GestorIncidencia gestor;
+    public GetIncidentsByPlace(GestorIncidencia gestor) {
+        this.gestor = gestor;
     }
 
     @Override
@@ -41,13 +39,13 @@ public class GetIncidentsByPlace extends UserBotEstado{
 
     private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         if (messageText.equals("/menu")) {
-            telegramUserBot.setEstado(new MainMenu(obtenedorIncidencias));
+            telegramUserBot.setEstado(new MainMenu());
             telegramUserBot.execute(messageText,bot);
         } else{
             if (messageText.isEmpty()){ invalidMessage(telegramUserBot,bot); }
             if (!UtilsBot.validateCodePlaceFormat(telegramUserBot,messageText,bot)){return;}
 
-            List<Incidencia> incidencias =  obtenedorIncidencias.obtenerIncidenciasByPlace(messageText);
+            List<Incidencia> incidencias = gestor.getIncidents(10, null, null, messageText);
             showIncidents(telegramUserBot,bot,incidencias);
         }
     }

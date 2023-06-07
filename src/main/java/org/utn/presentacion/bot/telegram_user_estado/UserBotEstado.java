@@ -1,6 +1,5 @@
 package org.utn.presentacion.bot.telegram_user_estado;
 
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 

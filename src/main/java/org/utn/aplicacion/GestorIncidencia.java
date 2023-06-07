@@ -3,6 +3,7 @@ package org.utn.aplicacion;
 import org.jetbrains.annotations.NotNull;
 import org.utn.controllers.inputs.CreateIncident;
 import org.utn.controllers.inputs.EditIncident;
+import org.utn.dominio.estado.Reportado;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.dominio.incidencia.RepoIncidencias;
@@ -37,11 +38,11 @@ public class GestorIncidencia {
         Incidencia nuevaIncidencia = nuevaIncidencia(new CodigoCatalogo(data.code),
                 DateUtils.parsearFecha(data.reportDate),
                 data.description,
-                data.status,
-                data.employeeId,
+                new Reportado().getNombreEstado(),
+                null,
                 data.reporterId,
-                DateUtils.parsearFecha(data.closedDate),
-                data.rejectedReason);
+                null,
+                null);
         repoIncidencias.save(nuevaIncidencia);
         return nuevaIncidencia;
     }

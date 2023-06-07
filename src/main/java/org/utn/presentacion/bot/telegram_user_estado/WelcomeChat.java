@@ -3,19 +3,13 @@ package org.utn.presentacion.bot.telegram_user_estado;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
-import org.utn.aplicacion.ObtenedorIncidencias;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 
 import static org.utn.presentacion.bot.Shows.*;
 
 public class WelcomeChat extends UserBotEstado {
 
-    private final ObtenedorIncidencias obtenedorIncidencias;
-
-    public WelcomeChat(ObtenedorIncidencias obtenedorIncidencias) {
-
-        this.obtenedorIncidencias = obtenedorIncidencias;
-    }
+    public WelcomeChat() {}
     @Override
     public String getNombreEstado() {
         return "WelcomeChat";
@@ -44,7 +38,7 @@ public class WelcomeChat extends UserBotEstado {
 
     private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         if (messageText.equals("/menu")) {
-            telegramUserBot.setEstado(new MainMenu(obtenedorIncidencias));
+            telegramUserBot.setEstado(new MainMenu());
             telegramUserBot.execute(messageText,bot);
         } else{
             invalidMessage(telegramUserBot,bot);

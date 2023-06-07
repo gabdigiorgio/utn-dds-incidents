@@ -3,19 +3,17 @@ package org.utn.presentacion.bot.telegram_user_estado;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
-import org.utn.aplicacion.ObtenedorIncidencias;
+import org.utn.aplicacion.GestorIncidencia;
+import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 
 import static org.utn.presentacion.bot.Shows.*;
 
 public class MainMenu extends UserBotEstado{
 
-    private final ObtenedorIncidencias obtenedorIncidencias;
+    static GestorIncidencia gestor = new GestorIncidencia(MemRepoIncidencias.obtenerInstancia());
 
-    public MainMenu(ObtenedorIncidencias obtenedorIncidencias){
-
-        this.obtenedorIncidencias = obtenedorIncidencias;
-    }
+    public MainMenu() {}
 
     @Override
     public String getNombreEstado() {
@@ -54,19 +52,19 @@ public class MainMenu extends UserBotEstado{
 
         switch (messageText) {
             case "1" -> {
-                telegramUserBot.setEstado(new GetIncidentsLastReport(obtenedorIncidencias));
+                telegramUserBot.setEstado(new GetIncidentsLastReport(gestor));
                 telegramUserBot.execute(messageText,bot);
             }
             case "2" -> {
-                telegramUserBot.setEstado(new GetIncidentsFirstReport(obtenedorIncidencias));
+                telegramUserBot.setEstado(new GetIncidentsFirstReport(gestor));
                 telegramUserBot.execute(messageText,bot);
             }
             case "3" -> {
-                telegramUserBot.setEstado(new GetIncidentsByState(obtenedorIncidencias));
+                telegramUserBot.setEstado(new GetIncidentsByState(gestor));
                 telegramUserBot.execute(messageText,bot);
             }
             case "4" -> {
-                telegramUserBot.setEstado(new GetIncidentsByPlace(obtenedorIncidencias));
+                telegramUserBot.setEstado(new GetIncidentsByPlace(gestor));
                 telegramUserBot.execute(messageText,bot);
             }
             default -> invalidMessage(telegramUserBot,bot);
