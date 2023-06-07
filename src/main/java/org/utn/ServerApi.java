@@ -4,6 +4,8 @@ import io.javalin.Javalin;
 
 import org.utn.controllers.IncidentsController;
 import org.utn.presentacion.api.controllers.IniciarBotController;
+import org.utn.presentacion.api.url_mappings.IncidentsResource;
+import org.utn.presentacion.api.url_mappings.TelegramBotResource;
 
 public class ServerApi {
     public static void main(String[] args) {
@@ -11,13 +13,10 @@ public class ServerApi {
         Javalin server = Javalin.create().start(port);
 
         // bot
-        server.post("/bot", new IniciarBotController());
+        server.routes(new TelegramBotResource());
         
         // incidents
-        server.get("/incidents", IncidentsController.getIncidents);
-        server.post("/incidents", IncidentsController.createIncident);
-        server.put("/incidents/{id}", IncidentsController.editIncident);
-        server.delete("/incidents/{id}", IncidentsController.deleteIncident);
+        server.routes(new IncidentsResource());
     }
 
 }

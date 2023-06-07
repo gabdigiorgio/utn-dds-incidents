@@ -91,30 +91,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
         }
 
-
-        if (message.hasDocument()) {
-            try {
-                // Obtiene el archivo
-                GetFile getFile = new GetFile();
-                getFile.setFileId(message.getDocument().getFileId());
-                org.telegram.telegrambots.meta.api.objects.File file = execute(getFile);
-                java.io.File downloadedFile = downloadFile(file);
-
-                String filePath = downloadedFile.getAbsolutePath();
-
-                String result = new ReaderCsv().execute(filePath);
-
-                // Envia el mensaje al usuario
-                SendMessage responseMsg = new SendMessage();
-                responseMsg.setChatId(message.getChatId());
-                responseMsg.setText(result);
-                execute(responseMsg);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
     }
 
     public static void main(String[] args) throws TelegramApiException {
