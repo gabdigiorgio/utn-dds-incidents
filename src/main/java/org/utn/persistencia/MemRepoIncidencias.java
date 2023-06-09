@@ -39,11 +39,7 @@ public final class MemRepoIncidencias implements RepoIncidencias {
         incidencias.add(incidencia);
     }
 
-    public void update(Incidencia incidencia) {
-        OptionalInt incidentToRemove = IntStream.range(0, incidencias.size()).filter(i -> incidencias.get(i).getId().equals(incidencia.getId())).findFirst();
-        if (incidentToRemove.isPresent()) incidencias.remove(incidentToRemove.getAsInt());
-        this.save(incidencia);
-    }
+    public void update(Incidencia incidencia) {}
 
     public void remove(Integer id) {
         OptionalInt incidentToRemove = IntStream.range(0, incidencias.size()).filter(i -> incidencias.get(i).getId().equals(id)).findFirst();
