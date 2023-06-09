@@ -41,22 +41,13 @@ public class IncidentsController {
     // get incidents
     List<Incidencia> incidents = gestor.getIncidents(limit, orderBy, status, place);
 
-    JSONObject result = new JSONObject();
-    JSONArray array = new JSONArray();
-    incidents.forEach((incident) -> {
-      JSONObject item = new JSONObject();
-      item.put("id", incident.getId());
-      item.put("code", incident.getCodigoCatalogo().getCodigo());
-      item.put("description", incident.getDescripcion());
-      item.put("status", incident.getEstado().getNombreEstado());
-      item.put("employeeId", incident.getEmpleado());
-      item.put("closedDate", incident.getFechaCierre());
-      item.put("rejectedReason", incident.getMotivoRechazo());
-      array.put(item);
-    });
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-    result.put("result", array);
-    ctx.json(result.toString());
+    String json = objectMapper.writeValueAsString(incidents);
+    ctx.json(json);
     ctx.status(200);
   };
 
@@ -85,16 +76,14 @@ public class IncidentsController {
       // edit incident
       Incidencia editedIncident = gestor.editIncident(id, data);
 
-      JSONObject item = new JSONObject();
-      item.put("id", editedIncident.getId());
-      item.put("code", editedIncident.getCodigoCatalogo().getCodigo());
-      item.put("description", editedIncident.getDescripcion());
-      item.put("status", editedIncident.getEstado().getNombreEstado());
-      item.put("employeeId", editedIncident.getEmpleado());
-      item.put("closedDate", editedIncident.getFechaCierre());
-      item.put("rejectedReason", editedIncident.getMotivoRechazo());
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.registerModule(new JavaTimeModule());
+      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+      objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-      ctx.json(item.toString());
+      String json = objectMapper.writeValueAsString(editedIncident);
+
+      ctx.json(json);
       ctx.status(200);
       
     } catch(Exception error) {
