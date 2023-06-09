@@ -261,7 +261,7 @@ public class TestIncidencias {
     }
 
     private void whenDesestimarIncidencia() throws Exception {
-        incidencia.desestimarIncidencia();
+        incidencia.desestimarIncidencia("");
     }
 
     private void whenResolverIncidencia() throws Exception {

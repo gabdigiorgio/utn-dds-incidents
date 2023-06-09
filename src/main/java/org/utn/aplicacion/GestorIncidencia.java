@@ -1,6 +1,7 @@
 package org.utn.aplicacion;
 
 import org.jetbrains.annotations.NotNull;
+import org.utn.controllers.inputs.ChangeState;
 import org.utn.controllers.inputs.CreateIncident;
 import org.utn.controllers.inputs.EditIncident;
 import org.utn.dominio.estado.Reportado;
@@ -55,6 +56,35 @@ public class GestorIncidencia {
         if (data.employeeId != null) incident.setEmpleado(data.employeeId);
         if (data.closedDate != null) incident.setClosedDate(DateUtils.parsearFecha(data.closedDate));
         if (data.rejectedReason != null) incident.setRejectedReason(data.rejectedReason);
+
+        // repoIncidencias
+        repoIncidencias.update(incident);
+        return incident;
+    }
+
+    public Incidencia updateIncidentState(Integer id, ChangeState request) throws Exception {
+        Incidencia incident = repoIncidencias.getById(id);
+        if (incident == null) throw new Exception("INCIDENT_NOT_FOUND");
+
+        switch (request.estado) {
+            case "Asignado":
+                incident.asignarEmpleado(request.empleado);
+                break;
+            case "Confirmado":
+                incident.confirmarIncidencia();
+                break;
+            case "Desestimado":
+                incident.desestimarIncidencia(request.motivoRechazo);
+                break;
+            case "EnProgreso":
+                incident.iniciarProgreso();
+                break;
+            case "Solucionado":
+                incident.resolverIncidencia();
+                break;
+            default:
+                throw new Exception("Estado deseado inválido");
+        }
 
         // repoIncidencias
         repoIncidencias.update(incident);

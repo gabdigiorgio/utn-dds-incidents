@@ -97,8 +97,9 @@ public class Incidencia {
         this.estado.confirmarIncidencia(this);
     }
 
-    public void desestimarIncidencia() throws Exception {
+    public void desestimarIncidencia(String motivoRechazo) throws Exception {
         this.estado.desestimarIncidencia(this);
+        this.setRejectedReason(motivoRechazo);
     }
 
     public void iniciarProgreso() throws Exception {

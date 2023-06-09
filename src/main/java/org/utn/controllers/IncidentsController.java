@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.utn.aplicacion.GestorIncidencia;
+import org.utn.controllers.inputs.ChangeState;
 import org.utn.controllers.inputs.CreateIncident;
 import org.utn.controllers.inputs.EditIncident;
 import org.utn.dominio.incidencia.Incidencia;
@@ -92,6 +93,21 @@ public class IncidentsController {
       ctx.json(item.toString());
       ctx.status(200);
       
+    } catch(Exception error) {
+      ctx.json("error: " + error.getMessage());
+      ctx.status(400);
+    }
+  };
+  public static Handler updateIncidentState = ctx -> {
+    try {
+      Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+      ChangeState request = ctx.bodyAsClass(ChangeState.class);
+
+      Incidencia editedIncident = gestor.updateIncidentState(id, request);
+
+      ctx.json(editedIncident);
+      ctx.status(200);
+
     } catch(Exception error) {
       ctx.json("error: " + error.getMessage());
       ctx.status(400);
