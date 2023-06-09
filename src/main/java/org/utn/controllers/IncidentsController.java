@@ -57,10 +57,16 @@ public class IncidentsController {
 
       // create incident
       Incidencia newIncident = gestor.createIncident(data);
-      JSONObject item = new JSONObject();
-      item.put("id", newIncident.getId());
 
-      ctx.json(item.toString());
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.registerModule(new JavaTimeModule());
+      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+      objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+      String json = objectMapper.writeValueAsString(newIncident);
+
+      ctx.json(json);
+
       ctx.status(200);
     } catch(Exception error) {
       ctx.json("error: " + error.getMessage());
