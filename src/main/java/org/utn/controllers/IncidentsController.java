@@ -1,14 +1,17 @@
 package org.utn.controllers;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.utn.aplicacion.GestorIncidencia;
 import org.utn.controllers.inputs.ChangeState;
 import org.utn.controllers.inputs.CreateIncident;
 import org.utn.controllers.inputs.EditIncident;
+import org.utn.controllers.inputs.ErrorResponse;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.MemRepoIncidencias;
 import org.json.JSONArray;
@@ -69,7 +72,7 @@ public class IncidentsController {
 
       ctx.status(200);
     } catch(Exception error) {
-      ctx.json("error: " + error.getMessage());
+      ctx.json(parseErrorResponse(400,error.getMessage()));
       ctx.status(400);
     }
   };
@@ -93,7 +96,7 @@ public class IncidentsController {
       ctx.status(200);
       
     } catch(Exception error) {
-      ctx.json("error: " + error.getMessage());
+      ctx.json(parseErrorResponse(400,error.getMessage()));
       ctx.status(400);
     }
   };
@@ -116,7 +119,7 @@ public class IncidentsController {
       ctx.status(200);
 
     } catch(Exception error) {
-      ctx.json("error: " + error.getMessage());
+      ctx.json(parseErrorResponse(400,error.getMessage()));
       ctx.status(400);
     }
   };
@@ -135,8 +138,25 @@ public class IncidentsController {
       ctx.status(200);
 
     } catch(Exception error) {
-      ctx.json("error: " + error.getMessage());
+
+      ctx.json(parseErrorResponse(400,error.getMessage()));
       ctx.status(400);
     }
   };
+
+
+  public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
+    ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.status=statusCode;
+    errorResponse.message ="Bad Request";
+    errorResponse.errors = Collections.singletonList(errorMsg);
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+    return objectMapper.writeValueAsString(errorResponse);
+  }
+
 }
