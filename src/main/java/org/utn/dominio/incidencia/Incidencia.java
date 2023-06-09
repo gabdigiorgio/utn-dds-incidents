@@ -1,5 +1,6 @@
 package org.utn.dominio.incidencia;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.utn.dominio.estado.*;
 
 import java.time.LocalDate;
@@ -45,10 +46,12 @@ public class Incidencia {
         return id;
     }
 
+
     public CodigoCatalogo getCodigoCatalogo() {
         return codigoCatalogo;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     public LocalDate getFechaReporte() {
         return fechaReporte;
     }
@@ -65,6 +68,7 @@ public class Incidencia {
         return reportadoPor;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     public LocalDate getFechaCierre() {
         return fechaCierre;
     }

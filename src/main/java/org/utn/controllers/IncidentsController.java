@@ -3,6 +3,8 @@ package org.utn.controllers;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.utn.aplicacion.GestorIncidencia;
 import org.utn.controllers.inputs.ChangeState;
 import org.utn.controllers.inputs.CreateIncident;
@@ -13,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import io.javalin.http.Handler;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class IncidentsController {
   static GestorIncidencia gestor = new GestorIncidencia(MemRepoIncidencias.obtenerInstancia());
@@ -105,7 +109,15 @@ public class IncidentsController {
 
       Incidencia editedIncident = gestor.updateIncidentState(id, request);
 
-      ctx.json(editedIncident);
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.registerModule(new JavaTimeModule());
+      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+      objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+      String json = objectMapper.writeValueAsString(editedIncident);
+      ctx.result(json).contentType("application/json");
+
+      //ctx.json(objectMapper.writeValueAsString(editedIncident));
       ctx.status(200);
 
     } catch(Exception error) {

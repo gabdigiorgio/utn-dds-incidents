@@ -1,5 +1,6 @@
 package org.utn.dominio.incidencia;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.utn.utils.StringValidatorUtils;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
 
@@ -14,7 +15,7 @@ public class CodigoCatalogo {
     private void validar(String codigo) throws FormatoCodigoCatalogoInvalidoException {
         if (!StringValidatorUtils.isCodigoCatalogo(codigo)) throw new FormatoCodigoCatalogoInvalidoException(codigo);
     }
-
+    @JsonValue
     public String getCodigo() {
         return codigo;
     }
