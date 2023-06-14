@@ -3,10 +3,17 @@ package org.utn.dominio.incidencia;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.utn.dominio.estado.*;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
 public class Incidencia {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //#TODO
     private Integer id;
+    @Transient
     public CodigoCatalogo codigoCatalogo;
     public LocalDate fechaReporte;
     public String descripcion;
@@ -14,8 +21,10 @@ public class Incidencia {
     public String reportadoPor; // Posiblemente en un futuro sea una Clase (Pagina 7)
     public LocalDate fechaCierre;
     public String motivoRechazo;
+    @Convert(converter = EstadoConverter.class)
     public Estado estado;
     public String empleado; // Posiblemente en un futuro sea una Clase (Pagina 8)
+
 
     public Incidencia(
         CodigoCatalogo codigoCatalogo,
@@ -38,6 +47,10 @@ public class Incidencia {
         this.estado = estado;
     }
 
+    protected Incidencia() {
+        super();
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -45,7 +58,6 @@ public class Incidencia {
     public Integer getId() {
         return id;
     }
-
 
     public CodigoCatalogo getCodigoCatalogo() {
         return codigoCatalogo;

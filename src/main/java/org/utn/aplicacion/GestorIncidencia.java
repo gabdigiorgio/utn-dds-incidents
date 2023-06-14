@@ -7,7 +7,7 @@ import org.utn.controllers.inputs.EditIncident;
 import org.utn.dominio.estado.Reportado;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.dominio.incidencia.RepoIncidencias;
+import org.utn.persistencia.RepoIncidencias;
 import org.utn.dominio.incidencia.factory.IncidenciaFactory;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;

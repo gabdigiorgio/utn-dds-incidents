@@ -7,7 +7,7 @@ import org.mockito.ArgumentMatchers;
 import org.utn.dominio.IncidenciasBuilderForTest;
 import org.utn.dominio.estado.*;
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.dominio.incidencia.RepoIncidencias;
+import org.utn.persistencia.RepoIncidencias;
 
 import java.time.LocalDate;
 

@@ -13,8 +13,7 @@ import org.utn.controllers.inputs.CreateIncident;
 import org.utn.controllers.inputs.EditIncident;
 import org.utn.controllers.inputs.ErrorResponse;
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.persistencia.MemRepoIncidencias;
-import org.json.JSONArray;
+import org.utn.persistencia.DbIncidentsRepository;
 import org.json.JSONObject;
 
 import io.javalin.http.Handler;
@@ -22,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class IncidentsController {
-  static GestorIncidencia gestor = new GestorIncidencia(MemRepoIncidencias.obtenerInstancia());
+  static GestorIncidencia gestor = new GestorIncidencia(DbIncidentsRepository.obtenerInstancia());
 
 //   // validate two dependent query parameters:
 // Instant fromDate = ctx.queryParam("from", Instant.class).get();
@@ -158,5 +157,6 @@ public class IncidentsController {
 
     return objectMapper.writeValueAsString(errorResponse);
   }
+
 
 }
