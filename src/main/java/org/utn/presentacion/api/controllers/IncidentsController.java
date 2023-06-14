@@ -1,4 +1,4 @@
-package org.utn.controllers;
+package org.utn.presentacion.api.controllers;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.utn.aplicacion.GestorIncidencia;
-import org.utn.controllers.inputs.ChangeState;
-import org.utn.controllers.inputs.CreateIncident;
-import org.utn.controllers.inputs.EditIncident;
-import org.utn.controllers.inputs.ErrorResponse;
+import org.utn.presentacion.api.inputs.ChangeState;
+import org.utn.presentacion.api.inputs.CreateIncident;
+import org.utn.presentacion.api.inputs.EditIncident;
+import org.utn.presentacion.api.inputs.ErrorResponse;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.DbIncidentsRepository;
 import org.json.JSONObject;

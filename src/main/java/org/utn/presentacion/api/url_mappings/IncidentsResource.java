@@ -2,7 +2,7 @@ package org.utn.presentacion.api.url_mappings;
 
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
-import org.utn.controllers.IncidentsController;
+import org.utn.presentacion.api.controllers.IncidentsController;
 
 public class IncidentsResource implements EndpointGroup {
 

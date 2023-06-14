@@ -1,9 +1,9 @@
 package org.utn.aplicacion;
 
 import org.jetbrains.annotations.NotNull;
-import org.utn.controllers.inputs.ChangeState;
-import org.utn.controllers.inputs.CreateIncident;
-import org.utn.controllers.inputs.EditIncident;
+import org.utn.presentacion.api.inputs.ChangeState;
+import org.utn.presentacion.api.inputs.CreateIncident;
+import org.utn.presentacion.api.inputs.EditIncident;
 import org.utn.dominio.estado.Reportado;
 import org.utn.dominio.incidencia.CodigoCatalogo;
 import org.utn.dominio.incidencia.Incidencia;
