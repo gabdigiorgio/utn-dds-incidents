@@ -134,7 +134,7 @@ public class DbIncidentsRepository implements RepoIncidencias {
                 configOverrides.put(key, value);
             }
         }
-        entityManagerFactory = Persistence.createEntityManagerFactory("copiamedb", configOverrides);
+        entityManagerFactory = Persistence.createEntityManagerFactory("db", configOverrides);
     }
 
     public static List<Incidencia> filtrarPorCantidad(List<Incidencia> lista, int cantidad) {

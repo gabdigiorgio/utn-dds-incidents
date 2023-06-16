@@ -15,7 +15,7 @@ public class PersistenceIT {
     @Test
     public void testGuardarYRecuperarDoc() throws Exception {
 
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("copiamedb");
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("dbtest");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Incidencia incidencia= new IncidenciasBuilderForTest().build();
