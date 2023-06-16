@@ -13,7 +13,7 @@ public class Incidencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //#TODO
     private Integer id;
-    @Transient
+    @OneToOne(cascade = CascadeType.ALL)
     public CodigoCatalogo codigoCatalogo;
     public LocalDate fechaReporte;
     public String descripcion;
