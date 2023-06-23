@@ -9,7 +9,8 @@ import static org.utn.presentacion.bot.Shows.*;
 
 public class UtilsBot {
 
-    public static boolean validateIsNumber(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    // Cambiado a isNumber a modo de pregunta porque es un metodo booleano
+    public static boolean isNumber(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
         if (!StringValidatorUtils.isNumber(messageText)){
             invalidMessage(telegramUserBot,bot);
             showGetQuantityIncidents(telegramUserBot,bot);
@@ -18,7 +19,8 @@ public class UtilsBot {
         return false;
     }
 
-    public static boolean validateCodePlaceFormat(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
+    // Cambiado a hasCodePlaceFormat a modo de pregunta porque es booleano
+    public static boolean hasCodePlaceFormat(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
 
         if (!StringValidatorUtils.isCodePlaceFormat(messageText)) {
             invalidFormatCode(telegramUserBot, bot);

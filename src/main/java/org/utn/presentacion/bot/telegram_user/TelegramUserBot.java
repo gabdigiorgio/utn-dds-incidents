@@ -1,37 +1,37 @@
 package org.utn.presentacion.bot.telegram_user;
 
 import org.utn.TelegramBot;
-import org.utn.presentacion.bot.telegram_user_estado.UserBotEstado;
+import org.utn.presentacion.bot.telegram_user_estado.UserBotStatus;
 
 public class TelegramUserBot {
     private final Long id;
-    private int cantMensajes;
+    private int messagesQuantity;
     private int incidentsQuantity;
-    private UserBotEstado estado;
+    private UserBotStatus status;
 
-    public UserBotEstado getEstado() {
-        return estado;
+    public UserBotStatus getStatus() {
+        return status;
     }
 
-    public void setEstado(UserBotEstado estado) {
-        this.estado = estado;
+    public void setStatus(UserBotStatus status) {
+        this.status = status;
     }
 
-    public TelegramUserBot(Long id, UserBotEstado estado) {
+    public TelegramUserBot(Long id, UserBotStatus status) {
         this.id = id;
-        this.estado = estado;
-        this.cantMensajes = 0;
+        this.status = status;
+        this.messagesQuantity = 0;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void addMensaje(){
-        cantMensajes ++;
+    public void addMessage(){
+        messagesQuantity++;
     }
-    public int getCantMensajes(){
-        return cantMensajes;
+    public int getMessagesQuantity(){
+        return messagesQuantity;
     }
     public int getIncidentsQuantity() {
         return incidentsQuantity;
@@ -42,7 +42,7 @@ public class TelegramUserBot {
     }
 
     public void execute(String msg, TelegramBot bot) throws Exception {
-        this.estado.execute(this,msg,bot);
+        this.status.execute(this,msg,bot);
     }
 
 }

@@ -5,8 +5,8 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
-import org.utn.aplicacion.GestorIncidencia;
-import org.utn.persistencia.MemRepoIncidencias;
+import org.utn.aplicacion.IncidentManager;
+import org.utn.persistencia.MemIncidentsRepo;
 import org.utn.utils.DateUtils;
 
 import java.io.FileReader;
@@ -16,9 +16,19 @@ import java.util.*;
 
 public class ReaderCsv {
 
-    private static final Set<String> HEADERS = new HashSet<>(Arrays.asList(
-            "Codigo de catalogo", "Fecha de reporte", "Descripcion", "Estado", "Operador", "Persona que lo reporto", "Fecha cierre", "Motivo rechazo"
-    ));
+    private static final Set<String> HEADERS =
+            new HashSet<>(
+                    Arrays.asList(
+                            "Codigo de catalogo",
+                            "Fecha de reporte",
+                            "Descripcion",
+                            "Estado",
+                            "Operador",
+                            "Persona que lo reporto",
+                            "Fecha cierre",
+                            "Motivo rechazo"
+                    )
+            );
 
     public String execute(String file_path) throws IOException, CsvException {
         //SE HACE LA LECTURA DEL ARCHIVO
@@ -53,11 +63,11 @@ public class ReaderCsv {
         }
 
         String[] record;
-        int incidenciasCargadas = 0;
+        int loadedIncidents = 0;
 
         //COMIENZA LA LECTURA DE CADA LINEA DEL CSV
         while ((record = csvReader.readNext()) != null) {
-            GestorIncidencia gestor = new GestorIncidencia(MemRepoIncidencias.obtenerInstancia());
+            IncidentManager manager = new IncidentManager(MemIncidentsRepo.getInstance());
             if (record.length == 0 || Arrays.stream(record).allMatch(String::isEmpty)) {
                 continue; // Salta las líneas vacías
             }
@@ -67,26 +77,38 @@ public class ReaderCsv {
                 String[] filledRecord = Arrays.copyOf(record, 8);
                 Arrays.fill(filledRecord, record.length, filledRecord.length, "");
 
-                String codigoCatalogo = filledRecord[headerMap.get("Codigo de catalogo")];
-                String fechaReporte = filledRecord[headerMap.get("Fecha de reporte")];
-                String descripcion = filledRecord[headerMap.get("Descripcion")];
-                String estado = filledRecord[headerMap.get("Estado")];
-                String operador = filledRecord[headerMap.get("Operador")];
-                String personaReporto = filledRecord[headerMap.get("Persona que lo reporto")];
-                String fechaCierre = filledRecord[headerMap.get("Fecha cierre")];
-                String motivoRechazo = filledRecord[headerMap.get("Motivo rechazo")];
+                String catalogCode = filledRecord[headerMap.get("Codigo de catalogo")];
+                String reportDate = filledRecord[headerMap.get("Fecha de reporte")];
+                String description = filledRecord[headerMap.get("Descripcion")];
+                String status = filledRecord[headerMap.get("Estado")];
+                String operator = filledRecord[headerMap.get("Operador")];
+                String whoReported = filledRecord[headerMap.get("Persona que lo reporto")];
+                String closeDate = filledRecord[headerMap.get("Fecha cierre")];
+                String rejectionReason = filledRecord[headerMap.get("Motivo rechazo")];
 
-                Validador.validar(codigoCatalogo, fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
-                gestor.crearIncidencia(codigoCatalogo,
-                    DateUtils.parsearFecha(fechaReporte),
-                    descripcion,
-                    estado,
-                    operador,
-                    personaReporto,
-                    DateUtils.parsearFecha(fechaCierre),
-                    motivoRechazo
+                Validator.validate(
+                        catalogCode,
+                        reportDate,
+                        description,
+                        status,
+                        operator,
+                        whoReported,
+                        closeDate,
+                        rejectionReason
                 );
-                incidenciasCargadas++;
+
+                manager.createIncident(
+                        catalogCode,
+                        DateUtils.parseDate(reportDate),
+                        description,
+                        status,
+                        operator,
+                        whoReported,
+                        DateUtils.parseDate(closeDate),
+                        rejectionReason
+                );
+
+                loadedIncidents++;
                 //SE CREO LA INCIDENCIA DE MANERA EXITOSA
             } catch (Exception e) {
                 //FALLO LA CREACIÓN DE LA INCIDENCIA
@@ -95,7 +117,7 @@ public class ReaderCsv {
                 System.err.println("\t" + e.getMessage());
             }
         }
-        return String.format("Se cargaron exitosamente %d incidencias", incidenciasCargadas);
+        return String.format("Se cargaron exitosamente %d incidencias", loadedIncidents);
 
     }
 

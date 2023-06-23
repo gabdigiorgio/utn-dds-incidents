@@ -3,8 +3,8 @@ package org.utn.presentacion.bot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
+import org.utn.dominio.incidencia.Incident;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
-import org.utn.dominio.incidencia.Incidencia;
 
 import java.util.List;
 
@@ -30,10 +30,10 @@ public class Shows {
         response.setChatId(user.getId());
         response.setText("""
                 Escriba el número de la opción deseada:
-                1️⃣ ☞ Obtener N incidencias (La mas recientes primero)
-                2️⃣ ☞ Obtener N incidencias (La mas antigua primero)
-                3️⃣ ☞ Obtener N incidencias  filtrando por estado
-                4️⃣ ☞ Obtener las incidencias de un codigo de catalogo""");
+                1️⃣ ☞ Obtener N incidents (La mas recientes primero)
+                2️⃣ ☞ Obtener N incidents (La mas antigua primero)
+                3️⃣ ☞ Obtener N incidents  filtrando por status
+                4️⃣ ☞ Obtener las incidents de un codigo de catalogo""");
         try {
             bot.execute(response);
         } catch (TelegramApiException e) {
@@ -44,7 +44,7 @@ public class Shows {
     public static void showGetQuantityIncidents(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg = "➡️ Escriba el número de incidencias que desea visualizar\n"
+        String msg = "➡️ Escriba el número de incidents que desea visualizar\n"
                 +"↩️ Si desea volver al menu anterior escriba 0️⃣";
 
         sendMessage.setText(msg);
@@ -54,7 +54,7 @@ public class Shows {
     public static void showGetPlaceIncidents(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg = "➡️ Escriba el código del lugar de las incidencias que desea visualizar\n"
+        String msg = "➡️ Escriba el código del lugar de las incidents que desea visualizar\n"
                 +"↩️ Si desea volver al menu anterior escriba 0️⃣";
 
         sendMessage.setText(msg);
@@ -64,20 +64,20 @@ public class Shows {
     public static void showGetStatusIncidents(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg = "➡️ Escriba el estado de las incidencias que desea visualizar\n"
+        String msg = "➡️ Escriba el status de las incidents que desea visualizar\n"
                 +"↩️ Si desea volver al menu principal escriba 0️⃣";
 
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
 
-    public static void showIncidents(TelegramUserBot telegramUserBot, TelegramBot bot, List<Incidencia> incidencias) throws TelegramApiException {
+    public static void showIncidents(TelegramUserBot telegramUserBot, TelegramBot bot, List<Incident> incidents) throws TelegramApiException {
 
-        for (Incidencia incidencia : incidencias) {
+        for (Incident incident : incidents) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(telegramUserBot.getId());
 
-            String tmp_msg = msgFromIncidencia(incidencia);
+            String tmp_msg = msgFromIncident(incident);
             sendMessage.setText(tmp_msg);
             bot.execute(sendMessage);
         }
@@ -107,7 +107,7 @@ public class Shows {
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
-    public static void showPossibleStates(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+    public static void showPossibleStatus(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg = "Los estados posibles de una incidencia son los siguientes:\n"
@@ -122,18 +122,18 @@ public class Shows {
     }
 
 
-    private static String msgFromIncidencia(Incidencia incidencia){
+    private static String msgFromIncident(Incident incident){
         StringBuilder msg = new StringBuilder();
 
         // Agregar encabezado de tabla
-        msg.append("Codigo de catalogo: ").append(incidencia.getCodigoCatalogo()).append("\n")
-            .append("Fecha de reporte: ").append(incidencia.getFechaReporte()).append("\n")
-            .append("Descripcion: ").append(incidencia.getDescripcion()).append("\n")
-            .append("Estado: ").append(incidencia.getEstado().getNombreEstado()).append("\n")
-            .append("Operador: ").append(incidencia.getOperador()).append("\n")
-            .append("Persona que lo reporto: ").append(incidencia.getReportadoPor()).append("\n")
-            .append("Fecha cierre: ").append(incidencia.getFechaCierre()).append("\n")
-            .append("Motivo rechazo: ").append(incidencia.getMotivoRechazo());
+        msg.append("Codigo de catalogo: ").append(incident.getCatalogCode()).append("\n")
+            .append("Fecha de reporte: ").append(incident.getReportDate()).append("\n")
+            .append("Descripcion: ").append(incident.getDescription()).append("\n")
+            .append("Estado: ").append(incident.getStatus().getStatusName()).append("\n")
+            .append("Operador: ").append(incident.getOperator()).append("\n")
+            .append("Persona que lo reporto: ").append(incident.getWhoReported()).append("\n")
+            .append("Fecha cierre: ").append(incident.getCloseDate()).append("\n")
+            .append("Motivo rechazo: ").append(incident.getRejectionReason());
 
         return msg.toString();
     }

@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 
-import org.utn.presentacion.bot.telegram_user.TelegramUserUserBotRepo;
+import org.utn.presentacion.bot.telegram_user.TelegramUserBotRepo;
 import org.utn.presentacion.bot.telegram_user.UserBotRepo;
 import org.utn.presentacion.bot.telegram_user_estado.WelcomeChat;
 import org.utn.presentacion.carga_incidentes.ReaderCsv;
@@ -39,14 +39,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         Message message = update.getMessage();
         Long chatId = message.getChatId();
 
-        UserBotRepo repoTelegramBots = TelegramUserUserBotRepo.obtenerInstancia();
+        UserBotRepo repoTelegramBots = TelegramUserBotRepo.getInstance();
         TelegramUserBot telegramUserBot = repoTelegramBots.getById(chatId);
         if (telegramUserBot == null) {
             telegramUserBot = new TelegramUserBot(chatId, new WelcomeChat());
             repoTelegramBots.save(telegramUserBot);
         }
 
-        telegramUserBot.addMensaje();
+        telegramUserBot.addMessage();
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
@@ -58,8 +58,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                     SendMessage sendMessage = new SendMessage();
                     sendMessage.setChatId(telegramUserBot.getId());
                     String msg = String.format("El usuario se tiene el chat id: %d\n",telegramUserBot.getId())
-                            + String.format("Este es el mensaje #%d\n",telegramUserBot.getCantMensajes())
-                            + String.format("El user se encuentra en el estado [%s]",telegramUserBot.getEstado().getNombreEstado());
+                            + String.format("Este es el mensaje #%d\n",telegramUserBot.getMessagesQuantity())
+                            + String.format("El user se encuentra en el estado [%s]",telegramUserBot.getStatus().getStatusName());
                     sendMessage.setText(msg);
                     execute(sendMessage);
                 } else {
@@ -122,18 +122,26 @@ public class TelegramBot extends TelegramLongPollingBot {
         String userLastName = message.getChat().getLastName();
         long userId = message.getChat().getId();
         String messageText = message.getText();
-        String userState = userBot.getEstado().getNombreEstado();
-        String userSubState = userBot.getEstado().getSubEstado().toString();
-        log(userFirstName, userLastName, Long.toString(userId), messageText,userState,userSubState);
+        String userStatus = userBot.getStatus().getStatusName();
+        String userSubStatus = userBot.getStatus().getSubStatus().toString();
+        log(userFirstName, userLastName, Long.toString(userId), messageText,userStatus,userSubStatus);
     }
 
-    private void log(String firstName, String lastName, String userId, String txt,String userState,String userSubState) {
+    private void log(
+            String firstName,
+            String lastName,
+            String userId,
+            String txt,
+            String userStatus,
+            String userSubStatus
+    )
+    {
         System.out.println("----------------------------");
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         System.out.println(dateFormat.format(date));
         System.out.println("Message from " + firstName + " " + lastName + ". (id = " + userId + ") \n Text - " + txt);
-        System.out.println("User in state: " + userState);
-        System.out.println("User in sub_state: " + userSubState);
+        System.out.println("User in state: " + userStatus);
+        System.out.println("User in sub_state: " + userSubStatus);
     }
 }
