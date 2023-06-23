@@ -5,7 +5,9 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import com.opencsv.exceptions.CsvValidationException;
 import org.utn.aplicacion.GestorIncidencia;
+import org.utn.persistencia.DbIncidentsRepository;
 import org.utn.persistencia.MemRepoIncidencias;
 import org.utn.utils.DateUtils;
 
@@ -23,6 +25,15 @@ public class ReaderCsv {
     public String execute(String file_path) throws IOException, CsvException {
         //SE HACE LA LECTURA DEL ARCHIVO
         Reader reader = new FileReader(file_path);
+        return processFile(reader);
+    }
+
+    public String execute(Reader reader) throws IOException, CsvException {
+        return processFile(reader);
+    }
+
+    private static String processFile(Reader reader) throws CsvValidationException, IOException {
+
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator('\t')
                 .withIgnoreLeadingWhiteSpace(true)
@@ -57,7 +68,7 @@ public class ReaderCsv {
 
         //COMIENZA LA LECTURA DE CADA LINEA DEL CSV
         while ((record = csvReader.readNext()) != null) {
-            GestorIncidencia gestor = new GestorIncidencia(MemRepoIncidencias.obtenerInstancia());
+            GestorIncidencia gestor = new GestorIncidencia(DbIncidentsRepository.obtenerInstancia());
             if (record.length == 0 || Arrays.stream(record).allMatch(String::isEmpty)) {
                 continue; // Salta las líneas vacías
             }
@@ -78,13 +89,13 @@ public class ReaderCsv {
 
                 Validador.validar(codigoCatalogo, fechaReporte, descripcion, estado, operador, personaReporto, fechaCierre, motivoRechazo);
                 gestor.crearIncidencia(codigoCatalogo,
-                    DateUtils.parsearFecha(fechaReporte),
-                    descripcion,
-                    estado,
-                    operador,
-                    personaReporto,
-                    DateUtils.parsearFecha(fechaCierre),
-                    motivoRechazo
+                        DateUtils.parsearFecha(fechaReporte),
+                        descripcion,
+                        estado,
+                        operador,
+                        personaReporto,
+                        DateUtils.parsearFecha(fechaCierre),
+                        motivoRechazo
                 );
                 incidenciasCargadas++;
                 //SE CREO LA INCIDENCIA DE MANERA EXITOSA
@@ -98,7 +109,6 @@ public class ReaderCsv {
         return String.format("Se cargaron exitosamente %d incidencias", incidenciasCargadas);
 
     }
-
 
     private static void checkHeaders(String[] headers) throws Exception {
         Set<String> headerSet = new HashSet<>(Arrays.asList(headers));

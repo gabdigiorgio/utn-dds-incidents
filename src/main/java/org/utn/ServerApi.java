@@ -15,6 +15,7 @@ public class ServerApi {
         
         // incidents
         server.routes(new IncidentsResource());
+
     }
 
 

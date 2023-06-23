@@ -14,6 +14,7 @@ public class IncidentsResource implements EndpointGroup {
             ApiBuilder.put("/{id}", IncidentsController.editIncident);
             ApiBuilder.delete("/{id}", IncidentsController.deleteIncident);
             ApiBuilder.put("/{id}/estado", IncidentsController.updateIncidentState);
+            ApiBuilder.post("/upload_csv", IncidentsController.createMassiveIncident);//upload incidents from csv
         });
     }
 }
