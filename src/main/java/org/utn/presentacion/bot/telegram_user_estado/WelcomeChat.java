@@ -7,17 +7,17 @@ import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 
 import static org.utn.presentacion.bot.Shows.*;
 
-public class WelcomeChat extends UserBotEstado {
+public class WelcomeChat extends UserBotStatus {
 
     public WelcomeChat() {}
     @Override
-    public String getNombreEstado() {
+    public String getStatusName() {
         return "WelcomeChat";
     }
 
     @Override
     public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
-        switch (subEstado){
+        switch (subStatus){
             case START -> startExecute(telegramUserBot,bot);
             case WAITING_RESPONSE_OPTION -> waitingResponseExecute(telegramUserBot,messageText,bot);
         }
@@ -33,12 +33,12 @@ public class WelcomeChat extends UserBotEstado {
         msg = "✏️ Escribe \"/menu\" para ver las opciones disponibles ";
         sendMessage.setText(msg);
         bot.execute(sendMessage);
-        this.setSubEstado(SubEstado.WAITING_RESPONSE_OPTION);
+        this.setSubStatus(SubStatus.WAITING_RESPONSE_OPTION);
     }
 
     private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         if (messageText.equals("/menu")) {
-            telegramUserBot.setEstado(new MainMenu());
+            telegramUserBot.setStatus(new MainMenu());
             telegramUserBot.execute(messageText,bot);
         } else{
             invalidMessage(telegramUserBot,bot);
