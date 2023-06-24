@@ -2,8 +2,8 @@ package org.utn.presentacion.bot.telegram_user_estado;
 
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
-import org.utn.aplicacion.IncidentManager;
-import org.utn.dominio.incidencia.Incident;
+import org.utn.aplicacion.GestorIncidencia;
+import org.utn.dominio.incidencia.Incidencia;
 import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
 import org.utn.presentacion.bot.UtilsBot;
 import org.utn.presentacion.bot.Shows;
@@ -12,21 +12,21 @@ import java.util.List;
 
 import static org.utn.presentacion.bot.Shows.*;
 
-public class GetIncidentsLastReport extends UserBotStatus {
+public class GetIncidentsLastReport extends UserBotEstado{
 
-    private IncidentManager manager;
-    public GetIncidentsLastReport(IncidentManager manager) {
-        this.manager = manager;
+    private GestorIncidencia gestor;
+    public GetIncidentsLastReport(GestorIncidencia gestor) {
+        this.gestor = gestor;
     }
 
     @Override
-    public String getStatusName() {
+    public String getNombreEstado() {
         return "GetIncidentsLastReport";
     }
 
     @Override
     public void execute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
-        switch (subStatus){
+        switch (subEstado){
             case START -> startExecute(telegramUserBot,bot);
             case WAITING_RESPONSE_QUANTITY -> waitingResponseExecute(telegramUserBot,messageText,bot);
         }
@@ -34,18 +34,18 @@ public class GetIncidentsLastReport extends UserBotStatus {
 
     private void startExecute(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         showGetQuantityIncidents(telegramUserBot,bot);
-        this.setSubStatus(SubStatus.WAITING_RESPONSE_QUANTITY);
+        this.setSubEstado(SubEstado.WAITING_RESPONSE_QUANTITY);
     }
 
     private void waitingResponseExecute(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws Exception {
         if (messageText.equals("/menu")) {
-            telegramUserBot.setStatus(new MainMenu());
+            telegramUserBot.setEstado(new MainMenu());
             telegramUserBot.execute(messageText,bot);
         } else{
-            if (UtilsBot.isNumber(telegramUserBot, messageText, bot)){return;}
+            if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)){return;}
 
-            List<Incident> incidents = manager.getIncidents(Integer.parseInt(messageText), "createdAt", null, null);
-            Shows.showIncidents(telegramUserBot,bot, incidents);
+            List<Incidencia> incidencias = gestor.getIncidents(Integer.parseInt(messageText), "createdAt", null, null);
+            Shows.showIncidents(telegramUserBot,bot,incidencias);
         }
     }
 }

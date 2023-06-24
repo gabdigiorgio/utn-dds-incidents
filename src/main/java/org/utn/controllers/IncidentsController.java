@@ -7,13 +7,14 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.utn.aplicacion.IncidentManager;
-import org.utn.controllers.inputs.ChangeStatus;
+import org.utn.aplicacion.GestorIncidencia;
+import org.utn.controllers.inputs.ChangeState;
 import org.utn.controllers.inputs.CreateIncident;
 import org.utn.controllers.inputs.EditIncident;
 import org.utn.controllers.inputs.ErrorResponse;
-import org.utn.dominio.incidencia.Incident;
-import org.utn.persistencia.MemIncidentsRepo;
+import org.utn.dominio.incidencia.Incidencia;
+import org.utn.persistencia.MemRepoIncidencias;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import io.javalin.http.Handler;
@@ -21,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class IncidentsController {
-  static IncidentManager manager = new IncidentManager(MemIncidentsRepo.getInstance());
+  static GestorIncidencia gestor = new GestorIncidencia(MemRepoIncidencias.obtenerInstancia());
 
 //   // validate two dependent query parameters:
 // Instant fromDate = ctx.queryParam("from", Instant.class).get();
@@ -41,7 +42,7 @@ public class IncidentsController {
     String place = ctx.queryParamAsClass("place", String.class).getOrDefault(null);
 
     // get incidents
-    List<Incident> incidents = manager.getIncidents(limit, orderBy, status, place);
+    List<Incidencia> incidents = gestor.getIncidents(limit, orderBy, status, place);
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
@@ -58,7 +59,7 @@ public class IncidentsController {
       CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
       // create incident
-      Incident newIncident = manager.createIncident(data);
+      Incidencia newIncident = gestor.createIncident(data);
 
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.registerModule(new JavaTimeModule());
@@ -82,7 +83,7 @@ public class IncidentsController {
       EditIncident data = ctx.bodyAsClass(EditIncident.class);
   
       // edit incident
-      Incident editedIncident = manager.editIncident(id, data);
+      Incidencia editedIncident = gestor.editIncident(id, data);
 
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.registerModule(new JavaTimeModule());
@@ -99,12 +100,12 @@ public class IncidentsController {
       ctx.status(400);
     }
   };
-  public static Handler updateIncidentStatus = ctx -> {
+  public static Handler updateIncidentState = ctx -> {
     try {
       Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-      ChangeStatus request = ctx.bodyAsClass(ChangeStatus.class);
+      ChangeState request = ctx.bodyAsClass(ChangeState.class);
 
-      Incident editedIncident = manager.updateIncidentStatus(id, request);
+      Incidencia editedIncident = gestor.updateIncidentState(id, request);
 
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.registerModule(new JavaTimeModule());
@@ -128,7 +129,7 @@ public class IncidentsController {
       int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
   
       // delete incident
-      manager.deleteIncident(id);
+      gestor.deleteIncident(id);
 
       JSONObject result = new JSONObject();
       result.put("result", true);
@@ -146,7 +147,7 @@ public class IncidentsController {
 
   public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
     ErrorResponse errorResponse = new ErrorResponse();
-    errorResponse.status =statusCode;
+    errorResponse.status=statusCode;
     errorResponse.message ="Bad Request";
     errorResponse.errors = Collections.singletonList(errorMsg);
 
