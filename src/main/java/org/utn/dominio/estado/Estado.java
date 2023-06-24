@@ -3,6 +3,7 @@ package org.utn.dominio.estado;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.utils.constantesExepciones;
+
 public interface Estado {
     @JsonValue
     String getNombreEstado();

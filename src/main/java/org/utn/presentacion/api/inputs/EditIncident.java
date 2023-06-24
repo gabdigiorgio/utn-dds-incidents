@@ -1,4 +1,4 @@
-package org.utn.controllers.inputs;
+package org.utn.presentacion.api.inputs;
 
 public class EditIncident {
   public String closedDate;

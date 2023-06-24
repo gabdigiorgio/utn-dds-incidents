@@ -1,5 +1,8 @@
-package org.utn.controllers;
+package org.utn.presentacion.api.controllers;
 
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -7,22 +10,24 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import io.javalin.http.UploadedFile;
+import io.javalin.util.FileUtil;
 import org.utn.aplicacion.GestorIncidencia;
-import org.utn.controllers.inputs.ChangeState;
-import org.utn.controllers.inputs.CreateIncident;
-import org.utn.controllers.inputs.EditIncident;
-import org.utn.controllers.inputs.ErrorResponse;
+import org.utn.presentacion.api.inputs.ChangeState;
+import org.utn.presentacion.api.inputs.CreateIncident;
+import org.utn.presentacion.api.inputs.EditIncident;
+import org.utn.presentacion.api.inputs.ErrorResponse;
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.persistencia.MemRepoIncidencias;
-import org.json.JSONArray;
+import org.utn.persistencia.DbIncidentsRepository;
 import org.json.JSONObject;
 
 import io.javalin.http.Handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.utn.presentacion.carga_incidentes.ReaderCsv;
 
 public class IncidentsController {
-  static GestorIncidencia gestor = new GestorIncidencia(MemRepoIncidencias.obtenerInstancia());
+  static GestorIncidencia gestor = new GestorIncidencia(DbIncidentsRepository.obtenerInstancia());
 
 //   // validate two dependent query parameters:
 // Instant fromDate = ctx.queryParam("from", Instant.class).get();
@@ -144,6 +149,29 @@ public class IncidentsController {
     }
   };
 
+  public static Handler createMassiveIncident = ctx -> {
+    try {
+      UploadedFile file = ctx.uploadedFile("file");
+
+      if (file != null) {
+        Reader reader = new InputStreamReader(file.content());
+        String result = new ReaderCsv().execute(reader);
+
+        ctx.json(result);
+        ctx.status(200);
+      }
+      else {
+        ctx.status(400);
+        ctx.json("No se recibió ningún archivo.");
+      }
+
+
+
+    } catch(Exception error) {
+      ctx.json(parseErrorResponse(400,error.getMessage()));
+      ctx.status(400);
+    }
+  };
 
   public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
     ErrorResponse errorResponse = new ErrorResponse();
@@ -158,5 +186,6 @@ public class IncidentsController {
 
     return objectMapper.writeValueAsString(errorResponse);
   }
+
 
 }

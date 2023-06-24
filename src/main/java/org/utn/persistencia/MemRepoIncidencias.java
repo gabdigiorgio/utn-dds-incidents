@@ -1,7 +1,6 @@
 package org.utn.persistencia;
 
 import org.utn.dominio.incidencia.Incidencia;
-import org.utn.dominio.incidencia.RepoIncidencias;
 
 import java.util.ArrayList;
 import java.util.Collections;
