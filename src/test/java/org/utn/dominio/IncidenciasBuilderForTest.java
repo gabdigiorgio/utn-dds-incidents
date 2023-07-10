@@ -1,8 +1,8 @@
 package org.utn.dominio;
 
-import org.utn.dominio.estado.Desestimado;
-import org.utn.dominio.estado.Estado;
 import org.utn.dominio.incidencia.CodigoCatalogo;
+import org.utn.dominio.incidencia.EnumEstado;
+import org.utn.dominio.incidencia.Estado;
 import org.utn.dominio.incidencia.Incidencia;
 
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class IncidenciasBuilderForTest {
             "Reportado por de prueba",
             null,
             "",
-            new Desestimado());
+            EnumEstado.DESESTIMADO);
 
     private CodigoCatalogo codigoCatalogo = IncendeciaDefault.getCodigoCatalogo();
     private LocalDate fechaReporte = IncendeciaDefault.getFechaReporte();

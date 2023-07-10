@@ -1,14 +1,14 @@
 package org.utn.aplicacion;
 
 import org.jetbrains.annotations.NotNull;
+import org.utn.dominio.incidencia.CodigoCatalogo;
+import org.utn.dominio.incidencia.EnumEstado;
+import org.utn.dominio.incidencia.Incidencia;
+import org.utn.dominio.incidencia.factory.IncidenciaFactory;
+import org.utn.persistencia.RepoIncidencias;
 import org.utn.presentacion.api.inputs.ChangeState;
 import org.utn.presentacion.api.inputs.CreateIncident;
 import org.utn.presentacion.api.inputs.EditIncident;
-import org.utn.dominio.estado.Reportado;
-import org.utn.dominio.incidencia.CodigoCatalogo;
-import org.utn.dominio.incidencia.Incidencia;
-import org.utn.persistencia.RepoIncidencias;
-import org.utn.dominio.incidencia.factory.IncidenciaFactory;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
 
@@ -39,7 +39,7 @@ public class GestorIncidencia {
         Incidencia nuevaIncidencia = nuevaIncidencia(new CodigoCatalogo(data.code),
                 DateUtils.parsearFecha(data.reportDate),
                 data.description,
-                new Reportado().getNombreEstado(),
+                EnumEstado.REPORTADO.getNombreEstado(),
                 null,
                 data.reporterId,
                 null,
@@ -65,28 +65,8 @@ public class GestorIncidencia {
     public Incidencia updateIncidentState(Integer id, ChangeState request) throws Exception {
         Incidencia incident = repoIncidencias.getById(id);
         if (incident == null) throw new Exception("INCIDENT_NOT_FOUND");
-
-        switch (request.estado) {
-            case "Asignado":
-                incident.asignarEmpleado(request.empleado);
-                break;
-            case "Confirmado":
-                incident.confirmarIncidencia();
-                break;
-            case "Desestimado":
-                incident.desestimarIncidencia(request.motivoRechazo);
-                break;
-            case "EnProgreso":
-                incident.iniciarProgreso();
-                break;
-            case "Solucionado":
-                incident.resolverIncidencia();
-                break;
-            default:
-                throw new Exception("Estado deseado inválido");
-        }
-
-        // repoIncidencias
+        EnumEstado siguienteEstado = EnumEstado.valueOf(request.estado);
+        incident.actualizarEstado(siguienteEstado, request.empleado, request.motivoRechazo);
         repoIncidencias.update(incident);
         return incident;
     }
@@ -155,5 +135,6 @@ public class GestorIncidencia {
         }
         return nuevaIncidencia;
     }
+
 }
 
