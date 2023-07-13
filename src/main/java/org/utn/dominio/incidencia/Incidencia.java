@@ -1,10 +1,11 @@
 package org.utn.dominio.incidencia;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.utn.dominio.estado.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+
+import static org.utn.dominio.incidencia.EnumEstado.*;
 
 @Entity
 public class Incidencia {
@@ -99,7 +100,7 @@ public class Incidencia {
         return reportadoPor;
     }
 
-    public void setEstado(Estado estado) {
+    public void setEstado(EnumEstado estado) {
         this.estado = estado;
     }
 
@@ -144,4 +145,25 @@ public class Incidencia {
     }
 
 
+    public void actualizarEstado(EnumEstado siguienteEstado, String empleado, String motivoDeRechazo) throws Exception {
+        switch (siguienteEstado) {
+            case ASIGNADO:
+                this.asignarEmpleado(empleado);
+                break;
+            case CONFIRMADO:
+                this.confirmarIncidencia();
+                break;
+            case DESESTIMADO:
+                this.desestimarIncidencia(motivoDeRechazo);
+                break;
+            case EN_PROGRESO:
+                this.iniciarProgreso();
+                break;
+            case SOLUCIONADO:
+                this.resolverIncidencia();
+                break;
+            default:
+                throw new Exception("Estado deseado inválido");
+        }
+    }
 }

@@ -1,8 +1,9 @@
 package org.utn.dominio;
 
 import org.junit.Test;
-import org.utn.dominio.estado.*;
 import org.utn.dominio.incidencia.CodigoCatalogo;
+import org.utn.dominio.incidencia.EnumEstado;
+import org.utn.dominio.incidencia.Estado;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.utils.exceptions.validador.FormatoCodigoCatalogoInvalidoException;
 
@@ -24,32 +25,32 @@ public class TestIncidencias {
     @Test
     public void debePoderPasarDeReportadoAAsignado() throws Exception {
 
-        givenIncidenciaWithEstado(new Reportado());
+        givenIncidenciaWithEstado(EnumEstado.REPORTADO);
 
         whenAsignarEmpleado();
 
-        debePasarA(Asignado.class);
+        debePasarA(EnumEstado.ASIGNADO.getClass());
         debeAsignarseEmpleado();
     }
 
     @Test
     public void debePoderPasarDeAsignadoAConfirmado() throws Exception {
 
-        givenIncidenciaWithEstado(new Asignado());
+        givenIncidenciaWithEstado(EnumEstado.ASIGNADO);
 
         whenConfirmarIncidencia();
 
-        debePasarA(Confirmado.class);
+        debePasarA(EnumEstado.CONFIRMADO.getClass());
     }
 
     @Test
     public void debePoderPasarDeAsignadoADesestimado() throws Exception {
 
-        givenIncidenciaWithEstado(new Asignado());
+        givenIncidenciaWithEstado(EnumEstado.ASIGNADO);
 
         whenDesestimarIncidencia();
 
-        debePasarA(Desestimado.class);
+        debePasarA(EnumEstado.DESESTIMADO.getClass());
     }
 
     // Tests de transicion de estado: Reportado
@@ -57,7 +58,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlConfirmarIncidenciaReportada() throws Exception{
 
-        givenIncidenciaWithEstado(new Reportado());
+        givenIncidenciaWithEstado(EnumEstado.REPORTADO);
 
         whenConfirmarIncidencia();
     }
@@ -65,7 +66,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlIniciarProgresoIncidenciaReportada() throws Exception{
 
-        givenIncidenciaWithEstado(new Reportado());
+        givenIncidenciaWithEstado(EnumEstado.REPORTADO);
 
         whenIniciarProgresoIncidencia();
     }
@@ -73,7 +74,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlResolverIncidenciaReportada() throws Exception{
 
-        givenIncidenciaWithEstado(new Reportado());
+        givenIncidenciaWithEstado(EnumEstado.REPORTADO);
 
         whenResolverIncidencia();
     }
@@ -83,7 +84,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlAsignarEmpleadoIncidenciaAsignada() throws Exception{
 
-        givenIncidenciaWithEstado(new Asignado());
+        givenIncidenciaWithEstado(EnumEstado.ASIGNADO);
 
         whenAsignarEmpleado();
     }
@@ -91,7 +92,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlIniciarProgresoIncidenciaAsignada() throws Exception{
 
-        givenIncidenciaWithEstado(new Asignado()); // TODO: revisar si puede pasar de asignado -> en progreso
+        givenIncidenciaWithEstado(EnumEstado.ASIGNADO); // TODO: revisar si puede pasar de asignado -> en progreso
 
         whenIniciarProgresoIncidencia();
     }
@@ -99,7 +100,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlResolverIncidenciaAsignada() throws Exception{
 
-        givenIncidenciaWithEstado(new Asignado());
+        givenIncidenciaWithEstado(EnumEstado.ASIGNADO);
 
         whenResolverIncidencia();
     }
@@ -109,7 +110,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlAsignarEmpleadoIncidenciaConfirmada() throws Exception{
 
-        givenIncidenciaWithEstado(new Confirmado());
+        givenIncidenciaWithEstado(EnumEstado.CONFIRMADO);
 
         whenAsignarEmpleado();
     }
@@ -117,7 +118,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlConfirmarIncidenciaConfirmada() throws Exception{
 
-        givenIncidenciaWithEstado(new Confirmado());
+        givenIncidenciaWithEstado(EnumEstado.CONFIRMADO);
 
         whenConfirmarIncidencia();
     }
@@ -125,7 +126,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlResolverIncidenciaConfirmada() throws Exception{
 
-        givenIncidenciaWithEstado(new Confirmado());
+        givenIncidenciaWithEstado(EnumEstado.CONFIRMADO);
 
         whenResolverIncidencia();
     }
@@ -135,7 +136,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlAsignarEmpleadoIncidenciaDesestimada() throws Exception{
 
-        givenIncidenciaWithEstado(new Desestimado());
+        givenIncidenciaWithEstado(EnumEstado.DESESTIMADO);
 
         whenAsignarEmpleado();
     }
@@ -143,7 +144,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlConfirmarIncidenciaDesestimada() throws Exception{
 
-        givenIncidenciaWithEstado(new Desestimado());
+        givenIncidenciaWithEstado(EnumEstado.DESESTIMADO);
 
         whenConfirmarIncidencia();
     }
@@ -151,7 +152,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlDesestimarIncidenciaDesestimada() throws Exception{
 
-        givenIncidenciaWithEstado(new Desestimado());
+        givenIncidenciaWithEstado(EnumEstado.DESESTIMADO);
 
         whenDesestimarIncidencia();
     }
@@ -159,7 +160,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlIniciarProgresoIncidenciaDesestimada() throws Exception{
 
-        givenIncidenciaWithEstado(new Desestimado());
+        givenIncidenciaWithEstado(EnumEstado.DESESTIMADO);
 
         whenIniciarProgresoIncidencia();
     }
@@ -167,7 +168,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlResolverIncidenciaDesestimada() throws Exception{
 
-        givenIncidenciaWithEstado(new Desestimado());
+        givenIncidenciaWithEstado(EnumEstado.DESESTIMADO);
 
         whenResolverIncidencia();
     }
@@ -177,7 +178,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlAsignarEmpleadoIncidenciaEnProgreso() throws Exception{
 
-        givenIncidenciaWithEstado(new EnProgreso());
+        givenIncidenciaWithEstado(EnumEstado.EN_PROGRESO);
 
         whenAsignarEmpleado();
     }
@@ -185,7 +186,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlConfirmarIncidenciaEnProgreso() throws Exception{
 
-        givenIncidenciaWithEstado(new EnProgreso());
+        givenIncidenciaWithEstado(EnumEstado.EN_PROGRESO);
 
         whenConfirmarIncidencia();
     }
@@ -193,7 +194,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlDesestimarIncidenciaEnProgreso() throws Exception{
 
-        givenIncidenciaWithEstado(new EnProgreso());
+        givenIncidenciaWithEstado(EnumEstado.EN_PROGRESO);
 
         whenDesestimarIncidencia();
     }
@@ -201,7 +202,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlIniciarProgresoIncidenciaEnProgreso() throws Exception{
 
-        givenIncidenciaWithEstado(new EnProgreso());
+        givenIncidenciaWithEstado(EnumEstado.EN_PROGRESO);
 
         whenIniciarProgresoIncidencia();
     }
@@ -211,7 +212,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlAsignarEmpleadoIncidenciaSolucionada() throws Exception{
 
-        givenIncidenciaWithEstado(new Solucionado());
+        givenIncidenciaWithEstado(EnumEstado.SOLUCIONADO);
 
         whenAsignarEmpleado();
     }
@@ -219,7 +220,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlConfirmarIncidenciaSolucionada() throws Exception{
 
-        givenIncidenciaWithEstado(new Solucionado());
+        givenIncidenciaWithEstado(EnumEstado.SOLUCIONADO);
 
         whenConfirmarIncidencia();
     }
@@ -227,7 +228,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlDesestimarIncidenciaSolucionada() throws Exception{
 
-        givenIncidenciaWithEstado(new Solucionado());
+        givenIncidenciaWithEstado(EnumEstado.SOLUCIONADO);
 
         whenDesestimarIncidencia();
     }
@@ -235,7 +236,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlIniciarProgresoIncidenciaSolucionada() throws Exception{
 
-        givenIncidenciaWithEstado(new Solucionado());
+        givenIncidenciaWithEstado(EnumEstado.SOLUCIONADO);
 
         whenIniciarProgresoIncidencia();
     }
@@ -243,7 +244,7 @@ public class TestIncidencias {
     @Test(expected = Exception.class)
     public void debeLanzarExcepcionAlResolverIncidenciaSolucionada() throws Exception{
 
-        givenIncidenciaWithEstado(new Solucionado());
+        givenIncidenciaWithEstado(EnumEstado.SOLUCIONADO);
 
         whenResolverIncidencia();
     }

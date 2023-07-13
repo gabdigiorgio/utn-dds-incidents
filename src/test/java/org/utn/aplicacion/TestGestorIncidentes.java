@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.utn.dominio.IncidenciasBuilderForTest;
-import org.utn.dominio.estado.*;
+import org.utn.dominio.incidencia.EnumEstado;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.RepoIncidencias;
 
@@ -33,7 +33,7 @@ public class TestGestorIncidentes {
     @Test
     public void debeCrearInicdenciaCorrectaReportado() {
 
-        givenIncidenciaEsperada(new IncidenciasBuilderForTest().withEstado(new Reportado()).build());
+        givenIncidenciaEsperada(new IncidenciasBuilderForTest().withEstado(EnumEstado.REPORTADO).build());
 
         whenCrearIncidencia();
 
@@ -43,7 +43,7 @@ public class TestGestorIncidentes {
     @Test
     public void debeCrearInicdenciaCorrectaAsignado() {
 
-        givenIncidenciaEsperada(new IncidenciasBuilderForTest().withEstado(new Asignado()).build());
+        givenIncidenciaEsperada(new IncidenciasBuilderForTest().withEstado(EnumEstado.ASIGNADO).build());
 
         whenCrearIncidencia();
 
@@ -53,7 +53,7 @@ public class TestGestorIncidentes {
     @Test
     public void debeCrearInicdenciaCorrectaConfirmado() {
 
-        givenIncidenciaEsperada(new IncidenciasBuilderForTest().withEstado(new Confirmado()).build());
+        givenIncidenciaEsperada(new IncidenciasBuilderForTest().withEstado(EnumEstado.CONFIRMADO).build());
 
         whenCrearIncidencia();
 
@@ -64,7 +64,7 @@ public class TestGestorIncidentes {
     public void debeCrearInicdenciaCorrectaDesestimado() {
 
         givenIncidenciaEsperada(new IncidenciasBuilderForTest()
-                .withEstado(new Desestimado())
+                .withEstado(EnumEstado.DESESTIMADO)
                 .withFechaCierre(LocalDate.of(2023, 5, 28))
                 .withMotivoRechazo("Motivo rechazo de prueba")
                 .build());
@@ -77,7 +77,7 @@ public class TestGestorIncidentes {
     @Test
     public void debeCrearInicdenciaCorrectaEnProgreso() {
 
-        givenIncidenciaEsperada(new IncidenciasBuilderForTest().withEstado(new EnProgreso()).build());
+        givenIncidenciaEsperada(new IncidenciasBuilderForTest().withEstado(EnumEstado.EN_PROGRESO).build());
 
         whenCrearIncidencia();
 
@@ -88,7 +88,7 @@ public class TestGestorIncidentes {
     public void debeCrearInicdenciaCorrectaSolucionado() {
 
         givenIncidenciaEsperada(new IncidenciasBuilderForTest()
-                .withEstado(new Solucionado())
+                .withEstado(EnumEstado.SOLUCIONADO)
                 .withFechaCierre(LocalDate.of(2023, 5, 28))
                 .build());
 

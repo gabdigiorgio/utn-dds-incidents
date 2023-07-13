@@ -4,7 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.utn.dominio.IncidenciasBuilderForTest;
-import org.utn.dominio.estado.*;
+import org.utn.dominio.incidencia.EnumEstado;
+import org.utn.dominio.incidencia.Estado;
 import org.utn.dominio.incidencia.Incidencia;
 
 import java.util.ArrayList;
@@ -28,12 +29,12 @@ public class TestMemRepoIncidencias {
 
     @Before
     public void cargarIncidencias() {
-        givenIncidenciaWithEstado(new Reportado());
-        givenIncidenciaWithEstado(new Asignado());
-        givenIncidenciaWithEstado(new Confirmado());
-        givenIncidenciaWithEstado(new Desestimado());
-        givenIncidenciaWithEstado(new EnProgreso());
-        givenIncidenciaWithEstado(new Solucionado());
+        givenIncidenciaWithEstado(EnumEstado.REPORTADO);
+        givenIncidenciaWithEstado(EnumEstado.ASIGNADO);
+        givenIncidenciaWithEstado(EnumEstado.CONFIRMADO);
+        givenIncidenciaWithEstado(EnumEstado.DESESTIMADO);
+        givenIncidenciaWithEstado(EnumEstado.EN_PROGRESO);
+        givenIncidenciaWithEstado(EnumEstado.SOLUCIONADO);
     }
 
     @Test
@@ -52,61 +53,61 @@ public class TestMemRepoIncidencias {
     @Test
     public void debePoderFiltrarUnaIncidenciasPorEstadoReportado(){
 
-        List<Incidencia> incidenciasFiltradas = whenFindByEstado(new Reportado());
+        List<Incidencia> incidenciasFiltradas = whenFindByEstado(EnumEstado.REPORTADO);
 
         debeFiltrarseIncidencias(1, incidenciasFiltradas);
 
-        debeSerIncidenciaDeEstado(Reportado.class, incidenciasFiltradas);
+        debeSerIncidenciaDeEstado(EnumEstado.REPORTADO.getClass(), incidenciasFiltradas);
     }
 
     @Test
     public void debePoderFiltrarUnaIncidenciaPorEstadoAsignado(){
 
-        List<Incidencia> incidenciasFiltradas = whenFindByEstado(new Asignado());
+        List<Incidencia> incidenciasFiltradas = whenFindByEstado(EnumEstado.ASIGNADO);
 
         debeFiltrarseIncidencias(1, incidenciasFiltradas);
 
-        debeSerIncidenciaDeEstado(Asignado.class, incidenciasFiltradas);
+        debeSerIncidenciaDeEstado(EnumEstado.ASIGNADO.getClass(), incidenciasFiltradas);
     }
 
     @Test
     public void debePoderFiltrarUnaIncidenciaPorEstadoConfirmado(){
 
-        List<Incidencia> incidenciasFiltradas = whenFindByEstado(new Confirmado());
+        List<Incidencia> incidenciasFiltradas = whenFindByEstado(EnumEstado.CONFIRMADO);
 
         debeFiltrarseIncidencias(1, incidenciasFiltradas);
 
-        debeSerIncidenciaDeEstado(Confirmado.class, incidenciasFiltradas);
+        debeSerIncidenciaDeEstado(EnumEstado.CONFIRMADO.getClass(), incidenciasFiltradas);
     }
 
     @Test
     public void debePoderFiltrarUnaIncidenciaPorEstadoDesestimado(){
 
-        List<Incidencia> incidenciasFiltradas = whenFindByEstado(new Desestimado());
+        List<Incidencia> incidenciasFiltradas = whenFindByEstado(EnumEstado.DESESTIMADO);
 
         debeFiltrarseIncidencias(1, incidenciasFiltradas);
 
-        debeSerIncidenciaDeEstado(Desestimado.class, incidenciasFiltradas);
+        debeSerIncidenciaDeEstado(EnumEstado.DESESTIMADO.getClass(), incidenciasFiltradas);
     }
 
     @Test
     public void debePoderFiltrarUnaIncidenciaPorEstadoEnProgreso(){
 
-        List<Incidencia> incidenciasFiltradas = whenFindByEstado(new EnProgreso());
+        List<Incidencia> incidenciasFiltradas = whenFindByEstado(EnumEstado.EN_PROGRESO);
 
         debeFiltrarseIncidencias(1, incidenciasFiltradas);
 
-        debeSerIncidenciaDeEstado(EnProgreso.class, incidenciasFiltradas);
+        debeSerIncidenciaDeEstado(EnumEstado.EN_PROGRESO.getClass(), incidenciasFiltradas);
     }
 
     @Test
     public void debePoderFiltrarUnaIncidenciaPorEstadoSolucionado(){
 
-        List<Incidencia> incidenciasFiltradas = whenFindByEstado(new Solucionado());
+        List<Incidencia> incidenciasFiltradas = whenFindByEstado(EnumEstado.SOLUCIONADO);
 
         debeFiltrarseIncidencias(1, incidenciasFiltradas);
 
-        debeSerIncidenciaDeEstado(Solucionado.class, incidenciasFiltradas);
+        debeSerIncidenciaDeEstado(EnumEstado.SOLUCIONADO.getClass(), incidenciasFiltradas);
     }
 
     private void givenIncidencia(Incidencia incidencia){
@@ -154,9 +155,9 @@ public class TestMemRepoIncidencias {
     @Test
     public void ordenXestado(){
         //pido 4 incidencias pero solo hay 3 de ese estado
-        assertEquals(repoIncidencias.obtenerIncidencias(4,new Asignado()).size(),3);
+        assertEquals(repoIncidencias.obtenerIncidencias(4,EnumEstado.ASIGNADO).size(),3);
 
-        assertEquals(repoIncidencias.obtenerIncidencias(3,new Reportado()).size(),1);
+        assertEquals(repoIncidencias.obtenerIncidencias(3,EnumEstado.REPORTADO).size(),1);
     }*/
 
     /*@Test

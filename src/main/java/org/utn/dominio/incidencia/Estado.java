@@ -1,4 +1,4 @@
-package org.utn.dominio.estado;
+package org.utn.dominio.incidencia;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.utn.dominio.incidencia.Incidencia;
