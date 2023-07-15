@@ -1,7 +1,6 @@
 package org.utn;
 
 import io.javalin.Javalin;
-import org.utn.presentacion.api.controllers.IncidentsController;
 import org.utn.presentacion.api.url_mappings.IncidentsResource;
 import org.utn.presentacion.api.url_mappings.TelegramBotResource;
 
