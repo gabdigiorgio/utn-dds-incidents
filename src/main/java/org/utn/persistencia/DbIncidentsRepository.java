@@ -7,9 +7,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class DbIncidentsRepository implements RepoIncidencias {
@@ -85,35 +85,53 @@ public class DbIncidentsRepository implements RepoIncidencias {
     }
 
     @Override
+
     public List<Incidencia> findIncidents(int quantity, String status, String orderBy, String place) {
-        List<Incidencia> list = all();
-
-        if (status != null) {
-            list = list.stream().filter(i -> i.getNombreEstado().equals(status)).collect(Collectors.toList());
-        }
-        if (place != null) {
-            list = list.stream().filter(i -> i.getCodigoCatalogo().equals(place)).collect(Collectors.toList());;
-        }
-        if (orderBy != null) {
-            if (orderBy == "createdAt") list = getOrdered(list, true);
-            else list = getOrdered(list, false);
-        }
-        return filtrarPorCantidad(list, quantity);
-    }
-
-    @Override
-    public int count() {
-        return all().size();
-    }
-
-    public List<Incidencia> all() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Incidencia> criteriaQuery = criteriaBuilder.createQuery(Incidencia.class);
             Root<Incidencia> root = criteriaQuery.from(Incidencia.class);
-            criteriaQuery.select(root);
-            return entityManager.createQuery(criteriaQuery).getResultList();
+            //criteriaQuery.select(root);
+            if (status != null) {
+                Predicate filtroStatus = criteriaBuilder.equal(root.get("estado").as(String.class), status);
+                criteriaQuery.where(filtroStatus);
+            }
+
+            if (place != null) {
+                Predicate filtroPlace = criteriaBuilder.equal(root.get("codigoCatalogo"), place);
+                criteriaQuery.where(filtroPlace);
+            }
+
+            if (orderBy != null) {
+                if (orderBy.equals("createdAt")) {
+                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get("fechaReporte")));
+                } else {
+                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("fechaReporte")));
+                }
+            }
+
+            List<Incidencia> resultados = entityManager.createQuery(criteriaQuery).getResultList();
+
+            return filtrarPorCantidad(resultados,quantity);
+        } finally {
+            if (entityManager != null && entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
+    @Override
+    public int count() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+            criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Incidencia.class)));
+
+            Long count = entityManager.createQuery(criteriaQuery).getSingleResult();
+
+            return count.intValue();
         } finally {
             if (entityManager != null && entityManager.isOpen()) {
                 entityManager.close();
@@ -137,20 +155,11 @@ public class DbIncidentsRepository implements RepoIncidencias {
         entityManagerFactory = Persistence.createEntityManagerFactory("db", configOverrides);
     }
 
-    public static List<Incidencia> filtrarPorCantidad(List<Incidencia> lista, int cantidad) {
+    private static List<Incidencia> filtrarPorCantidad(List<Incidencia> lista, int cantidad) {
         if (lista.size() <= cantidad) {
             return lista;
         } else {
             return lista.subList(0, cantidad);
         }
     }
-
-    public static List<Incidencia> getOrdered(List<Incidencia> incidents, Boolean newsFirst) {
-        Collections.sort(incidents, (unaIncidencia, otra) -> unaIncidencia.getFechaReporte().compareTo(otra.getFechaReporte()));
-        if (newsFirst) Collections.reverse(incidents);
-        return incidents;
-    }
-
-
 }
-
