@@ -13,10 +13,7 @@ import io.javalin.http.UploadedFile;
 import io.javalin.util.FileUtil;
 import org.apache.http.entity.StringEntity;
 import org.utn.aplicacion.GestorIncidencia;
-import org.utn.presentacion.api.inputs.ChangeState;
-import org.utn.presentacion.api.inputs.CreateIncident;
-import org.utn.presentacion.api.inputs.EditIncident;
-import org.utn.presentacion.api.inputs.ErrorResponse;
+import org.utn.presentacion.api.inputs.*;
 import org.utn.dominio.incidencia.Incidencia;
 import org.utn.persistencia.DbIncidentsRepository;
 import org.json.JSONObject;
@@ -192,7 +189,6 @@ public class IncidentsController {
     }
   }
 
-
   public static Handler createMassiveIncident = ctx -> {
     try {
       UploadedFile file = ctx.uploadedFile("file");
@@ -212,6 +208,21 @@ public class IncidentsController {
       ctx.json(parseErrorResponse(400,error.getMessage()));
       ctx.status(400);
     }
+  };
+
+  public static Handler processMassiveIncidents = ctx -> {
+      ProcessCsv data = ctx.bodyAsClass(ProcessCsv.class);
+      String incidents = data.indicents;
+      InputStream incidentsStream = new ByteArrayInputStream(incidents.getBytes("UTF-8"));
+      Reader reader = new InputStreamReader(incidentsStream);
+      try {
+        String result = new ReaderCsv().execute(reader);
+        ctx.json(result);
+        ctx.status(200);
+      } catch(Exception error)  {
+        ctx.status(400);
+        ctx.json("No se recibió ningún archivo.");
+      }
   };
 
   public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {

@@ -1,6 +1,14 @@
 package org.utn.aplicacion;
 
 import com.rabbitmq.client.*;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.utn.presentacion.carga_incidentes.ReaderCsv;
 
 import javax.persistence.EntityManagerFactory;
@@ -10,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
 import java.util.Map;
 
 public class Worker extends DefaultConsumer {
@@ -43,12 +52,32 @@ public class Worker extends DefaultConsumer {
         System.out.println("se recibio el siguiente payload:");
         System.out.println(incidents);
 
+        CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
-            InputStream incidentsStream = new ByteArrayInputStream(incidents.getBytes());
-            Reader reader = new InputStreamReader(incidentsStream);
-            new ReaderCsv().execute(reader);
+
+            JSONObject json = new JSONObject();
+            json.put("incidents", incidents);
+
+            StringEntity params = new StringEntity(json.toString());
+            HttpUriRequest httpPost = RequestBuilder.post()
+                    .setUri(new URI("https://tpa-utn-grupo-1.onrender.com/incidents/process_csv"))
+                    .addHeader("Content-Type", "application/json; charset=UTF-8")
+                    .addHeader("Accept", "*/*")
+                    .addHeader("Accept-Encoding", "gzip, deflate, br")
+                    .setEntity(params)
+                    .build();
+
+            CloseableHttpResponse response = httpclient.execute(httpPost);
+            try {
+                System.out.println(EntityUtils.toString(response.getEntity()));
+            } finally {
+                response.close();
+            }
+
+
 
         } catch(Exception error) {
+            httpclient.close();
             System.out.println("Error al procesar payload!!");
         }
     }
