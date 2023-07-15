@@ -65,7 +65,8 @@ public class GestorIncidencia {
     public Incidencia updateIncidentState(Integer id, ChangeState request) throws Exception {
         Incidencia incident = repoIncidencias.getById(id);
         if (incident == null) throw new Exception("INCIDENT_NOT_FOUND");
-        EnumEstado siguienteEstado = EnumEstado.valueOf(request.estado);
+        String estadoFormateado = request.estado.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
+        EnumEstado siguienteEstado = EnumEstado.valueOf(estadoFormateado);
         incident.actualizarEstado(siguienteEstado, request.empleado, request.motivoRechazo);
         repoIncidencias.update(incident);
         return incident;
