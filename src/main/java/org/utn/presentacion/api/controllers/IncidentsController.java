@@ -1,10 +1,9 @@
 package org.utn.presentacion.api.controllers;
 
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.javalin.http.UploadedFile;
 import io.javalin.util.FileUtil;
+import org.apache.http.entity.StringEntity;
 import org.utn.aplicacion.GestorIncidencia;
 import org.utn.presentacion.api.inputs.ChangeState;
 import org.utn.presentacion.api.inputs.CreateIncident;
@@ -25,6 +25,16 @@ import io.javalin.http.Handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.utn.presentacion.carga_incidentes.ReaderCsv;
+
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.ContentType;
+
+import java.net.URI;
 
 public class IncidentsController {
   static GestorIncidencia gestor = new GestorIncidencia(DbIncidentsRepository.obtenerInstancia());
@@ -149,23 +159,54 @@ public class IncidentsController {
     }
   };
 
+  public static void sendToWorker(String payload) throws Exception {
+    CloseableHttpClient httpclient = HttpClients.createDefault();
+    Map<String, String> env = System.getenv();
+    try {
+      JSONObject json = new JSONObject();
+      json.put("vhost", env.get("QUEUE_HOST"));
+      json.put("routing_key", env.get("QUEUE_NAME"));
+      json.put("delivery_mode", "1");
+      json.put("payload_encoding", "string");
+      json.put("properties", new JSONObject());
+      json.put("payload", payload);
+
+      StringEntity params = new StringEntity(json.toString());
+      HttpUriRequest httpPost = RequestBuilder.post()
+              .setUri(new URI("https://gull.rmq.cloudamqp.com/api/exchanges/fvizvkea/amq.default/publish"))
+              .addHeader("Authorization", env.get("QUEUE_AUTH"))
+              .addHeader("Content-Type", "application/json; charset=UTF-8")
+              .addHeader("Accept", "*/*")
+              .addHeader("Accept-Encoding", "gzip, deflate, br")
+              .setEntity(params)
+              .build();
+
+      CloseableHttpResponse response = httpclient.execute(httpPost);
+      try {
+        System.out.println(EntityUtils.toString(response.getEntity()));
+      } finally {
+        response.close();
+      }
+    } finally {
+      httpclient.close();
+    }
+  }
+
+
   public static Handler createMassiveIncident = ctx -> {
     try {
       UploadedFile file = ctx.uploadedFile("file");
-
       if (file != null) {
-        Reader reader = new InputStreamReader(file.content());
-        String result = new ReaderCsv().execute(reader);
+        InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
+        String text = new String(inputStream.readAllBytes(), "UTF-8");
 
-        ctx.json(result);
+        sendToWorker(text);
         ctx.status(200);
       }
       else {
         ctx.status(400);
         ctx.json("No se recibió ningún archivo.");
       }
-
-
 
     } catch(Exception error) {
       ctx.json(parseErrorResponse(400,error.getMessage()));
