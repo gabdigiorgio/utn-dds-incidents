@@ -1,8 +1,8 @@
 package org.utn;
 
 import io.javalin.Javalin;
-import org.utn.presentacion.api.url_mappings.IncidentsResource;
-import org.utn.presentacion.api.url_mappings.TelegramBotResource;
+import org.utn.presentation.api.url_mappings.IncidentsResource;
+import org.utn.presentation.api.url_mappings.TelegramBotResource;
 
 public class ServerApi {
 

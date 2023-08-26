@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import com.opencsv.exceptions.CsvException;
-import org.utn.presentacion.carga_incidentes.ReaderCsv;
 
 public class CsvReader {
     public static void main(String[] args) throws IOException, CsvException {
@@ -17,7 +16,7 @@ public class CsvReader {
             System.err.println("'" + file_path + "' no existe...");
             System.exit(1);
         }
-        System.out.println(new ReaderCsv().execute(file_path));
+        System.out.println(new org.utn.presentation.incidents_load.CsvReader().execute(file_path));
     }
 }
 

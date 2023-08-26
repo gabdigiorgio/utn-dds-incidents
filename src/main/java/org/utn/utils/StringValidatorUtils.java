@@ -11,26 +11,26 @@ public class StringValidatorUtils {
         return s.chars().allMatch(Character::isDigit);
     }
 
-    public static boolean isCodePlaceFormat(String s) {
+    public static boolean isCodePlaceFormat(String code) {
         String regex = "^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{2}$";
-        return validarExpresionRegular(s, regex);
+        return validateRegularExpression(code, regex);
     }
 
-    public static boolean isUserState(String s) {
-        return validarExpresionRegular(s, "^(Asignado|Confirmado|Desestimado|En progreso|Reportado|Solucionado)$");
+    public static boolean isUserState(String state) {
+        return validateRegularExpression(state, "^(Asignado|Confirmado|Desestimado|En progreso|Reportado|Solucionado)$");
     }
 
-    public static boolean isCodigoCatalogo(String codigoCatalogo) {
-        return validarExpresionRegular(codigoCatalogo, "^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{2}$");
+    public static boolean isCatalogCode(String catalogCode) {
+        return validateRegularExpression(catalogCode, "^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{2}$");
     }
 
-    public static boolean isFecha(String fecha) throws Exception {
-        return validarExpresionRegular(fecha, "^(0?[1-9]|[12][0-9]|3[01])(0?[1-9]|1[0-2])[0-9]{4}$");
+    public static boolean isDate(String date) throws Exception {
+        return validateRegularExpression(date, "^(0?[1-9]|[12][0-9]|3[01])(0?[1-9]|1[0-2])[0-9]{4}$");
     }
 
-    private static boolean validarExpresionRegular(String valor, String expresionRegular) {
-        Pattern regex = Pattern.compile(expresionRegular);
-        return regex.matcher(valor).matches();
+    private static boolean validateRegularExpression(String value, String regularExpression) {
+        Pattern regex = Pattern.compile(regularExpression);
+        return regex.matcher(value).matches();
     }
 
 }
