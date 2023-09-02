@@ -8,12 +8,12 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import org.utn.presentacion.bot.telegram_user.TelegramUserBot;
+import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 
-import org.utn.presentacion.bot.telegram_user.TelegramUserUserBotRepo;
-import org.utn.presentacion.bot.telegram_user.UserBotRepo;
-import org.utn.presentacion.bot.telegram_user_estado.WelcomeChat;
-import org.utn.presentacion.carga_incidentes.ReaderCsv;
+import org.utn.presentation.bot.telegram_user.TelegramUserUserBotRepo;
+import org.utn.presentation.bot.telegram_user.UserBotRepo;
+import org.utn.presentation.bot.telegram_user_state.WelcomeChat;
+import org.utn.presentation.incidents_load.CsvReader;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -39,14 +39,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         Message message = update.getMessage();
         Long chatId = message.getChatId();
 
-        UserBotRepo repoTelegramBots = TelegramUserUserBotRepo.obtenerInstancia();
+        UserBotRepo repoTelegramBots = TelegramUserUserBotRepo.getInstance();
         TelegramUserBot telegramUserBot = repoTelegramBots.getById(chatId);
         if (telegramUserBot == null) {
             telegramUserBot = new TelegramUserBot(chatId, new WelcomeChat());
             repoTelegramBots.save(telegramUserBot);
         }
 
-        telegramUserBot.addMensaje();
+        telegramUserBot.addMessage();
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
@@ -58,8 +58,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                     SendMessage sendMessage = new SendMessage();
                     sendMessage.setChatId(telegramUserBot.getId());
                     String msg = String.format("El usuario se tiene el chat id: %d\n",telegramUserBot.getId())
-                            + String.format("Este es el mensaje #%d\n",telegramUserBot.getCantMensajes())
-                            + String.format("El user se encuentra en el estado [%s]",telegramUserBot.getEstado().getNombreEstado());
+                            + String.format("Este es el mensaje #%d\n",telegramUserBot.getMessageCount())
+                            + String.format("El user se encuentra en el estado [%s]",telegramUserBot.getState().getStateName());
                     sendMessage.setText(msg);
                     execute(sendMessage);
                 } else {
@@ -79,7 +79,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 java.io.File downloadedFile = downloadFile(file);
 
                 String filePath = downloadedFile.getAbsolutePath();
-                String result = new ReaderCsv().execute(filePath);
+                String result = new CsvReader().execute(filePath);
 
                 // Envia el mensaje al usuario
                 SendMessage responseMsg = new SendMessage();
@@ -122,8 +122,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         String userLastName = message.getChat().getLastName();
         long userId = message.getChat().getId();
         String messageText = message.getText();
-        String userState = userBot.getEstado().getNombreEstado();
-        String userSubState = userBot.getEstado().getSubEstado().toString();
+        String userState = userBot.getState().getStateName();
+        String userSubState = userBot.getState().getSubState().toString();
         log(userFirstName, userLastName, Long.toString(userId), messageText,userState,userSubState);
     }
 
