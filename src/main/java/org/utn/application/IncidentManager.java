@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.utn.domain.incident.CatalogCode;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
+import org.utn.domain.incident.StateTransitionException;
 import org.utn.domain.incident.factory.IncidentFactory;
 import org.utn.persistence.IncidentsRepository;
 import org.utn.presentation.api.inputs.ChangeState;

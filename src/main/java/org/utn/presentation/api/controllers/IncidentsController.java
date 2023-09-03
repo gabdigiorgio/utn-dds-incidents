@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.utn.application.IncidentManager;
 import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.StateTransitionException;
 import org.utn.persistence.DbIncidentsRepository;
 import org.utn.presentation.api.inputs.*;
 import org.utn.presentation.incidents_load.CsvReader;
@@ -133,7 +134,13 @@ public class IncidentsController {
             //ctx.json(objectMapper.writeValueAsString(editedIncident));
             ctx.status(200);
 
-        } catch (Exception error) {
+        }
+        catch (StateTransitionException transitionError)
+        {
+            ctx.json(parseErrorResponse(422, transitionError.getMessage()));
+            ctx.status(422);
+        }
+        catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
         }
