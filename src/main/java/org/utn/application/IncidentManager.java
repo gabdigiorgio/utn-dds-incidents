@@ -1,5 +1,6 @@
 package org.utn.application;
 
+import javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.incident.CatalogCode;
 import org.utn.domain.incident.Incident;
@@ -48,9 +49,9 @@ public class IncidentManager {
         return newIncident;
     }
 
-    public Incident editIncident(Integer id, EditIncident data) throws Exception {
+    public Incident editIncident(Integer id, EditIncident data) throws NotFoundException {
         Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new Exception("INCIDENT_NOT_FOUND");
+        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
 
         // data.status,
         if (data.employeeId != null) incident.setEmployee(data.employeeId);
