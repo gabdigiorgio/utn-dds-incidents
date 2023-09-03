@@ -32,7 +32,7 @@ import org.apache.http.util.EntityUtils;
 import java.net.URI;
 
 public class IncidentsController {
-  static IncidentManager gestor = new IncidentManager(DbIncidentsRepository.getInstance());
+  static IncidentManager manager = new IncidentManager(DbIncidentsRepository.getInstance());
 
 //   // validate two dependent query parameters:
 // Instant fromDate = ctx.queryParam("from", Instant.class).get();
@@ -52,7 +52,7 @@ public class IncidentsController {
     String place = ctx.queryParamAsClass("place", String.class).getOrDefault(null);
 
     // get incidents
-    List<Incident> incidents = gestor.getIncidents(limit, orderBy, status, place);
+    List<Incident> incidents = manager.getIncidents(limit, orderBy, status, place);
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
@@ -69,7 +69,7 @@ public class IncidentsController {
       CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
       // create incident
-      Incident newIncident = gestor.createIncident(data);
+      Incident newIncident = manager.createIncident(data);
 
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.registerModule(new JavaTimeModule());
@@ -93,7 +93,7 @@ public class IncidentsController {
       EditIncident data = ctx.bodyAsClass(EditIncident.class);
   
       // edit incident
-      Incident editedIncident = gestor.editIncident(id, data);
+      Incident editedIncident = manager.editIncident(id, data);
 
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.registerModule(new JavaTimeModule());
@@ -115,7 +115,7 @@ public class IncidentsController {
       Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
       ChangeState request = ctx.bodyAsClass(ChangeState.class);
 
-      Incident editedIncident = gestor.updateIncidentState(id, request);
+      Incident editedIncident = manager.updateIncidentState(id, request);
 
       ObjectMapper objectMapper = new ObjectMapper();
       objectMapper.registerModule(new JavaTimeModule());
@@ -139,7 +139,7 @@ public class IncidentsController {
       int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
   
       // delete incident
-      gestor.deleteIncident(id);
+      manager.deleteIncident(id);
 
       JSONObject result = new JSONObject();
       result.put("result", true);
