@@ -64,9 +64,9 @@ public class IncidentManager {
         return incident;
     }
 
-    public Incident updateIncidentState(Integer id, ChangeState request) throws Exception {
+    public Incident updateIncidentState(Integer id, ChangeState request) throws NotFoundException, StateTransitionException {
         Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new Exception("INCIDENT_NOT_FOUND");
+        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
         String formattedState = request.state.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
         StateEnum nextState = StateEnum.valueOf(formattedState);
         incident.updateState(nextState, request.employee, request.rejectedReason);
@@ -74,9 +74,9 @@ public class IncidentManager {
         return incident;
     }
 
-    public void deleteIncident(Integer id) throws Exception {
+    public void deleteIncident(Integer id) throws NotFoundException {
         Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new Exception("INCIDENT_NOT_FOUND");
+        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
         IncidentRepository.remove(id);
     }
 

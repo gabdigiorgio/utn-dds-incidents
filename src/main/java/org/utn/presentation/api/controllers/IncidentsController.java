@@ -134,13 +134,13 @@ public class IncidentsController {
             //ctx.json(objectMapper.writeValueAsString(editedIncident));
             ctx.status(200);
 
-        }
-        catch (StateTransitionException transitionError)
-        {
+        } catch (StateTransitionException transitionError) {
             ctx.json(parseErrorResponse(422, transitionError.getMessage()));
             ctx.status(422);
-        }
-        catch (Exception error) {
+        } catch (NotFoundException notFoundError) {
+            ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
+            ctx.status(404);
+        } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
         }
@@ -159,8 +159,10 @@ public class IncidentsController {
             ctx.json(result.toString());
             ctx.status(200);
 
+        } catch (NotFoundException notFoundError) {
+            ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
+            ctx.status(404);
         } catch (Exception error) {
-
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
         }
@@ -179,14 +181,12 @@ public class IncidentsController {
             json.put("payload", payload);
 
             StringEntity params = new StringEntity(json.toString());
-            HttpUriRequest httpPost = RequestBuilder.post()
-                    .setUri(new URI("https://gull.rmq.cloudamqp.com/api/exchanges/fvizvkea/amq.default/publish"))
-                    .addHeader("Authorization", env.get("QUEUE_AUTH"))
-                    .addHeader("Content-Type", "application/json; charset=UTF-8")
-                    .addHeader("Accept", "*/*")
-                    .addHeader("Accept-Encoding", "gzip, deflate, br")
-                    .setEntity(params)
-                    .build();
+            HttpUriRequest httpPost = RequestBuilder.post().setUri(
+                    new URI("https://gull.rmq.cloudamqp.com/api/exchanges/fvizvkea/amq.default/publish"))
+                    .addHeader("Authorization"
+                    , env.get("QUEUE_AUTH")).addHeader("Content-Type", "application/json; charset=UTF-8")
+                    .addHeader("Accept", "*/*").addHeader("Accept-Encoding", "gzip, deflate, br")
+                    .setEntity(params).build();
 
             CloseableHttpResponse response = httpclient.execute(httpPost);
             try {
@@ -247,6 +247,5 @@ public class IncidentsController {
 
         return objectMapper.writeValueAsString(errorResponse);
     }
-
-
+    
 }
