@@ -13,6 +13,7 @@ import org.utn.presentation.api.inputs.CreateIncident;
 import org.utn.presentation.api.inputs.EditIncident;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
+import org.utn.utils.exceptions.validator.InvalidDateException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -37,20 +38,7 @@ public class IncidentManager {
         return incidents;
     }
 
-    public Incident createIncident(CreateIncident data) throws InvalidCatalogCodeException {
-        Incident newIncident = newIncident(new CatalogCode(data.catalogCode),
-                DateUtils.parseDate(data.reportDate),
-                data.description,
-                StateEnum.REPORTED.getStateName(),
-                null,
-                data.reporterId,
-                null,
-                null);
-        IncidentRepository.save(newIncident);
-        return newIncident;
-    }
-
-    public Incident editIncident(Integer id, EditIncident data) throws NotFoundException {
+    public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
         Incident incident = IncidentRepository.getById(id);
         if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
 

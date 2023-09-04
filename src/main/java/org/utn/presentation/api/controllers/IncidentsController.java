@@ -2,8 +2,10 @@ package org.utn.presentation.api.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
@@ -18,10 +20,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.utn.application.IncidentManager;
 import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
 import org.utn.persistence.DbIncidentsRepository;
 import org.utn.presentation.api.inputs.*;
 import org.utn.presentation.incidents_load.CsvReader;
+import org.utn.utils.DateUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -72,9 +76,16 @@ public class IncidentsController {
             CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
             // create incident
-            Incident newIncident = manager.createIncident(data);
+            Incident newIncident = manager.createIncident(data.catalogCode,
+                    DateUtils.parseDate(data.reportDate),
+                    data.description,StateEnum.REPORTED.getStateName(),
+                    null,
+                    data.reporterId,
+                    null,
+                    null);
 
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
             objectMapper.registerModule(new JavaTimeModule());
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -84,7 +95,9 @@ public class IncidentsController {
             ctx.json(json);
 
             ctx.status(200);
-        } catch (Exception error) {
+        }
+
+        catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
         }
