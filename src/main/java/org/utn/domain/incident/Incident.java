@@ -113,6 +113,7 @@ public class Incident {
     }
 
     public void dismissIncident(String motivoRechazo) throws StateTransitionException {
+        if (motivoRechazo == null) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo.");
         this.state.dismissIncident(this);
         this.setRejectedReason(motivoRechazo);
     }
