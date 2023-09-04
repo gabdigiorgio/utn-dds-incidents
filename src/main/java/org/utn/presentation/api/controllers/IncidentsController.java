@@ -95,9 +95,11 @@ public class IncidentsController {
             ctx.json(json);
 
             ctx.status(200);
-        }
-
-        catch (Exception error) {
+        } catch (UnrecognizedPropertyException unRecognizedPropertyError) {
+            String message = String.format("Campo desconocido: '%s'", unRecognizedPropertyError.getPropertyName());
+            ctx.json(parseErrorResponse(400, message));
+            ctx.status(400);
+        } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
         }
