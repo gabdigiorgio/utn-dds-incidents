@@ -102,7 +102,8 @@ public class Incident {
     }
 
     /******   Inicio metodos que impactan a estados   ******/
-    public void assignEmployee(String employee) throws StateTransitionException {
+    public void assignEmployee(String employee) throws StateTransitionException, IllegalArgumentException {
+        if (employee == null) throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo.");
         this.state.assignEmployee(this);
         this.setEmployee(employee);
     }

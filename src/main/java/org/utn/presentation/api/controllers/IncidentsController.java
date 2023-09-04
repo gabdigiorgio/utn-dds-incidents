@@ -247,5 +247,5 @@ public class IncidentsController {
 
         return objectMapper.writeValueAsString(errorResponse);
     }
-    
+
 }
