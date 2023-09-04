@@ -93,8 +93,8 @@ public class IncidentsController {
             String json = objectMapper.writeValueAsString(newIncident);
 
             ctx.json(json);
+            ctx.status(201);
 
-            ctx.status(200);
         } catch (UnrecognizedPropertyException unRecognizedPropertyError) {
             String message = String.format("Campo desconocido: '%s'", unRecognizedPropertyError.getPropertyName());
             ctx.json(parseErrorResponse(400, message));
