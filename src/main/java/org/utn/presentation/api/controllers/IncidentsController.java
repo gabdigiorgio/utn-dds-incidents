@@ -168,11 +168,7 @@ public class IncidentsController {
             // delete incident
             manager.deleteIncident(id);
 
-            JSONObject result = new JSONObject();
-            result.put("result", true);
-
-            ctx.json(result.toString());
-            ctx.status(200);
+            ctx.status(204);
 
         } catch (NotFoundException notFoundError) {
             ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
