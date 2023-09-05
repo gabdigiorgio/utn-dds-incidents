@@ -96,20 +96,20 @@ public class DbIncidentsRepository implements IncidentsRepository {
             Root<Incident> root = criteriaQuery.from(Incident.class);
             //criteriaQuery.select(root);
             if (state != null) {
-                Predicate stateFilter = criteriaBuilder.equal(root.get("estado").as(String.class), state);
+                Predicate stateFilter = criteriaBuilder.equal(root.get("state").as(String.class), state);
                 criteriaQuery.where(stateFilter);
             }
 
             if (catalogCode != null) {
-                Predicate catalogCodeFilter = criteriaBuilder.equal(root.get("codigoCatalogo"), catalogCode);
+                Predicate catalogCodeFilter = criteriaBuilder.equal(root.get("catalogCode"), catalogCode);
                 criteriaQuery.where(catalogCodeFilter);
             }
 
             if (orderBy != null) {
                 if (orderBy.equals("createdAt")) {
-                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get("fechaReporte")));
+                    criteriaQuery.orderBy(criteriaBuilder.asc(root.get("reportDate")));
                 } else {
-                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("fechaReporte")));
+                    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("reportDate")));
                 }
             }
 

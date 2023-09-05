@@ -1,10 +1,7 @@
 package org.utn.domain;
 
 import org.junit.Test;
-import org.utn.domain.incident.CatalogCode;
-import org.utn.domain.incident.StateEnum;
-import org.utn.domain.incident.State;
-import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.*;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
 import static org.junit.Assert.assertEquals;
@@ -56,7 +53,7 @@ public class IncidentsTest {
     // Tests de transicion de estado: Reportado
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenConfirmingReportedIncident() throws Exception{
+    public void shouldThrowExceptionWhenConfirmingReportedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.REPORTED);
 
@@ -64,7 +61,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenStartingProgressOfReportedIncident() throws Exception{
+    public void shouldThrowExceptionWhenStartingProgressOfReportedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.REPORTED);
 
@@ -72,7 +69,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenResolvingReportedIncident() throws Exception{
+    public void shouldThrowExceptionWhenResolvingReportedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.REPORTED);
 
@@ -82,7 +79,7 @@ public class IncidentsTest {
     // Tests de transicion de estado: Asignado
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenAssigningEmployeeToAssignedIncident() throws Exception{
+    public void shouldThrowExceptionWhenAssigningEmployeeToAssignedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.ASSIGNED);
 
@@ -90,7 +87,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenStartingProgressOfAssignedIncident() throws Exception{
+    public void shouldThrowExceptionWhenStartingProgressOfAssignedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.ASSIGNED); // TODO: revisar si puede pasar de asignado -> en progreso
 
@@ -98,7 +95,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenResolvingAssignedIncident() throws Exception{
+    public void shouldThrowExceptionWhenResolvingAssignedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.ASSIGNED);
 
@@ -108,7 +105,7 @@ public class IncidentsTest {
     // Tests de transicion de estado: Confirmado
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenAssigningEmployeeToConfirmedIncident() throws Exception{
+    public void shouldThrowExceptionWhenAssigningEmployeeToConfirmedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.CONFIRMED);
 
@@ -116,7 +113,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenConfirmingConfirmedIncident() throws Exception{
+    public void shouldThrowExceptionWhenConfirmingConfirmedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.CONFIRMED);
 
@@ -124,7 +121,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenResolvingConfirmedIncident() throws Exception{
+    public void shouldThrowExceptionWhenResolvingConfirmedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.CONFIRMED);
 
@@ -134,7 +131,7 @@ public class IncidentsTest {
     // Tests de transicion de estado: Desestimado
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenAssigningEmployeeToDismissedIncident() throws Exception{
+    public void shouldThrowExceptionWhenAssigningEmployeeToDismissedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.DISMISSED);
 
@@ -142,7 +139,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenConfirmingDismissedIncident() throws Exception{
+    public void shouldThrowExceptionWhenConfirmingDismissedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.DISMISSED);
 
@@ -150,7 +147,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenDismissingDismissedIncident() throws Exception{
+    public void shouldThrowExceptionWhenDismissingDismissedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.DISMISSED);
 
@@ -158,7 +155,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenStartingProgressOfDismissedIncident() throws Exception{
+    public void shouldThrowExceptionWhenStartingProgressOfDismissedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.DISMISSED);
 
@@ -166,7 +163,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenResolvingDismissedIncident() throws Exception{
+    public void shouldThrowExceptionWhenResolvingDismissedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.DISMISSED);
 
@@ -176,7 +173,7 @@ public class IncidentsTest {
     // Tests de transicion de estado: En Progreso
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenAssigningEmployeeToInProgressIncident() throws Exception{
+    public void shouldThrowExceptionWhenAssigningEmployeeToInProgressIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.IN_PROGRESS);
 
@@ -184,7 +181,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenConfirmingInProgressIncident() throws Exception{
+    public void shouldThrowExceptionWhenConfirmingInProgressIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.IN_PROGRESS);
 
@@ -192,7 +189,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenDismissingInProgressIncident() throws Exception{
+    public void shouldThrowExceptionWhenDismissingInProgressIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.IN_PROGRESS);
 
@@ -200,7 +197,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenStartingProgressOfInProgressIncident() throws Exception{
+    public void shouldThrowExceptionWhenStartingProgressOfInProgressIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.IN_PROGRESS);
 
@@ -210,7 +207,7 @@ public class IncidentsTest {
     // Tests de transicion de estado: Solucionado
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenAssigningEmployeeToResolvedIncident() throws Exception{
+    public void shouldThrowExceptionWhenAssigningEmployeeToResolvedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.RESOLVED);
 
@@ -218,7 +215,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenConfirmingResolvedIncident() throws Exception{
+    public void shouldThrowExceptionWhenConfirmingResolvedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.RESOLVED);
 
@@ -226,7 +223,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenDismissingResolvedIncident() throws Exception{
+    public void shouldThrowExceptionWhenDismissingResolvedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.RESOLVED);
 
@@ -234,7 +231,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenStartingProgressOfResolvedIncident() throws Exception{
+    public void shouldThrowExceptionWhenStartingProgressOfResolvedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.RESOLVED);
 
@@ -242,7 +239,7 @@ public class IncidentsTest {
     }
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenResolvingResolvedIncident() throws Exception{
+    public void shouldThrowExceptionWhenResolvingResolvedIncident() throws StateTransitionException{
 
         givenIncidentWithState(StateEnum.RESOLVED);
 
@@ -253,23 +250,23 @@ public class IncidentsTest {
         incident = new IncidentBuilderForTest().withState(state).build();
     }
 
-    private void whenAssignEmployee() throws Exception {
+    private void whenAssignEmployee() throws StateTransitionException {
         incident.assignEmployee(employee);
     }
 
-    private void whenConfirmIncident() throws Exception {
+    private void whenConfirmIncident() throws StateTransitionException {
         incident.confirmIncident();
     }
 
-    private void whenDismissIncident() throws Exception {
+    private void whenDismissIncident() throws StateTransitionException {
         incident.dismissIncident("");
     }
 
-    private void whenResolveIncident() throws Exception {
+    private void whenResolveIncident() throws StateTransitionException {
         incident.resolveIncident();
     }
 
-    private void whenStartProgressIncident() throws Exception {
+    private void whenStartProgressIncident() throws StateTransitionException {
         incident.startProgress();
     }
 

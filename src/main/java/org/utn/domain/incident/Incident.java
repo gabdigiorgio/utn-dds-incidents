@@ -102,25 +102,27 @@ public class Incident {
     }
 
     /******   Inicio metodos que impactan a estados   ******/
-    public void assignEmployee(String employee) throws Exception {
+    public void assignEmployee(String employee) throws StateTransitionException, IllegalArgumentException {
+        if (employee == null) throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo.");
         this.state.assignEmployee(this);
         this.setEmployee(employee);
     }
 
-    public void confirmIncident() throws Exception {
+    public void confirmIncident() throws StateTransitionException {
         this.state.confirmIncident(this);
     }
 
-    public void dismissIncident(String motivoRechazo) throws Exception {
+    public void dismissIncident(String motivoRechazo) throws StateTransitionException {
+        if (motivoRechazo == null) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo.");
         this.state.dismissIncident(this);
         this.setRejectedReason(motivoRechazo);
     }
 
-    public void startProgress() throws Exception {
+    public void startProgress() throws StateTransitionException {
         this.state.startProgress(this);
     }
 
-    public void resolveIncident() throws Exception {
+    public void resolveIncident() throws StateTransitionException {
         this.state.resolveIncident(this);
     }
 
@@ -140,7 +142,7 @@ public class Incident {
         this.rejectedReason = rejectedReason;
     }
 
-    public void updateState(StateEnum nextState, String employee, String rejectedReason) throws Exception {
+    public void updateState(StateEnum nextState, String employee, String rejectedReason) throws StateTransitionException {
         switch (nextState) {
             case ASSIGNED:
                 this.assignEmployee(employee);
@@ -158,7 +160,7 @@ public class Incident {
                 this.resolveIncident();
                 break;
             default:
-                throw new Exception("Estado deseado inválido");
+                throw new StateTransitionException("Estado deseado inválido");
         }
     }
 }
