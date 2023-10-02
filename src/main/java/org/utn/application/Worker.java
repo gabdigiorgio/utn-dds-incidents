@@ -55,7 +55,7 @@ public class Worker extends DefaultConsumer {
 
             StringEntity params = new StringEntity(json.toString());
             HttpUriRequest httpPost = RequestBuilder.post()
-                    .setUri(new URI("https://tpa-utn-grupo-1.onrender.com/incidents/process_csv"))
+                    .setUri(new URI("https://tpa-utn-grupo-1.onrender.com/api/incidents/process_csv"))
                     .addHeader("Content-Type", "application/json; charset=UTF-8")
                     .addHeader("Accept", "*/*")
                     .addHeader("Accept-Encoding", "gzip, deflate, br")

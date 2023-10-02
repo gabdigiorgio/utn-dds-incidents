@@ -38,6 +38,12 @@ public class IncidentManager {
         return incidents;
     }
 
+    public Incident getIncident(Integer id) throws NotFoundException {
+        Incident incident = IncidentRepository.getById(id);
+        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
+        return incident;
+    }
+
     public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
         Incident incident = IncidentRepository.getById(id);
         if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
