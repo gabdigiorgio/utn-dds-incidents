@@ -9,11 +9,11 @@ public class UIResource implements EndpointGroup {
     public void addEndpoints() {
         ApiBuilder.path("/ui/incidents", () -> {
             //ApiBuilder.get("/", UIController.getIncidents);
+            ApiBuilder.get("/upload_csv", UIController.createMassiveIncident);
             ApiBuilder.get("/{id}", UIController.getIncident);
             //ApiBuilder.post("/", UIController.createIncident);
             //ApiBuilder.put("/{id}", UIController.editIncident);
             //ApiBuilder.put("/{id}/estado", UIController.updateIncidentState);
-            //ApiBuilder.post("/upload_csv", UIController.createMassiveIncident);
         });
     }
 }
