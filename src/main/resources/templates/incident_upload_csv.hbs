@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Cargar Archivo CSV</title>
-    <!-- Enlaces a Bootstrap CSS y JS desde la CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body style="background-color: #f8f9fa;">
@@ -16,12 +15,12 @@
                     <h5 class="card-title">Cargar Archivo CSV</h5>
                 </div>
                 <div class="card-body">
-                    <form enctype="multipart/form-data" action="tu_ruta_de_procesamiento" method="POST">
+                    <form enctype="multipart/form-data" id="fileUploadForm">
                         <div class="mb-3">
-                            <label for="csvFile" class="form-label">Selecciona un archivo CSV:</label>
-                            <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv">
+                            <label for="file" class="form-label">Seleccione un archivo CSV:</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".csv, .tsv">
                         </div>
-                        <button type="submit" class="btn btn-primary">Cargar</button>
+                        <button type="button" class="btn btn-primary" onclick="uploadFile()">Cargar</button>
                     </form>
                 </div>
             </div>
@@ -29,9 +28,28 @@
     </div>
 </div>
 
-<!-- Scripts de Bootstrap y jQuery desde la CDN -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Opcional: Agrega jQuery desde la CDN si lo utilizas -->
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<script>
+function uploadFile() {
+    const formData = new FormData(document.getElementById("fileUploadForm"));
+
+    fetch("/api/incidents/upload_csv", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Archivo cargado con éxito.");
+        } else {
+            alert("Error al cargar el archivo. Por favor, inténtalo de nuevo.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Error al cargar el archivo. Por favor, inténtalo de nuevo.");
+    });
+}
+</script>
 </body>
 </html>
