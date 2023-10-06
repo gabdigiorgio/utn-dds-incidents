@@ -42,7 +42,39 @@ public class ServerApi {
     }
 
     private static void InitWorker() throws IOException, TimeoutException {
+        String[] requiredEnvVars = {"QUEUE_HOST", "QUEUE_USERNAME", "QUEUE_PASSWORD", "QUEUE_NAME"};
+
         Map<String, String> env = System.getenv();
+
+        //forzamos un fail fast acá por si las variables no están cargadas correctamente
+        //me salto este error porque no las tenia cargadas en el proyecto...
+        for (String var : requiredEnvVars) {
+            if (env.get(var) == null) {
+                throw new IllegalArgumentException("Falta la variable de entorno: " + var);
+            }
+        }
+
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost(env.get("QUEUE_HOST"));
+        factory.setUsername(env.get("QUEUE_USERNAME"));
+        factory.setPassword(env.get("QUEUE_PASSWORD"));
+        factory.setVirtualHost(env.get("QUEUE_USERNAME"));
+        String queueName = env.get("QUEUE_NAME");
+
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+
+            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel, queueName, new CsvReader());
+            worker.init();
+        }
+    }
+
+
+    /*
+    Comento el metodo de Gabo para comparar
+    private static void InitWorker() throws IOException, TimeoutException {
+        Map<String, String> env = System.getenv();
+
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(env.get("QUEUE_HOST"));
         factory.setUsername(env.get("QUEUE_USERNAME"));
@@ -54,7 +86,7 @@ public class ServerApi {
 
         IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader());
         worker.init();
-    }
+    }*/
 
     private static void initTemplateEngine() {
     JavalinRenderer.register(
