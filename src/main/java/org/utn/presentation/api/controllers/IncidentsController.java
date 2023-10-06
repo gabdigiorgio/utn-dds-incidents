@@ -25,6 +25,7 @@ import org.utn.domain.incident.StateTransitionException;
 import org.utn.persistence.DbIncidentsRepository;
 import org.utn.presentation.api.inputs.*;
 import org.utn.presentation.incidents_load.CsvReader;
+import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
 
 import java.io.ByteArrayInputStream;
@@ -41,16 +42,6 @@ import java.util.Objects;
 public class IncidentsController {
     static IncidentManager manager = new IncidentManager(DbIncidentsRepository.getInstance());
 
-//   // validate two dependent query parameters:
-// Instant fromDate = ctx.queryParam("from", Instant.class).get();
-// Instant toDate = ctx.queryParam("to", Instant.class)
-//         .check(it -> it.isAfter(fromDate), "'to' has to be after 'from'")
-//         .get();
-
-// // validate a json body:
-// MyObject myObject = ctx.bodyValidator(MyObject.class)
-//         .check(obj -> obj.myObjectProperty == someValue)
-//         .getOrThrow();
 
     public static Handler getIncidents = ctx -> {
         Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
@@ -179,35 +170,9 @@ public class IncidentsController {
         }
     };
 
-    public static void sendToWorker(String payload) throws Exception {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        Map<String, String> env = System.getenv();
-        try {
-            JSONObject json = new JSONObject();
-            json.put("vhost", env.get("QUEUE_HOST"));
-            json.put("routing_key", env.get("QUEUE_NAME"));
-            json.put("delivery_mode", "1");
-            json.put("payload_encoding", "string");
-            json.put("properties", new JSONObject());
-            json.put("payload", payload);
-
-            StringEntity params = new StringEntity(json.toString());
-            HttpUriRequest httpPost = RequestBuilder.post().setUri(
-                    new URI("https://gull.rmq.cloudamqp.com/api/exchanges/fvizvkea/amq.default/publish"))
-                    .addHeader("Authorization"
-                    , env.get("QUEUE_AUTH")).addHeader("Content-Type", "application/json; charset=UTF-8")
-                    .addHeader("Accept", "*/*").addHeader("Accept-Encoding", "gzip, deflate, br")
-                    .setEntity(params).build();
-
-            CloseableHttpResponse response = httpclient.execute(httpPost);
-            try {
-                System.out.println(EntityUtils.toString(response.getEntity()));
-            } finally {
-                response.close();
-            }
-        } finally {
-            httpclient.close();
-        }
+    private static void sendToWorker(String payload) throws Exception {
+        MQCLient mqClient = new MQCLient();
+        mqClient.publish(payload);
     }
 
     public static Handler createMassiveIncident = ctx -> {
@@ -230,20 +195,6 @@ public class IncidentsController {
         }
     };
 
-    public static Handler processMassiveIncidents = ctx -> {
-        ProcessCsv data = ctx.bodyAsClass(ProcessCsv.class);
-        String incidents = data.indicents;
-        InputStream incidentsStream = new ByteArrayInputStream(incidents.getBytes(StandardCharsets.UTF_8));
-        Reader reader = new InputStreamReader(incidentsStream);
-        try {
-            String result = new CsvReader().execute(reader);
-            ctx.json(result);
-            ctx.status(200);
-        } catch (Exception error) {
-            ctx.status(400);
-            ctx.json("No se recibió ningún archivo.");
-        }
-    };
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
         ErrorResponse errorResponse = new ErrorResponse();
