@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static org.utn.presentation.api.controllers.IncidentsController.parseErrorResponse;
-import static org.utn.presentation.api.controllers.IncidentsController.sendToWorker;
 
 public class UIController {
     static IncidentManager manager = new IncidentManager(DbIncidentsRepository.getInstance());
