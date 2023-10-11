@@ -16,10 +16,10 @@ public class UIResource implements EndpointGroup {
         });
 
         ApiBuilder.path("/ui/incidents", () -> {
-            //ApiBuilder.get("/", UIController.getIncidents);
+            ApiBuilder.get("/", UIController.getIncidents);
             ApiBuilder.get("/upload_csv", UIController.createMassiveIncident);
             ApiBuilder.get("/{id}", UIController.getIncident);
-            //ApiBuilder.post("/", UIController.createIncident);
+            ApiBuilder.get("/create", UIController.createIncident);
             //ApiBuilder.put("/{id}", UIController.editIncident);
             //ApiBuilder.put("/{id}/estado", UIController.updateIncidentState);
         });

@@ -62,6 +62,22 @@ public class IncidentsController {
         ctx.status(200);
     };
 
+    public static Handler getIncident = ctx -> {
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        // get incident
+        Incident incidents = manager.getIncident(id);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        String json = objectMapper.writeValueAsString(incidents);
+        ctx.json(json);
+        ctx.status(200);
+    };
+
     public static Handler createIncident = ctx -> {
         try {
             CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
