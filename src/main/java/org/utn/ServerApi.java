@@ -5,6 +5,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
+import com.rabbitmq.client.AuthenticationFailureException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -25,9 +26,12 @@ public class ServerApi {
 
     public static void main(String[] args) throws IOException, TimeoutException {
 
+        // Worker
         InitWorker();
 
+        // TemplateEngine -Handlebars
         initTemplateEngine();
+
         Integer port = Integer.parseInt( System.getProperty("port", "8080"));
         Javalin server = Javalin.create().start(port);
 
@@ -66,6 +70,8 @@ public class ServerApi {
 
             IncidentsCsvWorker worker = new IncidentsCsvWorker(channel, queueName, new CsvReader());
             worker.init();
+        } catch (AuthenticationFailureException afe){   // afe = authenticationFailureException
+            throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());
         }
     }
 
@@ -88,14 +94,16 @@ public class ServerApi {
         worker.init();
     }*/
 
+
     private static void initTemplateEngine() {
     JavalinRenderer.register(
-            (path, model, context) -> { // Template render
-              Handlebars handlebars = new Handlebars();
-              Template template = null;
+            (path, model, context) -> { // Template render, expresion lambda para definir la renderizacion
+              Handlebars hb = new Handlebars(); // le cambio el nombre a hb para identificarlo mejor
               try {
-                template = handlebars.compile("templates/" + path.replace(".hbs", ""));
-                return template.apply(model);
+
+                Template tp = hb.compile("templates/" + path.replace(".hbs", ""));
+                return tp.apply(model);
+
               } catch (IOException e) {
                 e.printStackTrace();
                 context.status(HttpStatus.NOT_FOUND);
@@ -104,6 +112,7 @@ public class ServerApi {
             }, ".hbs" // Handlebars extension
     );
   }
+
 
     private static Consumer<JavalinConfig> config() {
         return config -> {

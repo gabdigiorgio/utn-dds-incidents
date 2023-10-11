@@ -7,6 +7,14 @@ import org.utn.presentation.api.controllers.UIController;
 public class UIResource implements EndpointGroup {
     @Override
     public void addEndpoints() {
+
+        // con esto podríamos generar un home y otras cositas, a evaluar si corresponde o no hacer esto
+        ApiBuilder.path("/", () -> {
+            ApiBuilder.get("/", ctx -> {
+                ctx.render("index.hbs");
+            });
+        });
+
         ApiBuilder.path("/ui/incidents", () -> {
             //ApiBuilder.get("/", UIController.getIncidents);
             ApiBuilder.get("/upload_csv", UIController.createMassiveIncident);
