@@ -8,6 +8,7 @@ import org.utn.presentation.incidents_load.CsvReader;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 public class IncidentsCsvWorker extends DefaultConsumer {
 
@@ -41,6 +42,9 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         } catch (CsvException e) {
             System.out.println("Error a procesa el CSV en el Worker!!");
         }
+        catch (Exception e) {
+            System.out.println("Excepcion no reconocida!!");
+        }
     }
 
     @NotNull
@@ -55,5 +59,35 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         this.getChannel().basicAck(envelope.getDeliveryTag(), false);
     }
 
+    public static void main(String[] args) throws IOException, TimeoutException {
+        String[] requiredEnvVars = {"QUEUE_HOST", "QUEUE_USERNAME", "QUEUE_PASSWORD", "QUEUE_NAME"};
+
+        Map<String, String> env = System.getenv();
+
+        //forzamos un fail fast acá por si las variables no están cargadas correctamente
+        //me salto este error porque no las tenia cargadas en el proyecto...
+        for (String var : requiredEnvVars) {
+            if (env.get(var) == null) {
+                throw new IllegalArgumentException("Falta la variable de entorno: " + var);
+            }
+        }
+
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost(env.get("QUEUE_HOST"));
+        factory.setUsername(env.get("QUEUE_USERNAME"));
+        factory.setPassword(env.get("QUEUE_PASSWORD"));
+        factory.setVirtualHost(env.get("QUEUE_USERNAME"));
+        String queueName = env.get("QUEUE_NAME");
+
+        try{
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
+            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader());
+            worker.init();
+        } catch (AuthenticationFailureException afe) {
+            throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());
+        }
+
+    }
 }
 
