@@ -1,6 +1,7 @@
 package org.utn.domain.incident;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -136,6 +137,18 @@ public class Incident {
 
     public void setClosingDate(LocalDate date) {
         this.closingDate = date;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setReportedBy(String reportedBy) {
+        this.reportedBy = reportedBy;
+    }
+
+    public void setReportDate(LocalDate reportDate) {
+        this.reportDate = reportDate;
     }
 
     public void setRejectedReason(String rejectedReason) {

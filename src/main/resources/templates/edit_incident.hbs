@@ -36,7 +36,7 @@
 <div class="container mt-3">
     <div class="row justify-content-between pt-5">
     <div class="col-10 pt-3">
-        <h2>Editar incidencia</h2>
+        <h2>Editar incidencia {{incident.id}}</h2>
     </div>
     <div class="col-2 pt-3">
         <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
@@ -59,11 +59,55 @@
             <input type="text" class="form-control" id="reporterId" value="{{incident.reporterId}}" placeholder="reporterId" name="reporterId">
             <label for="reporterId">Id de la persona que hace el reporte</label>
         </div>
+
+        <div class="form-floating mt-3 mb-3">
+            <select class="form-select" id="estado" name="estado">
+                <option value="Seleccionar estado" disabled selected>Seleccionar estado</option>
+                <option value="Asignado">Asignado</option>
+                <option value="Confirmado">Confirmado</option>
+                <option value="Desestimado">Desestimado</option>
+                <option value="En progreso">En progreso</option>
+                <option value="Resuelto">Resuelto</option>
+            </select>
+            <label for="estado">Estado</label>
+        </div>
+
+        <div class="form-floating mt-3 mb-3" id="campo-empleado" style="display: none;">
+            <input type="text" class="form-control" id="empleado" placeholder="Empleado" name="empleado">
+            <label for="empleado">Empleado</label>
+        </div>
+
+        <div class="form-floating mt-3 mb-3" id="campo-motivo" style="display: none;">
+            <input type="text" class="form-control" id="motivo" placeholder="Motivo de rechazo" name="motivo">
+            <label for="motivo">Motivo de rechazo</label>
+        </div>
+
         <button type="submit" class="btn btn-primary">Finalizar</button>
     </form>
     </div>
 </div>
 </body>
+<script>
+    const selectEstado = document.querySelector('select[name="estado"]');
+    const campoEmpleado = document.getElementById('campo-empleado');
+    const campoMotivo = document.getElementById('campo-motivo');
+
+    selectEstado.addEventListener('change', function () {
+        const estadoSeleccionado = selectEstado.value;
+
+        // Oculta todos los campos adicionales
+        campoEmpleado.style.display = 'none';
+        campoMotivo.style.display = 'none';
+
+        // Muestra el campo correspondiente al estado seleccionado
+        if (estadoSeleccionado === 'Asignado') {
+            campoEmpleado.style.display = 'block';
+        } else if (estadoSeleccionado === 'Desestimado') {
+            campoMotivo.style.display = 'block';
+        }
+    });
+</script>
+
 <script>
     form.onsubmit = async (e) => {
       e.preventDefault();
@@ -76,17 +120,34 @@
         reporterId : form.querySelector('input[name="reporterId"]').value
       }
 
-      const response = await fetch('/api/incidents', {
-        method: 'POST',
+      const rawDate = form.querySelector('input[name="reportDate"]').value;
+
+      const parts = rawDate.split('-');
+      const year = parts[0];
+      const month = parts[1];
+      const day = parts[2];
+
+      const formattedDate = `${day}${month}${year}`;
+      
+      data.reportDate = formattedDate;
+
+      const id = {{incident.id}};
+      const url = `/api/incidents/${id}`;
+
+      const response = await fetch(url, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       })
 
-      const responseData = await response.json(); // read response body as json
-      if (responseData.status === 400) alert(responseData.message);
-      else window.location.href = "http://localhost:8080/ui/incidents";
+      const responseData = await response.json();
+        if (responseData.status === 400) {
+        alert(responseData.message);
+        } else {
+        window.location.href = "http://localhost:8080/ui/incidents";
+        }
     }
 </script>
 </html>

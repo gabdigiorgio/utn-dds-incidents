@@ -9,7 +9,6 @@ import org.utn.domain.incident.StateTransitionException;
 import org.utn.domain.incident.factory.IncidentFactory;
 import org.utn.persistence.IncidentsRepository;
 import org.utn.presentation.api.inputs.ChangeState;
-import org.utn.presentation.api.inputs.CreateIncident;
 import org.utn.presentation.api.inputs.EditIncident;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
@@ -49,9 +48,10 @@ public class IncidentManager {
         if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
 
         // data.status,
-        if (data.employeeId != null) incident.setEmployee(data.employeeId);
-        if (data.closedDate != null) incident.setClosingDate(DateUtils.parseDate(data.closedDate));
-        if (data.rejectedReason != null) incident.setRejectedReason(data.rejectedReason);
+        if (data.catalogCode != null) incident.catalogCode.setCode(data.catalogCode);
+        if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
+        if (data.description != null) incident.setDescription(data.description);
+        if (data.reporterId != null) incident.setReportedBy(data.reporterId);
 
         // repoIncidencias
         IncidentRepository.update(incident);
