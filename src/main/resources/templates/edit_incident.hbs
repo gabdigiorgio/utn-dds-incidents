@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Crear incidencia</title>
+    <title>Editar incidencia</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -36,7 +36,7 @@
 <div class="container mt-3">
     <div class="row justify-content-between pt-5">
     <div class="col-10 pt-3">
-        <h2>Crear nueva incidencia</h2>
+        <h2>Editar incidencia</h2>
     </div>
     <div class="col-2 pt-3">
         <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
@@ -44,19 +44,19 @@
 
     <form id="form">
         <div class="form-floating mt-3 mb-3">
-            <input type="text" class="form-control" id="catalogCode" placeholder="Enter catalogCode" name="catalogCode">
+            <input type="text" class="form-control" id="catalogCode" value="{{incident.catalogCode.code}}" placeholder="Enter catalogCode" name="catalogCode">
             <label for="catalogCode">Codigo de catalogo</label>
         </div>
         <div class="form-floating mt-3 mb-3">
-            <input type="text" class="form-control" id="reportDate" placeholder="Enter reportDate" name="reportDate">
+            <input type="text" class="form-control" id="reportDate" value="{{incident.reportDate}}" placeholder="Enter reportDate" name="reportDate">
             <label for="reportDate">Fecha</label>
         </div>
         <div class="form-floating mt-3 mb-3">
-            <input type="text" class="form-control" id="description" placeholder="Enter description" name="description">
+            <input type="text" class="form-control" id="description" value="{{incident.description}}" placeholder="Enter description" name="description">
             <label for="description">Descripcion</label>
         </div>
         <div class="form-floating mt-3 mb-3">
-            <input type="text" class="form-control" id="reporterId" placeholder="reporterId" name="reporterId">
+            <input type="text" class="form-control" id="reporterId" value="{{incident.reporterId}}" placeholder="reporterId" name="reporterId">
             <label for="reporterId">Id de la persona que hace el reporte</label>
         </div>
         <button type="submit" class="btn btn-primary">Finalizar</button>

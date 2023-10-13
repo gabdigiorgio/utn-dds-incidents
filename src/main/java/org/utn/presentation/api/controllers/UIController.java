@@ -59,6 +59,24 @@ public class UIController {
         }
     };
 
+    public static Handler editIncident = ctx -> {
+        try {
+            Map<String, Object> model = new HashMap<>();
+            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+            // get incident by id
+            Incident incident = manager.getIncident(id);
+            model.put("incident", incident);
+            ctx.render("edit_incident.hbs", model);
+        }  catch (NotFoundException notFoundError) {
+            ctx.status(404);
+            ctx.result("Incidencia no encontrada");
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(400, error.getMessage()));
+            ctx.status(400);
+        }
+    };
+
     public static Handler createMassiveIncident = ctx -> {
         try {
             ctx.render("incident_upload_csv.hbs");
