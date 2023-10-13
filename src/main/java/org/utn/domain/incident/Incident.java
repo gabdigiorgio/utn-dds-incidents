@@ -104,7 +104,7 @@ public class Incident {
 
     /******   Inicio metodos que impactan a estados   ******/
     public void assignEmployee(String employee) throws StateTransitionException, IllegalArgumentException {
-        if (employee == null) throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo.");
+        if (employee == null || employee.isEmpty()) throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo ni vacío.");
         this.state.assignEmployee(this);
         this.setEmployee(employee);
     }
@@ -114,7 +114,7 @@ public class Incident {
     }
 
     public void dismissIncident(String motivoRechazo) throws StateTransitionException {
-        if (motivoRechazo == null) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo.");
+        if (motivoRechazo == null || motivoRechazo.isEmpty()) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo ni vacío.");
         this.state.dismissIncident(this);
         this.setRejectedReason(motivoRechazo);
     }
