@@ -1,8 +1,8 @@
 package org.utn.presentation.api.inputs;
 
 public class EditIncident {
-  public String closedDate;
-  public String rejectedReason;
-  public String state;
-  public String employeeId; 
+  public String reportDate;
+  public String description;
+  public String catalogCode;
+  public String reporterId;
 }
