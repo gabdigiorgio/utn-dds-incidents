@@ -104,7 +104,6 @@ const selectEstado = document.querySelector('select[name="estado"]');
             campoMotivo.style.display = 'block';
         }
 
-        // Limpia los campos si se selecciona un estado diferente a "En progreso"
         if (estadoSeleccionado !== 'En progreso') {
             document.querySelector('input[name="empleado"]').value = '';
             document.querySelector('input[name="motivo"]').value = '';
@@ -188,8 +187,7 @@ form.onsubmit = async (e) => {
     }
   }
 
-  // Redirige al usuario al final
-  window.location.href = "http://localhost:8080/ui/incidents";
+  window.location.href = `http://localhost:8080/ui/incidents/${id}`;
 };
 </script>
 </html>
