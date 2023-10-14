@@ -13,6 +13,19 @@ public class UIResource implements EndpointGroup {
             ApiBuilder.get("/", ctx -> {
                 ctx.render("index.hbs");
             });
+
+            // Agrega una nueva ruta '/about'
+            ApiBuilder.get("/faqs", ctx -> {
+                ctx.render("404.hbs");
+            });
+
+            ApiBuilder.get("/nosotros", ctx -> {
+                ctx.render("404.hbs");
+            });
+
+            ApiBuilder.get("/contacto", ctx -> {
+                ctx.render("404.hbs");
+            });
         });
 
         ApiBuilder.path("/ui/incidents", () -> {
