@@ -113,7 +113,7 @@ public class Incident {
         this.state.confirmIncident(this);
     }
 
-    public void dismissIncident(String motivoRechazo) throws StateTransitionException {
+    public void dismissIncident(String motivoRechazo) throws IllegalArgumentException, StateTransitionException {
         if (motivoRechazo == null || motivoRechazo.isEmpty()) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo ni vacío.");
         this.state.dismissIncident(this);
         this.setRejectedReason(motivoRechazo);
