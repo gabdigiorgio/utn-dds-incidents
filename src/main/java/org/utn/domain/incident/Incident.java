@@ -1,6 +1,7 @@
 package org.utn.domain.incident;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -103,7 +104,7 @@ public class Incident {
 
     /******   Inicio metodos que impactan a estados   ******/
     public void assignEmployee(String employee) throws StateTransitionException, IllegalArgumentException {
-        if (employee == null) throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo.");
+        if (employee == null || employee.isEmpty()) throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo ni vacío.");
         this.state.assignEmployee(this);
         this.setEmployee(employee);
     }
@@ -112,8 +113,8 @@ public class Incident {
         this.state.confirmIncident(this);
     }
 
-    public void dismissIncident(String motivoRechazo) throws StateTransitionException {
-        if (motivoRechazo == null) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo.");
+    public void dismissIncident(String motivoRechazo) throws IllegalArgumentException, StateTransitionException {
+        if (motivoRechazo == null || motivoRechazo.isEmpty()) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo ni vacío.");
         this.state.dismissIncident(this);
         this.setRejectedReason(motivoRechazo);
     }
@@ -136,6 +137,18 @@ public class Incident {
 
     public void setClosingDate(LocalDate date) {
         this.closingDate = date;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setReportedBy(String reportedBy) {
+        this.reportedBy = reportedBy;
+    }
+
+    public void setReportDate(LocalDate reportDate) {
+        this.reportDate = reportDate;
     }
 
     public void setRejectedReason(String rejectedReason) {

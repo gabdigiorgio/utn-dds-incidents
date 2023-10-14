@@ -45,7 +45,7 @@ public class IncidentsTest {
 
         givenIncidentWithState(StateEnum.ASSIGNED);
 
-        whenDismissIncident();
+        whenDismissIncident("reason");
 
         shouldTransitionTo(StateEnum.DISMISSED.getClass());
     }
@@ -258,8 +258,11 @@ public class IncidentsTest {
         incident.confirmIncident();
     }
 
-    private void whenDismissIncident() throws StateTransitionException {
+    private void whenDismissIncident() throws IllegalArgumentException, StateTransitionException {
         incident.dismissIncident("");
+    }
+    private void whenDismissIncident(String reason) throws IllegalArgumentException, StateTransitionException {
+        incident.dismissIncident(reason);
     }
 
     private void whenResolveIncident() throws StateTransitionException {

@@ -10,6 +10,7 @@ public class IncidentsResource implements EndpointGroup {
     public void addEndpoints() {
         ApiBuilder.path("/api/incidents", () -> {
             ApiBuilder.get("/", IncidentsController.getIncidents);
+            ApiBuilder.get("/{id}", IncidentsController.getIncident);
             ApiBuilder.post("/", IncidentsController.createIncident);
             ApiBuilder.put("/{id}", IncidentsController.editIncident);
             ApiBuilder.delete("/{id}", IncidentsController.deleteIncident);

@@ -113,9 +113,9 @@ public class DbIncidentsRepository implements IncidentsRepository {
                 }
             }
 
-            List<Incident> results = entityManager.createQuery(criteriaQuery).getResultList();
+            List<Incident> results = entityManager.createQuery(criteriaQuery).setMaxResults(quantity).getResultList();
 
-            return filterByQuantity(results, quantity);
+            return results;
         } finally {
             if (entityManager != null && entityManager.isOpen()) {
                 entityManager.close();
