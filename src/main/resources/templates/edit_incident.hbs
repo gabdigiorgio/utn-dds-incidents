@@ -66,7 +66,7 @@
                 <option value="Asignado">Asignado</option>
                 <option value="Confirmado">Confirmado</option>
                 <option value="Desestimado">Desestimado</option>
-                <option value="En progreso">En progreso</option>
+                <option value="En progreso">EnProgreso</option>
                 <option value="Resuelto">Resuelto</option>
             </select>
             <label for="estado">Estado</label>
@@ -88,66 +88,106 @@
 </div>
 </body>
 <script>
-    const selectEstado = document.querySelector('select[name="estado"]');
+const selectEstado = document.querySelector('select[name="estado"]');
     const campoEmpleado = document.getElementById('campo-empleado');
     const campoMotivo = document.getElementById('campo-motivo');
 
     selectEstado.addEventListener('change', function () {
         const estadoSeleccionado = selectEstado.value;
 
-        // Oculta todos los campos adicionales
         campoEmpleado.style.display = 'none';
         campoMotivo.style.display = 'none';
 
-        // Muestra el campo correspondiente al estado seleccionado
         if (estadoSeleccionado === 'Asignado') {
             campoEmpleado.style.display = 'block';
         } else if (estadoSeleccionado === 'Desestimado') {
             campoMotivo.style.display = 'block';
         }
+
+        if (estadoSeleccionado !== 'En progreso') {
+            document.querySelector('input[name="empleado"]').value = '';
+            document.querySelector('input[name="motivo"]').value = '';
+        }
     });
 </script>
 
 <script>
-    form.onsubmit = async (e) => {
-      e.preventDefault();
-      const form = document.querySelector("#form");
+// Mapeo de estados
+const estadoMapping = {
+  Asignado: "assigned",
+  Reportado: "reported",
+  EnProgreso: "inProgress",
+  Desestimado: "dismissed",
+  Resuelto: "resolved"
+};
 
-      const data = {
-        catalogCode : form.querySelector('input[name="catalogCode"]').value,
-        reportDate : form.querySelector('input[name="reportDate"]').value,
-        description : form.querySelector('input[name="description"]').value,
-        reporterId : form.querySelector('input[name="reporterId"]').value
-      }
+form.onsubmit = async (e) => {
+  e.preventDefault();
+  const form = document.querySelector("#form");
 
-      const rawDate = form.querySelector('input[name="reportDate"]').value;
+  const incidenciaData = {
+    catalogCode: form.querySelector('input[name="catalogCode"]').value,
+    reportDate: form.querySelector('input[name="reportDate"]').value,
+    description: form.querySelector('input[name="description"]').value,
+    reporterId: form.querySelector('input[name="reporterId"]').value
+  }
 
-      const parts = rawDate.split('-');
-      const year = parts[0];
-      const month = parts[1];
-      const day = parts[2];
+  const rawDate = form.querySelector('input[name="reportDate"]').value;
+  const parts = rawDate.split('-');
+  const year = parts[0];
+  const month = parts[1];
+  const day = parts[2];
+  const formattedDate = `${day}${month}${year}`;
 
-      const formattedDate = `${day}${month}${year}`;
-      
-      data.reportDate = formattedDate;
+  incidenciaData.reportDate = formattedDate;
 
-      const id = {{incident.id}};
-      const url = `/api/incidents/${id}`;
+  const estadoSeleccionado = selectEstado.value;
 
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
+  const estadoData = {
+    state: estadoMapping[estadoSeleccionado],
+    employee: form.querySelector('input[name="empleado"]').value,
+    rejectedReason: form.querySelector('input[name="motivo"]').value
+  };
 
-      const responseData = await response.json();
-        if (responseData.status === 400) {
-        alert(responseData.message);
-        } else {
-        window.location.href = "http://localhost:8080/ui/incidents";
-        }
+  const id = {{incident.id}};
+  const incidenciaUrl = `/api/incidents/${id}`;
+  const estadoUrl = `/api/incidents/${id}/estado`;
+
+  const responseIncidencia = await fetch(incidenciaUrl, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(incidenciaData),
+  });
+
+  const responseDataIncidencia = await responseIncidencia.json();
+  if (responseDataIncidencia.status === 400) {
+    alert(responseDataIncidencia.message);
+  } else {
+    alert("Incidencia editada con éxito");
+  }
+
+  if (estadoSeleccionado !== 'Seleccionar estado') {
+    const responseEstado = await fetch(estadoUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(estadoData),
+    });
+
+    const responseDataEstado = await responseEstado.json();
+    if (responseDataEstado.status === 422) {
+      alert(responseDataEstado.message);
+    } else if (responseDataEstado.status === 400) {
+      alert(responseDataEstado.message);
+    } else if (responseEstado.status === 200) {
+      alert("Cambio de estado realizado con éxito");
     }
+  }
+
+  window.location.href = `http://localhost:8080/ui/incidents/${id}`;
+};
 </script>
 </html>
