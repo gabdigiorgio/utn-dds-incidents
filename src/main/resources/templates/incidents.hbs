@@ -68,10 +68,12 @@
             <h2 style="display: inline;">Historial de incidencias</h2>
             <a class="btn btn-primary text-left" href="/ui/incidents/new" style="display: inline;height: 40;">Crear nueva incidencia</a>
         </div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 
         <hr class="featurette-divider">
 
-        <table class="table table-hover">
+        <table id= "tablax" class="table table-hover">
             <thead>
             <tr>
                 <th scope="col">Id</th>
@@ -107,6 +109,23 @@
                     </td>
                 </tr>
             {{/each}}
+            <body>
+            <script src="https://code.jquery.com/jquery-3.4.1.js"
+                    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous">
+            </script>
+            <!-- DATATABLES -->
+            <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js">
+            </script>
+            <!-- BOOTSTRAP -->
+            <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js">
+            </script>
+
+            <script>
+        $(document).ready(function () {
+            $('#tablax').DataTable();
+             });
+             </script>
+            </body>
             </tbody>
         </table>
     </div>
