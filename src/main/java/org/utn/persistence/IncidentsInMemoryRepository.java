@@ -70,7 +70,7 @@ public final class IncidentsInMemoryRepository implements IncidentsRepository {
         return incidents.size();
     }
 
-    public static List<Incident> filterByQuantity(List<Incident> list, int quantity) {
+    public static List<Incident> filterByQuantity( List<Incident> list, int quantity) {
         if (list.size() <= quantity) {
             return list;
         } else {

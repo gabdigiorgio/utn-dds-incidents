@@ -48,6 +48,7 @@ public class IncidentsController {
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
         String place = ctx.queryParamAsClass("place", String.class).getOrDefault(null);
+        Integer from = ctx.queryParamAsClass("from", Integer.class).getOrDefault(0);
 
         // get incidents
         List<Incident> incidents = manager.getIncidents(limit, orderBy, status, place);
