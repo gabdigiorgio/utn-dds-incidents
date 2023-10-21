@@ -16,14 +16,18 @@ import static org.utn.presentation.api.controllers.IncidentsController.parseErro
 public class UIController {
     static IncidentManager manager = new IncidentManager(DbIncidentsRepository.getInstance());
 
+
     public static Handler getIncidents = ctx -> {
         try {
+
             Map<String, Object> model = new HashMap<>();
 
             // get incidents
-            List<Incident> incidents = manager.getIncidents(10, "createdAt", null, null);
+
+            List<Incident> incidents = manager.getIncidents(1000, "createdAt", null, null);
             model.put("incidents", incidents);
             ctx.render("incidents.hbs", model);
+
 
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
