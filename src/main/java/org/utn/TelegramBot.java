@@ -15,6 +15,7 @@ import org.utn.presentation.bot.telegram_user.UserBotRepo;
 import org.utn.presentation.bot.telegram_user_state.WelcomeChat;
 import org.utn.presentation.incidents_load.CsvReader;
 
+import javax.persistence.EntityManagerFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,8 +23,11 @@ import java.util.Date;
 public class TelegramBot extends TelegramLongPollingBot {
     private static boolean isBotStarted = false;
 
-    public TelegramBot(String botToken) {
+    static EntityManagerFactory entityManagerFactory;
+
+    public TelegramBot(String botToken, EntityManagerFactory entityManagerFactory) {
         super(botToken);
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public static boolean isBotStarted() {
@@ -79,7 +83,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 java.io.File downloadedFile = downloadFile(file);
 
                 String filePath = downloadedFile.getAbsolutePath();
-                String result = new CsvReader().execute(filePath, null);
+                String result = new CsvReader(entityManagerFactory.createEntityManager()).execute(filePath);
 
                 // Envia el mensaje al usuario
                 SendMessage responseMsg = new SendMessage();
@@ -102,7 +106,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             // Se devuelve el token que nos generó el BotFather de nuestro bot
             String tokenbot = System.getenv("TELEGRAM_BOT_TOKEN");
             // Se registra el bot
-            telegramBotsApi.registerBot(new TelegramBot(tokenbot));
+            telegramBotsApi.registerBot(new TelegramBot(tokenbot, (EntityManagerFactory) entityManagerFactory.createEntityManager()));
             System.out.println("Se inicio la ejecución del BOT correctamente.");
 
             setBotStarted(true);

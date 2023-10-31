@@ -43,7 +43,7 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         try {
             System.out.println("Mensaje recibido en Worker");
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            csvReader.execute(reader, entityManager);
+            csvReader.execute(reader);
             System.out.println("Mensaje procesado correctamente en Worker");
         } catch (CsvException e) {
             System.out.println("Error a procesa el CSV en el Worker!!");
@@ -89,7 +89,7 @@ public class IncidentsCsvWorker extends DefaultConsumer {
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
             EntityManagerFactory entityManagerFactory =  PersistenceUtils.createEntityManagerFactory();
-            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader(), entityManagerFactory);
+            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader(entityManagerFactory.createEntityManager()), entityManagerFactory);
             worker.init();
         } catch (AuthenticationFailureException afe) {
             throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());
