@@ -3,8 +3,11 @@ package org.utn.presentation.worker;
 import com.opencsv.exceptions.CsvException;
 import com.rabbitmq.client.*;
 import org.jetbrains.annotations.NotNull;
+import org.utn.persistence.PersistenceUtils;
 import org.utn.presentation.incidents_load.CsvReader;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -14,11 +17,13 @@ public class IncidentsCsvWorker extends DefaultConsumer {
 
     private String queueName;
     private CsvReader csvReader;
+    private EntityManagerFactory entityManagerFactory;
 
-    public IncidentsCsvWorker(Channel channel, String queueName, CsvReader csvReader) {
+    public IncidentsCsvWorker(Channel channel, String queueName, CsvReader csvReader, EntityManagerFactory entityManagerFactory) {
         super(channel);
         this.queueName = queueName;
         this.csvReader = csvReader;
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public void init() throws IOException {
@@ -37,7 +42,8 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         Reader reader = createReader(body);
         try {
             System.out.println("Mensaje recibido en Worker");
-            csvReader.execute(reader);
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            csvReader.execute(reader, entityManager);
             System.out.println("Mensaje procesado correctamente en Worker");
         } catch (CsvException e) {
             System.out.println("Error a procesa el CSV en el Worker!!");
@@ -82,7 +88,8 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         try{
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader());
+            EntityManagerFactory entityManagerFactory =  PersistenceUtils.createEntityManagerFactory();
+            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader(), entityManagerFactory);
             worker.init();
         } catch (AuthenticationFailureException afe) {
             throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());

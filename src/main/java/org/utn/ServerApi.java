@@ -7,15 +7,21 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
+import org.utn.persistence.PersistenceUtils;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
 import org.utn.presentation.api.url_mappings.UIResource;
 
+import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 
 public class ServerApi {
 
+    public static EntityManagerFactory entityManagerFactory;
+
     public static void main(String[] args) {
+
+        entityManagerFactory = PersistenceUtils.createEntityManagerFactory();
 
         // TemplateEngine -Handlebars
         initTemplateEngine();
@@ -27,10 +33,10 @@ public class ServerApi {
         server.routes(new TelegramBotResource());
         
         // API
-        server.routes(new IncidentsResource());
+        server.routes(new IncidentsResource(entityManagerFactory));
 
         // UI
-        server.routes(new UIResource());
+        server.routes(new UIResource(entityManagerFactory));
     }
 
     private static void initTemplateEngine() {

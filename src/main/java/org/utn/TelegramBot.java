@@ -79,7 +79,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 java.io.File downloadedFile = downloadFile(file);
 
                 String filePath = downloadedFile.getAbsolutePath();
-                String result = new CsvReader().execute(filePath);
+                String result = new CsvReader().execute(filePath, null);
 
                 // Envia el mensaje al usuario
                 SendMessage responseMsg = new SendMessage();

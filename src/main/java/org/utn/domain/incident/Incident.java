@@ -1,8 +1,6 @@
 package org.utn.domain.incident;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import net.bytebuddy.asm.Advice;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -12,7 +10,7 @@ public class Incident {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //#TODO
     private Integer id;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public CatalogCode catalogCode;
     public LocalDate reportDate;
     public String description;
