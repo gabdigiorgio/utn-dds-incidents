@@ -21,7 +21,6 @@ import org.utn.presentation.api.inputs.EditIncident;
 import org.utn.presentation.api.inputs.ErrorResponse;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
-
 import javax.persistence.EntityManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -32,9 +31,20 @@ import java.util.Objects;
 
 public class IncidentsController {
     private IncidentManager manager;
+    private ObjectMapper objectMapper;
 
     public IncidentsController(EntityManagerFactory entityManagerFactory) {
         this.manager = new IncidentManager(new DbIncidentsRepository(entityManagerFactory.createEntityManager()));
+        this.objectMapper = createObjectMapper();
+    }
+
+    private ObjectMapper createObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        return objectMapper;
     }
 
     public Handler getIncidents = ctx -> {
@@ -47,11 +57,6 @@ public class IncidentsController {
         // get incidents
         List<Incident> incidents = manager.getIncidents(limit, orderBy, status, place);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
         ctx.status(200);
@@ -62,11 +67,6 @@ public class IncidentsController {
 
         // get incident
         Incident incidents = manager.getIncident(id);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
@@ -85,12 +85,6 @@ public class IncidentsController {
                     data.reporterId,
                     null,
                     null);
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
             String json = objectMapper.writeValueAsString(newIncident);
 
@@ -115,11 +109,6 @@ public class IncidentsController {
             // edit incident
             Incident editedIncident = manager.editIncident(id, data);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
             String json = objectMapper.writeValueAsString(editedIncident);
 
             ctx.json(json);
@@ -139,11 +128,6 @@ public class IncidentsController {
             ChangeState request = ctx.bodyAsClass(ChangeState.class);
 
             Incident editedIncident = manager.updateIncidentState(id, request);
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
             String json = objectMapper.writeValueAsString(editedIncident);
             ctx.result(json).contentType("application/json");
@@ -208,15 +192,15 @@ public class IncidentsController {
 
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.status = statusCode;
-        errorResponse.message = errorMsg;
-        errorResponse.errors = Collections.singletonList(errorMsg);
-
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.status = statusCode;
+        errorResponse.message = errorMsg;
+        errorResponse.errors = Collections.singletonList(errorMsg);
 
         return objectMapper.writeValueAsString(errorResponse);
     }

@@ -80,7 +80,6 @@ public class DbIncidentsRepository implements IncidentsRepository {
         return results;
     }
 
-
     @Override
     public int count() {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -92,12 +91,4 @@ public class DbIncidentsRepository implements IncidentsRepository {
         return count.intValue();
     }
 
-
-    private static List<Incident> filterByQuantity(List<Incident> list, int quantity) {
-        if (list.size() <= quantity) {
-            return list;
-        } else {
-            return list.subList(0, quantity);
-        }
-    }
 }

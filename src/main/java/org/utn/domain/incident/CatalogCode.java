@@ -3,11 +3,11 @@ package org.utn.domain.incident;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.utn.utils.StringValidatorUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 @Entity
 public class CatalogCode {
     @Id

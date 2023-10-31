@@ -13,7 +13,6 @@ import org.utn.presentation.api.inputs.EditIncident;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
-
 import java.time.LocalDate;
 import java.util.List;
 
