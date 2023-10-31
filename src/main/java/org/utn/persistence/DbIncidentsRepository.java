@@ -2,6 +2,7 @@ package org.utn.persistence;
 
 import org.utn.domain.incident.Incident;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class DbIncidentsRepository implements IncidentsRepository {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Incident.class);
         var root = criteriaQuery.from(Incident.class);
+        root.fetch("catalogCode", JoinType.LEFT);
 
         if (state != null) {
             Predicate stateFilter = criteriaBuilder.equal(root.get("state").as(String.class), state);
