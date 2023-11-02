@@ -2,8 +2,10 @@ package org.utn.persistence;
 
 import org.utn.domain.incident.Incident;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 public class DbIncidentsRepository implements IncidentsRepository {
@@ -47,7 +49,11 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public Incident getById(Integer id) {
-        return entityManager.find(Incident.class, id);
+        try {
+            return entityManager.find(Incident.class, id);
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException();
+        }
     }
 
     @Override

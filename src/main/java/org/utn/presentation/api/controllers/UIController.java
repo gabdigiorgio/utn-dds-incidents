@@ -16,8 +16,8 @@ import static org.utn.presentation.api.controllers.IncidentsController.parseErro
 public class UIController {
     private IncidentManager manager;
 
-    public UIController(EntityManagerFactory entityManagerFactory) {
-        this.manager = new IncidentManager(new DbIncidentsRepository(entityManagerFactory.createEntityManager()));
+    public UIController(IncidentManager manager) {
+        this.manager = manager;
     }
 
     public Handler getIncidents = ctx -> {

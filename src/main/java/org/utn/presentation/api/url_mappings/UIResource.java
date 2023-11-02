@@ -2,6 +2,7 @@ package org.utn.presentation.api.url_mappings;
 
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
+import org.utn.application.IncidentManager;
 import org.utn.presentation.api.controllers.IncidentsController;
 import org.utn.presentation.api.controllers.UIController;
 
@@ -9,10 +10,10 @@ import javax.persistence.EntityManagerFactory;
 
 public class UIResource implements EndpointGroup {
 
-    EntityManagerFactory entityManagerFactory;
+    IncidentManager manager;
 
-    public UIResource(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    public UIResource(IncidentManager manager) {
+        this.manager = manager;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class UIResource implements EndpointGroup {
             });
         });
 
-        UIController UIController = new UIController(entityManagerFactory);
+        UIController UIController = new UIController(manager);
         ApiBuilder.path("/ui/incidents", () -> {
             ApiBuilder.get("/", UIController.getIncidents);
             ApiBuilder.get("/upload_csv", UIController.createMassiveIncident);

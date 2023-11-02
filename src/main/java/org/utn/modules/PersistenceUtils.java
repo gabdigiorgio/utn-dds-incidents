@@ -1,4 +1,4 @@
-package org.utn.persistence;
+package org.utn.modules;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

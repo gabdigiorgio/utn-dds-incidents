@@ -2,11 +2,11 @@ package org.utn.presentation.api.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import javassist.NotFoundException;
@@ -14,14 +14,12 @@ import org.utn.application.IncidentManager;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
-import org.utn.persistence.DbIncidentsRepository;
 import org.utn.presentation.api.inputs.ChangeState;
 import org.utn.presentation.api.inputs.CreateIncident;
 import org.utn.presentation.api.inputs.EditIncident;
 import org.utn.presentation.api.inputs.ErrorResponse;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
-import javax.persistence.EntityManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -33,18 +31,9 @@ public class IncidentsController {
     private IncidentManager manager;
     private ObjectMapper objectMapper;
 
-    public IncidentsController(EntityManagerFactory entityManagerFactory) {
-        this.manager = new IncidentManager(new DbIncidentsRepository(entityManagerFactory.createEntityManager()));
-        this.objectMapper = createObjectMapper();
-    }
-
-    private ObjectMapper createObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return objectMapper;
+    public IncidentsController(IncidentManager manager, ObjectMapper objectMapper) {
+        this.manager = manager;
+        this.objectMapper = objectMapper;
     }
 
     public Handler getIncidents = ctx -> {
@@ -91,13 +80,10 @@ public class IncidentsController {
             ctx.json(json);
             ctx.status(201);
 
-        } catch (UnrecognizedPropertyException unRecognizedPropertyError) {
-            String message = String.format("Campo desconocido: '%s'", unRecognizedPropertyError.getPropertyName());
-            ctx.json(parseErrorResponse(400, message));
-            ctx.status(400);
-        } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+        } catch (UnrecognizedPropertyException e) {
+            handleBadRequest(ctx, e);
+        } catch (Exception e) {
+            handleInternalError(ctx, e);
         }
     };
 
@@ -115,13 +101,12 @@ public class IncidentsController {
             ctx.status(200);
 
         } catch (NotFoundException notFoundError) {
-            ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
-            ctx.status(404);
+            handleNotFoundException(ctx, notFoundError);
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            handleInternalError(ctx, error);
         }
     };
+
     public Handler updateIncidentState = ctx -> {
         try {
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
@@ -190,6 +175,21 @@ public class IncidentsController {
         }
     };
 
+    private void handleBadRequest(Context ctx, UnrecognizedPropertyException e) throws JsonProcessingException {
+        String message = String.format("Campo desconocido: '%s'", e.getPropertyName());
+        ctx.json(parseErrorResponse(400, message));
+        ctx.status(400);
+    }
+
+    private void handleNotFoundException(Context ctx, NotFoundException notFoundError) throws JsonProcessingException {
+        ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
+        ctx.status(404);
+    }
+
+    private void handleInternalError(Context ctx, Exception e) throws JsonProcessingException {
+        ctx.json(parseErrorResponse(500, e.getMessage()));
+        ctx.status(500);
+    }
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
