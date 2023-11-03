@@ -4,8 +4,6 @@ import io.javalin.http.Handler;
 import javassist.NotFoundException;
 import org.utn.application.IncidentManager;
 import org.utn.domain.incident.Incident;
-import org.utn.persistence.DbIncidentsRepository;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,17 +12,20 @@ import java.util.Objects;
 import static org.utn.presentation.api.controllers.IncidentsController.parseErrorResponse;
 
 public class UIController {
-    static IncidentManager manager = new IncidentManager(DbIncidentsRepository.getInstance());
+    private IncidentManager manager;
 
+    public UIController(IncidentManager manager) {
+        this.manager = manager;
+    }
 
-    public static Handler getIncidents = ctx -> {
+    public Handler getIncidents = ctx -> {
         try {
 
             Map<String, Object> model = new HashMap<>();
 
             // get incidents
 
-            List<Incident> incidents = manager.getIncidents(1000, "createdAt", null, null);
+            List<Incident> incidents = manager.getIncidents(10, "createdAt", null, null);
             model.put("incidents", incidents);
             ctx.render("incidents.hbs", model);
 
@@ -35,7 +36,7 @@ public class UIController {
         }
     };
 
-    public static Handler getIncident = ctx -> {
+    public Handler getIncident = ctx -> {
         try {
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
@@ -54,7 +55,7 @@ public class UIController {
         }
     };
 
-    public static Handler createIncident = ctx -> {
+    public Handler createIncident = ctx -> {
         try {
             ctx.render("create_incident.hbs");
         } catch (Exception error) {
@@ -63,7 +64,7 @@ public class UIController {
         }
     };
 
-    public static Handler editIncident = ctx -> {
+    public Handler editIncident = ctx -> {
         try {
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
@@ -81,7 +82,7 @@ public class UIController {
         }
     };
 
-    public static Handler createMassiveIncident = ctx -> {
+    public Handler createMassiveIncident = ctx -> {
         try {
             ctx.render("incident_upload_csv.hbs");
         } catch (Exception error) {

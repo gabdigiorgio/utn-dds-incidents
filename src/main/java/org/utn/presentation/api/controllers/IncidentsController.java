@@ -2,48 +2,41 @@ package org.utn.presentation.api.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import javassist.NotFoundException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 import org.utn.application.IncidentManager;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
-import org.utn.persistence.DbIncidentsRepository;
-import org.utn.presentation.api.inputs.*;
-import org.utn.presentation.incidents_load.CsvReader;
+import org.utn.presentation.api.inputs.ChangeState;
+import org.utn.presentation.api.inputs.CreateIncident;
+import org.utn.presentation.api.inputs.EditIncident;
+import org.utn.presentation.api.inputs.ErrorResponse;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class IncidentsController {
-    static IncidentManager manager = new IncidentManager(DbIncidentsRepository.getInstance());
+    private IncidentManager manager;
+    private ObjectMapper objectMapper;
 
+    public IncidentsController(IncidentManager manager, ObjectMapper objectMapper) {
+        this.manager = manager;
+        this.objectMapper = objectMapper;
+    }
 
-    public static Handler getIncidents = ctx -> {
+    public Handler getIncidents = ctx -> {
         Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
@@ -53,33 +46,23 @@ public class IncidentsController {
         // get incidents
         List<Incident> incidents = manager.getIncidents(limit, orderBy, status, place);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
         ctx.status(200);
     };
 
-    public static Handler getIncident = ctx -> {
+    public Handler getIncident = ctx -> {
         Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
         // get incident
         Incident incidents = manager.getIncident(id);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
         ctx.status(200);
     };
 
-    public static Handler createIncident = ctx -> {
+    public Handler createIncident = ctx -> {
         try {
             CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
@@ -92,28 +75,19 @@ public class IncidentsController {
                     null,
                     null);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
             String json = objectMapper.writeValueAsString(newIncident);
 
             ctx.json(json);
             ctx.status(201);
 
-        } catch (UnrecognizedPropertyException unRecognizedPropertyError) {
-            String message = String.format("Campo desconocido: '%s'", unRecognizedPropertyError.getPropertyName());
-            ctx.json(parseErrorResponse(400, message));
-            ctx.status(400);
-        } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+        } catch (UnrecognizedPropertyException e) {
+            handleBadRequest(ctx, e);
+        } catch (Exception e) {
+            handleInternalError(ctx, e);
         }
     };
 
-    public static Handler editIncident = ctx -> {
+    public Handler editIncident = ctx -> {
         try {
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
             EditIncident data = ctx.bodyAsClass(EditIncident.class);
@@ -121,35 +95,24 @@ public class IncidentsController {
             // edit incident
             Incident editedIncident = manager.editIncident(id, data);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
             String json = objectMapper.writeValueAsString(editedIncident);
 
             ctx.json(json);
             ctx.status(200);
 
         } catch (NotFoundException notFoundError) {
-            ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
-            ctx.status(404);
+            handleNotFoundException(ctx, notFoundError);
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            handleInternalError(ctx, error);
         }
     };
-    public static Handler updateIncidentState = ctx -> {
+
+    public Handler updateIncidentState = ctx -> {
         try {
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
             ChangeState request = ctx.bodyAsClass(ChangeState.class);
 
             Incident editedIncident = manager.updateIncidentState(id, request);
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
             String json = objectMapper.writeValueAsString(editedIncident);
             ctx.result(json).contentType("application/json");
@@ -169,7 +132,7 @@ public class IncidentsController {
         }
     };
 
-    public static Handler deleteIncident = ctx -> {
+    public Handler deleteIncident = ctx -> {
         try {
             int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
@@ -192,7 +155,7 @@ public class IncidentsController {
         mqClient.publish(payload);
     }
 
-    public static Handler createMassiveIncident = ctx -> {
+    public Handler createMassiveIncident = ctx -> {
         try {
             UploadedFile file = ctx.uploadedFile("file");
             if (file != null) {
@@ -212,17 +175,32 @@ public class IncidentsController {
         }
     };
 
+    private void handleBadRequest(Context ctx, UnrecognizedPropertyException e) throws JsonProcessingException {
+        String message = String.format("Campo desconocido: '%s'", e.getPropertyName());
+        ctx.json(parseErrorResponse(400, message));
+        ctx.status(400);
+    }
+
+    private void handleNotFoundException(Context ctx, NotFoundException notFoundError) throws JsonProcessingException {
+        ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
+        ctx.status(404);
+    }
+
+    private void handleInternalError(Context ctx, Exception e) throws JsonProcessingException {
+        ctx.json(parseErrorResponse(500, e.getMessage()));
+        ctx.status(500);
+    }
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.status = statusCode;
-        errorResponse.message = errorMsg;
-        errorResponse.errors = Collections.singletonList(errorMsg);
-
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.status = statusCode;
+        errorResponse.message = errorMsg;
+        errorResponse.errors = Collections.singletonList(errorMsg);
 
         return objectMapper.writeValueAsString(errorResponse);
     }

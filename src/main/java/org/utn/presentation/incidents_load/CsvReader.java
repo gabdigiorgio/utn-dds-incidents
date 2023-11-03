@@ -7,7 +7,6 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import org.utn.application.IncidentManager;
-import org.utn.persistence.DbIncidentsRepository;
 import org.utn.utils.DateUtils;
 
 import java.io.FileReader;
@@ -16,6 +15,12 @@ import java.io.Reader;
 import java.util.*;
 
 public class CsvReader {
+
+    private final IncidentManager manager;
+
+    public CsvReader(IncidentManager manager) {
+        this.manager = manager;
+    }
 
     private static final Set<String> HEADERS = new HashSet<>(Arrays.asList(
             "Codigo de catalogo", "Fecha de reporte", "Descripcion", "Estado", "Operador", "Persona que lo reporto", "Fecha cierre", "Motivo rechazo"
@@ -31,7 +36,7 @@ public class CsvReader {
         return processFile(reader);
     }
 
-    private static String processFile(Reader reader) throws CsvValidationException, IOException {
+    private String processFile(Reader reader) throws CsvValidationException, IOException {
 
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator('\t')
@@ -67,7 +72,6 @@ public class CsvReader {
 
         //COMIENZA LA LECTURA DE CADA LINEA DEL CSV
         while ((record = csvReader.readNext()) != null) {
-            IncidentManager manager = new IncidentManager(DbIncidentsRepository.getInstance());
             if (record.length == 0 || Arrays.stream(record).allMatch(String::isEmpty)) {
                 continue; // Salta las líneas vacías
             }

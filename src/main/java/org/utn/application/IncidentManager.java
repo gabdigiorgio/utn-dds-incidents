@@ -13,7 +13,6 @@ import org.utn.presentation.api.inputs.EditIncident;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,28 +38,21 @@ public class IncidentManager {
 
     public Incident getIncident(Integer id) throws NotFoundException {
         Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
         return incident;
     }
 
     public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
         Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
-
-        // data.status,
         if (data.catalogCode != null) incident.catalogCode.setCode(data.catalogCode);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
         if (data.reporterId != null) incident.setReportedBy(data.reporterId);
-
-        // repoIncidencias
         IncidentRepository.update(incident);
         return incident;
     }
 
     public Incident updateIncidentState(Integer id, ChangeState request) throws NotFoundException, StateTransitionException {
         Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
         String formattedState = request.state.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
         StateEnum nextState = StateEnum.valueOf(formattedState);
         incident.updateState(nextState, request.employee, request.rejectedReason);

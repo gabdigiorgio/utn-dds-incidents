@@ -3,8 +3,8 @@ package org.utn.presentation.worker;
 import com.opencsv.exceptions.CsvException;
 import com.rabbitmq.client.*;
 import org.jetbrains.annotations.NotNull;
+import org.utn.modules.IncidentManagerFactory;
 import org.utn.presentation.incidents_load.CsvReader;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -82,7 +82,7 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         try{
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader());
+            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader(IncidentManagerFactory.createIncidentManager()));
             worker.init();
         } catch (AuthenticationFailureException afe) {
             throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());
