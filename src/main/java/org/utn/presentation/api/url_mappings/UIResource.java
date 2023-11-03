@@ -3,10 +3,7 @@ package org.utn.presentation.api.url_mappings;
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
 import org.utn.application.IncidentManager;
-import org.utn.presentation.api.controllers.IncidentsController;
 import org.utn.presentation.api.controllers.UIController;
-
-import javax.persistence.EntityManagerFactory;
 
 public class UIResource implements EndpointGroup {
 

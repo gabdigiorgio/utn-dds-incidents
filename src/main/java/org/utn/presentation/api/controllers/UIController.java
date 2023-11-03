@@ -4,8 +4,6 @@ import io.javalin.http.Handler;
 import javassist.NotFoundException;
 import org.utn.application.IncidentManager;
 import org.utn.domain.incident.Incident;
-import org.utn.persistence.DbIncidentsRepository;
-import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -9,7 +9,8 @@ public class Incident {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //#TODO
     private Integer id;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Embedded
+    @AttributeOverrides({@AttributeOverride(name = "code", column = @Column(name = "catalogCode"))})
     public CatalogCode catalogCode;
     public LocalDate reportDate;
     public String description;

@@ -61,7 +61,6 @@ public class DbIncidentsRepository implements IncidentsRepository {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Incident.class);
         var root = criteriaQuery.from(Incident.class);
-        root.fetch("catalogCode", JoinType.LEFT);
 
         if (state != null) {
             Predicate stateFilter = criteriaBuilder.equal(root.get("state").as(String.class), state);

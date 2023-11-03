@@ -1,7 +1,5 @@
 package org.utn;
 
-import java.util.function.Consumer;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,15 +11,12 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
-import org.utn.application.IncidentManager;
 import org.utn.modules.ManagerFactory;
-import org.utn.modules.PersistenceUtils;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
 import org.utn.presentation.api.url_mappings.UIResource;
-
-import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 public class ServerApi {
 
