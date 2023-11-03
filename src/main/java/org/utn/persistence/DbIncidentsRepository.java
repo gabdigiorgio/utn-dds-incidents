@@ -2,29 +2,22 @@ package org.utn.persistence;
 
 import org.utn.domain.incident.Incident;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 public class DbIncidentsRepository implements IncidentsRepository {
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
-    public DbIncidentsRepository(EntityManager entityManager) {
+    public DbIncidentsRepository(EntityManagerFactory entityManagerFactory) {
         super();
-        this.entityManager = entityManager;
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public void save(Incident incident) {
+        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(incident);
         entityManager.getTransaction().commit();
@@ -32,6 +25,7 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public void update(Incident incident) {
+        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.merge(incident);
         entityManager.getTransaction().commit();
@@ -39,6 +33,7 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public void remove(Integer id) {
+        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         Incident incident = entityManager.find(Incident.class, id);
         if (incident != null) {
@@ -49,6 +44,7 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public Incident getById(Integer id) {
+        var entityManager = createEntityManager();
         try {
             return entityManager.find(Incident.class, id);
         } catch (EntityNotFoundException e) {
@@ -58,7 +54,8 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public List<Incident> findIncidents(int quantity, String state, String orderBy, String catalogCode) {
-        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var entityManager = createEntityManager();
+        var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Incident.class);
         var root = criteriaQuery.from(Incident.class);
 
@@ -87,13 +84,19 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public int count() {
-        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var entityManager = createEntityManager();
+        var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Long.class);
         criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Incident.class)));
 
         var count = entityManager.createQuery(criteriaQuery).getSingleResult();
 
         return count.intValue();
+    }
+
+    private EntityManager createEntityManager()
+    {
+        return this.entityManagerFactory.createEntityManager();
     }
 
 }

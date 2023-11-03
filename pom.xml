@@ -68,7 +68,6 @@
       <version>2.15.0</version> <!-- Asegúrate de utilizar la versión más reciente -->
     </dependency>
 
-
     <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
     <dependency>
       <groupId>org.postgresql</groupId>

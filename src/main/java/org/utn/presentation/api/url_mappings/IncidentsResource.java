@@ -1,17 +1,10 @@
 package org.utn.presentation.api.url_mappings;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
-import org.hibernate.type.ObjectType;
 import org.utn.application.IncidentManager;
 import org.utn.presentation.api.controllers.IncidentsController;
-
-import javax.persistence.EntityManagerFactory;
 
 public class IncidentsResource implements EndpointGroup {
     IncidentManager manager;

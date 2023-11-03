@@ -9,8 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.utn.application.IncidentManager;
-import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.url_mappings.IncidentsResource;
+import org.utn.modules.IncidentManagerFactory;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 
 import org.utn.presentation.bot.telegram_user.TelegramUserUserBotRepo;
@@ -18,7 +17,6 @@ import org.utn.presentation.bot.telegram_user.UserBotRepo;
 import org.utn.presentation.bot.telegram_user_state.WelcomeChat;
 import org.utn.presentation.incidents_load.CsvReader;
 
-import javax.persistence.EntityManagerFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -109,7 +107,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             // Se devuelve el token que nos generó el BotFather de nuestro bot
             String tokenbot = System.getenv("TELEGRAM_BOT_TOKEN");
             // Se registra el bot
-            telegramBotsApi.registerBot(new TelegramBot(tokenbot, ManagerFactory.createIncidentManager()));
+            telegramBotsApi.registerBot(new TelegramBot(tokenbot, IncidentManagerFactory.createIncidentManager()));
             System.out.println("Se inicio la ejecución del BOT correctamente.");
 
             setBotStarted(true);

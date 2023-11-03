@@ -11,10 +11,11 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
-import org.utn.modules.ManagerFactory;
+import org.utn.modules.IncidentManagerFactory;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
 import org.utn.presentation.api.url_mappings.UIResource;
+
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -22,7 +23,7 @@ public class ServerApi {
 
     public static void main(String[] args) {
 
-        var incidentManger = ManagerFactory.createIncidentManager();
+        var incidentManager = IncidentManagerFactory.createIncidentManager();
 
         // TemplateEngine -Handlebars
         initTemplateEngine();
@@ -34,10 +35,10 @@ public class ServerApi {
         server.routes(new TelegramBotResource());
         
         // API
-        server.routes(new IncidentsResource(incidentManger, createObjectMapper()));
+        server.routes(new IncidentsResource(incidentManager, createObjectMapper()));
 
         // UI
-        server.routes(new UIResource(incidentManger));
+        server.routes(new UIResource(incidentManager));
     }
 
     private static ObjectMapper createObjectMapper() {
