@@ -13,7 +13,7 @@ public class PersistenceUtils {
         Map<String, Object> configOverrides = new HashMap<String, Object>();
         String[] keys = new String[]{"javax.persistence.jdbc.url", "javax.persistence.jdbc.user",
                 "javax.persistence.jdbc.password", "javax.persistence.jdbc.driver", "hibernate.hbm2ddl.auto",
-                "hibernate.connection.pool_size", "hibernate.show_sql"};
+                "hibernate.show_sql"};
         for (String key : keys) {
             if (env.containsKey(key)) {
                 String value = env.get(key);

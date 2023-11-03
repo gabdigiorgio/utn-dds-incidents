@@ -25,7 +25,7 @@ public class UIController {
 
             // get incidents
 
-            List<Incident> incidents = manager.getIncidents(1000, "createdAt", null, null);
+            List<Incident> incidents = manager.getIncidents(10, "createdAt", null, null);
             model.put("incidents", incidents);
             ctx.render("incidents.hbs", model);
 
