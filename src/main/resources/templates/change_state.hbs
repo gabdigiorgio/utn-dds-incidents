@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cambiar incidencia</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<header class="p-3 bg-dark text-white fixed-top">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;"><use xlink:href="#icon"/></svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
+                <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
+                <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
+                <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
+                <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
+                <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
+            </ul>
+
+
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
+                <button type="button" class="btn btn-warning" >Registrarse</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container mt-3">
+    <div class="row justify-content-between pt-5">
+        <div class="col-10 pt-3">
+            <h2>Cambiar estado de incidencia {{incident.id}}</h2>
+        </div>
+        <div class="col-2 pt-3">
+            <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
+        </div>
+
+        <form id="form">
+            <div class="container mt-3">
+                <table class="table table-borderless" id="campo-estadoActual">
+                    <thead>
+                    <tr>
+                        <th>Estado actual</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <div class="form-floating mt-3 mb-3" id="campo-estadoActual">
+                            <td class="form-control" id="estadoActual" placeholder="estadoActual" name="estadoActual">{{incident.state}}</td>
+                        </div>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+              <div class="form-floating mt-3 mb-3">
+                  <select class="form-select" id="estado" name="estado">
+                      <option value="Seleccionar nuevo estado" disabled selected>Seleccionar nuevo estado</option>
+                      <div class="form-floating mt-3 mb-3" id="campo-asignado">
+                          <option value="Asignado" id="asignado">Asignado</option>
+                      </div>
+                      <div class="form-floating mt-3 mb-3" id="campo-confirmado">
+                      <option value="Confirmado" id="confirmado">Confirmado</option>
+                     </div>
+                     <div class="form-floating mt-3 mb-3" id="campo-desestimado">
+                      <option value="Desestimado" id="desestimado">Desestimado</option>
+                     </div>
+                      <div class="form-floating mt-3 mb-3" id="campo-enProgreso">
+                      <option value="En progreso" id="enProgreso">En Progreso</option>
+                      </div>
+                      <div class="form-floating mt-3 mb-3" id="campo-resuelto">
+                      <option value="Resuelto" id="resuelto">Resuelto</option>
+                      </div>
+                      <div class="form-floating mt-3 mb-3" id="campo-noSePuede">
+                      <label value="NoSePuede" id="noSePuede">No se puede cambiar estado</label>
+                      </div>
+                  </select>
+              </div>
+
+            <div class="form-floating mt-3 mb-3" id="campo-empleado" style="display: none;">
+                <input type="text" class="form-control" id="empleado" placeholder="Empleado" name="empleado">
+                <label for="empleado">Empleado</label>
+            </div>
+
+            <div class="form-floating mt-3 mb-3" id="campo-motivo" style="display: none;">
+                <input type="text" class="form-control" id="motivo" placeholder="Motivo de rechazo" name="motivo">
+                <label for="motivo">Motivo de rechazo</label>
+            </div>
+            <button href="/ui/incidents/{{incident.id}}" type="submit" class="btn btn-primary">Finalizar</button>
+        </form>
+    </div>
+</div>
+</body>
+
+
+<script>
+const selectEstado = document.querySelector('select[name="estado"]');
+    const campoEmpleado = document.getElementById('campo-empleado');
+    const campoMotivo = document.getElementById('campo-motivo');
+
+    selectEstado.addEventListener('change', function () {
+        const estadoSeleccionado = selectEstado.value;
+
+        campoEmpleado.style.display = 'none';
+        campoMotivo.style.display = 'none';
+
+        if (estadoSeleccionado === 'Asignado') {
+            campoEmpleado.style.display = 'block';
+        } else if (estadoSeleccionado === 'Desestimado') {
+            campoMotivo.style.display = 'block';
+        }
+
+        if (estadoSeleccionado !== 'En progreso') {
+            document.querySelector('input[name="empleado"]').value = '';
+            document.querySelector('input[name="motivo"]').value = '';
+        }
+    });
+</script>
+const estadoActual = document.getElementById('campo-estadoActual');
+
+const campoAsignado=document.getElementById('campo-asignado');
+const campoConfirmado=document.getElementById('campo-confirmado');
+const campoDesestimado=document.getElementById('campo-desestimado');
+const campoResuelto=document.getElementById('campo-resuelto');
+const campoNoSePuede=document.getElementById('campo-noSePuede'); //para desestimado
+
+campoAsignado.style.display = 'none';
+campoConfirmado.style.display = 'none';
+campoDesestimado.style.display = 'none';
+campoResuelto.style.display = 'none';
+campoNoSePuede.style.display = 'none';
+
+//a quien le aplico esto?
+selectEstado.addEventListener('isEqual', function () {
+if (estadoActual === 'reported') {
+campoAsignado.style.display = 'block';
+} else if (estadoActual === 'assigned') {
+campoConfirmado.style.display = 'block';
+campoDesestimado.style.display = 'block';
+} else if (estadoActual === 'confirmed') {
+campoEnProgreso.style.display = 'block';
+} else if (estadoActual === 'inProgress') {
+campoResuelto.style.display = 'block';
+}else if (estadoActual === 'resolved') {
+campoNoSePuede.style.display = 'block';
+}else if (estadoActual === 'dismissed') {
+campoNoSePuede.style.display = 'block';
+}
+});
+<script>
+
+</script>
+
+<script>
+// Mapeo de estados
+const estadoMapping = {
+  Asignado: "assigned",
+  Reportado: "reported",
+  EnProgreso: "inProgress",
+  Desestimado: "dismissed",
+  Resuelto: "resolved"
+};
+
+form.onsubmit = async (e) => {
+  e.preventDefault();
+  const form = document.querySelector("#form");
+
+
+  const estadoSeleccionado = selectEstado.value;
+
+  const estadoData = {
+    state: estadoMapping[estadoSeleccionado],
+    employee: form.querySelector('input[name="empleado"]').value,
+    rejectedReason: form.querySelector('input[name="motivo"]').value
+  };
+
+  const id = {{incident.id}};
+  const incidenciaUrl = `/api/incidents/${id}`;
+  const estadoUrl = `/api/incidents/${id}/estado`;
+
+  const responseIncidencia = await fetch(incidenciaUrl, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(incidenciaData),
+  });
+
+  const responseDataIncidencia = await responseIncidencia.json();
+  if (responseDataIncidencia.status === 400) {
+    alert(responseDataIncidencia.message);
+  } else {
+    alert("Incidencia editada con éxito");
+  }
+
+  if (estadoSeleccionado !== 'Seleccionar estado') {
+    const responseEstado = await fetch(estadoUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(estadoData),
+    });
+
+    const responseDataEstado = await responseEstado.json();
+    if (responseDataEstado.status === 422) {
+      alert(responseDataEstado.message);
+    } else if (responseDataEstado.status === 400) {
+      alert(responseDataEstado.message);
+    } else if (responseEstado.status === 200) {
+      alert("Cambio de estado realizado con éxito");
+    }
+  }
+
+  window.location.href = `http://localhost:8080/ui/incidents/${id}`;
+};
+</script>
+</html>
