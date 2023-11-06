@@ -10,11 +10,11 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private ProcessState state;
 
     public Job(Integer id, String rawText, ProcessState state) {
         this.id = id;
     }
-
 
     public static Job create(String rawText) {
         return new Job(null, rawText, ProcessState.CREATED);
