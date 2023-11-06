@@ -11,6 +11,7 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private ProcessState state;
+    private String rawText;
 
     public Job(Integer id, String rawText, ProcessState state) {
         this.id = id;
