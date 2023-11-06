@@ -1,4 +1,4 @@
-package org.utn.persistence;
+package org.utn.persistence.incident;
 
 import org.utn.domain.incident.Incident;
 

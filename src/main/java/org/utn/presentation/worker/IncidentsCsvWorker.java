@@ -4,8 +4,14 @@ import com.opencsv.exceptions.CsvException;
 import com.rabbitmq.client.*;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.job.Job;
-import org.utn.modules.IncidentManagerFactory;
+import org.utn.modules.ManagerFactory;
+import org.utn.modules.PersistenceUtils;
+import org.utn.modules.RepositoryFactory;
+import org.utn.persistence.job.JobsRepository;
 import org.utn.presentation.incidents_load.CsvReader;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -14,11 +20,13 @@ import java.util.concurrent.TimeoutException;
 public class IncidentsCsvWorker extends DefaultConsumer {
 
     private String queueName;
+    private EntityManagerFactory entityManagerFactory;
     private CsvReader csvReader;
 
-    public IncidentsCsvWorker(Channel channel, String queueName, CsvReader csvReader) {
+    public IncidentsCsvWorker(Channel channel, String queueName, EntityManagerFactory entityManagerFactory, CsvReader csvReader) {
         super(channel);
         this.queueName = queueName;
+        this.entityManagerFactory = entityManagerFactory;
         this.csvReader = csvReader;
     }
 
@@ -28,13 +36,35 @@ public class IncidentsCsvWorker extends DefaultConsumer {
     }
 
     @Override
-    public void handleDelivery(
-            String consumerTag,
-            Envelope envelope,
-            AMQP.BasicProperties properties,
-            byte[] body
-    ) throws IOException {
+    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+            throws IOException {
+
         sendAck(envelope);
+        String jobId = new String(body, "UTF-8");
+        Reader reader = createReader(body);
+
+        try {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+            entityManager.getTransaction().begin();
+
+            JobsRepository jobRepository = RepositoryFactory.createJobRepository();
+
+            Job job = jobRepository.getById(Integer.parseInt(jobId));
+
+            job.process(csvReader, job.getRawText());
+
+            entityManager.getTransaction().commit();
+
+            entityManager.close();
+        } catch (CsvException e) {
+            System.out.println("Error a procesa el CSV en el Worker!!");
+        }
+        catch (Exception e) {
+            System.out.println("Excepcion no reconocida!!");
+        }
+
+        /*sendAck(envelope);
         Reader reader = createReader(body);
         try {
             System.out.println("Mensaje recibido en Worker");
@@ -45,7 +75,7 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         }
         catch (Exception e) {
             System.out.println("Excepcion no reconocida!!");
-        }
+        }*/
     }
 
     @NotNull
@@ -83,7 +113,8 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         try{
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader(IncidentManagerFactory.createIncidentManager()));
+            EntityManagerFactory entityManagerFactory =  PersistenceUtils.createEntityManagerFactory();
+            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel, queueName, entityManagerFactory,new CsvReader(ManagerFactory.createIncidentManager()));
             worker.init();
         } catch (AuthenticationFailureException afe) {
             throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());

@@ -4,7 +4,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
 import org.utn.application.IncidentManager;
-import org.utn.persistence.IncidentsInMemoryRepository;
+import org.utn.persistence.incident.IncidentsInMemoryRepository;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 
 import static org.utn.presentation.bot.Shows.invalidMessage;

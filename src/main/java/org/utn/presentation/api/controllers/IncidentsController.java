@@ -11,6 +11,7 @@ import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import javassist.NotFoundException;
 import org.utn.application.IncidentManager;
+import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
@@ -30,10 +31,12 @@ import java.util.Objects;
 
 public class IncidentsController {
     private IncidentManager manager;
+    private JobManager jobManager;
     private ObjectMapper objectMapper;
 
-    public IncidentsController(IncidentManager manager, ObjectMapper objectMapper) {
+    public IncidentsController(IncidentManager manager, JobManager jobManager,ObjectMapper objectMapper) {
         this.manager = manager;
+        this.jobManager = jobManager;
         this.objectMapper = objectMapper;
     }
 
@@ -162,7 +165,7 @@ public class IncidentsController {
             if (file != null) {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                var job = Job.create(text);
+                Job job = jobManager.createJob(text);
                 sendToWorker(job.getId().toString());
                 ctx.status(200);
             } else {
