@@ -3,6 +3,7 @@ package org.utn.presentation.worker;
 import com.opencsv.exceptions.CsvException;
 import com.rabbitmq.client.*;
 import org.jetbrains.annotations.NotNull;
+import org.utn.domain.job.Job;
 import org.utn.modules.IncidentManagerFactory;
 import org.utn.presentation.incidents_load.CsvReader;
 import java.io.*;

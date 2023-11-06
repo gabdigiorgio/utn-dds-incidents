@@ -14,6 +14,7 @@ import org.utn.application.IncidentManager;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
+import org.utn.domain.job.Job;
 import org.utn.presentation.api.inputs.ChangeState;
 import org.utn.presentation.api.inputs.CreateIncident;
 import org.utn.presentation.api.inputs.EditIncident;
@@ -161,8 +162,8 @@ public class IncidentsController {
             if (file != null) {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-
-                sendToWorker(text);
+                var job = Job.create(text);
+                sendToWorker(job.getId().toString());
                 ctx.status(200);
             } else {
                 ctx.status(400);
