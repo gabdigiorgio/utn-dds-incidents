@@ -20,10 +20,10 @@ import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
 import org.utn.domain.job.Job;
-import org.utn.presentation.api.inputs.ChangeState;
-import org.utn.presentation.api.inputs.CreateIncident;
-import org.utn.presentation.api.inputs.EditIncident;
-import org.utn.presentation.api.inputs.ErrorResponse;
+import org.utn.presentation.api.dto.inputs.ChangeState;
+import org.utn.presentation.api.dto.inputs.CreateIncident;
+import org.utn.presentation.api.dto.inputs.EditIncident;
+import org.utn.presentation.api.dto.inputs.ErrorResponse;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
@@ -207,7 +207,7 @@ public class IncidentsController {
                     ctx.status(200);
                 } else {
                     ctx.status(400);
-                    ctx.json("Los headers del archivo CSV no son válidos.");
+                    ctx.json(parseErrorResponse(400, "Los headers del archivo CSV no son válidos."));
                 }
             } else {
                 ctx.status(400);

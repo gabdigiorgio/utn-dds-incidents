@@ -108,7 +108,9 @@
             if (response.ok) {
                 alert("Archivo cargado con éxito.");
             } else {
-                alert("Error al cargar el archivo. Por favor, intentelo de nuevo.");
+                response.json().then(errorData => {
+                    alert("Error al cargar el archivo: " + errorData.message);
+                });
             }
         })
         .catch(error => {

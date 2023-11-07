@@ -1,4 +1,4 @@
-package org.utn.presentation.api.inputs;
+package org.utn.presentation.api.dto.inputs;
 
 import java.util.List;
 
