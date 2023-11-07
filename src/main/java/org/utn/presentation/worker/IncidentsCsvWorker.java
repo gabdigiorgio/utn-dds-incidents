@@ -41,7 +41,6 @@ public class IncidentsCsvWorker extends DefaultConsumer {
 
         sendAck(envelope);
         String jobId = new String(body, "UTF-8");
-        Reader reader = createReader(body);
 
         try {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -58,24 +57,11 @@ public class IncidentsCsvWorker extends DefaultConsumer {
 
             entityManager.close();
         } catch (CsvException e) {
-            System.out.println("Error a procesa el CSV en el Worker!!");
+            System.out.println("Error al procesar el CSV en el Worker!!");
         }
-        catch (Exception e) {
-            System.out.println("Excepcion no reconocida!!");
+        catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
-
-        /*sendAck(envelope);
-        Reader reader = createReader(body);
-        try {
-            System.out.println("Mensaje recibido en Worker");
-            csvReader.execute(reader);
-            System.out.println("Mensaje procesado correctamente en Worker");
-        } catch (CsvException e) {
-            System.out.println("Error a procesa el CSV en el Worker!!");
-        }
-        catch (Exception e) {
-            System.out.println("Excepcion no reconocida!!");
-        }*/
     }
 
     @NotNull
