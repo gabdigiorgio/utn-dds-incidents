@@ -113,7 +113,7 @@ public class CsvReader {
 
     }
 
-    private static void checkHeaders(String[] headers) throws Exception {
+    public static void checkHeaders(String[] headers) throws Exception {
         Set<String> headerSet = new HashSet<>(Arrays.asList(headers));
         Set<String> missingHeaders = new HashSet<>(HEADERS);
         missingHeaders.removeAll(headerSet);
@@ -122,7 +122,7 @@ public class CsvReader {
         }
     }
 
-    private static void deleteCharacterBOM(String[] headers) {
+    public static void deleteCharacterBOM(String[] headers) {
         if (headers[0].startsWith("\uFEFF")) {
             // Eliminar el BOM del primer campo
             headers[0] = headers[0].substring(1);

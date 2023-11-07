@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
@@ -20,10 +24,12 @@ import org.utn.presentation.api.inputs.ChangeState;
 import org.utn.presentation.api.inputs.CreateIncident;
 import org.utn.presentation.api.inputs.EditIncident;
 import org.utn.presentation.api.inputs.ErrorResponse;
+import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
@@ -154,6 +160,36 @@ public class IncidentsController {
         }
     };
 
+    private boolean areCsvHeadersValid(String csvText) {
+        try {
+            CSVParser csvParser = new CSVParserBuilder()
+                    .withSeparator('\t')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreQuotations(true)
+                    .build();
+
+            CSVReader csvReader = new CSVReaderBuilder(new StringReader(csvText))
+                    .withSkipLines(0)
+                    .withCSVParser(csvParser)
+                    .build();
+
+            String[] headers = csvReader.readNext();
+            CsvReader.deleteCharacterBOM(headers);
+            validateCsvHeaders(headers);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void validateCsvHeaders(String[] headers) {
+        try {
+            CsvReader.checkHeaders(headers);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static void sendToWorker(String payload) throws Exception {
         MQCLient mqClient = new MQCLient();
         mqClient.publish(payload);
@@ -165,14 +201,18 @@ public class IncidentsController {
             if (file != null) {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                Job job = jobManager.createJob(text);
-                sendToWorker(job.getId().toString());
-                ctx.status(200);
+                if (areCsvHeadersValid(text)) {
+                    Job job = jobManager.createJob(text);
+                    sendToWorker(job.getId().toString());
+                    ctx.status(200);
+                } else {
+                    ctx.status(400);
+                    ctx.json("Los headers del archivo CSV no son válidos.");
+                }
             } else {
                 ctx.status(400);
                 ctx.json("No se recibió ningún archivo.");
             }
-
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
