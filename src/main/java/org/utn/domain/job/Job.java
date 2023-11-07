@@ -41,6 +41,8 @@ public class Job {
         return state;
     }
 
+    public void setState(ProcessState state) { this.state = state; }
+
     public void process(CsvReader csvReader, String rawText) throws IOException, CsvException {
         try(Reader reader = new StringReader(rawText)) {
             csvReader.execute(reader);

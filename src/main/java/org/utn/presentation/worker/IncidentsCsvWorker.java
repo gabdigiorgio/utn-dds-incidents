@@ -4,12 +4,12 @@ import com.opencsv.exceptions.CsvException;
 import com.rabbitmq.client.*;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.job.Job;
+import org.utn.domain.job.ProcessState;
 import org.utn.modules.ManagerFactory;
 import org.utn.modules.PersistenceUtils;
 import org.utn.modules.RepositoryFactory;
 import org.utn.persistence.job.JobsRepository;
 import org.utn.presentation.incidents_load.CsvReader;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.io.*;
@@ -51,13 +51,19 @@ public class IncidentsCsvWorker extends DefaultConsumer {
 
             Job job = jobRepository.getById(Integer.parseInt(jobId));
 
-            job.process(csvReader, job.getRawText());
+            job.setState(ProcessState.IN_PROCESS);
+
+            try {
+                job.process(csvReader, job.getRawText());
+                job.setState(ProcessState.DONE);
+            } catch (CsvException e) {
+                job.setState(ProcessState.DONE_WITH_ERRORS);
+                System.out.println("Error al procesar el CSV en el Worker!!");
+            }
 
             entityManager.getTransaction().commit();
 
             entityManager.close();
-        } catch (CsvException e) {
-            System.out.println("Error al procesar el CSV en el Worker!!");
         }
         catch (RuntimeException e) {
             System.out.println(e.getMessage());
