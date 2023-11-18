@@ -37,15 +37,22 @@ public class Job {
 
     public String getRawText() { return rawText; }
 
-    public ProcessState getState() {
+    private ProcessState getState() {
         return state;
     }
 
-    public void setState(ProcessState state) { this.state = state; }
+    private void setState(ProcessState state) { this.state = state; }
 
-    public void process(CsvReader csvReader, String rawText) throws IOException, CsvException {
+    public void process(CsvReader csvReader, String rawText) throws IOException {
+        setState(ProcessState.IN_PROCESS);
         try(Reader reader = new StringReader(rawText)) {
             csvReader.execute(reader);
+            setState(ProcessState.DONE);
         }
+        catch (CsvException e) {
+            setState(ProcessState.DONE_WITH_ERRORS);
+            System.out.println("Error al procesar el CSV en el Worker!!");
+        }
+
     }
 }

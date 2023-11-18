@@ -1,33 +1,25 @@
 package org.utn.presentation.worker;
 
-import com.opencsv.exceptions.CsvException;
 import com.rabbitmq.client.*;
-import org.jetbrains.annotations.NotNull;
-import org.utn.domain.job.Job;
-import org.utn.domain.job.ProcessState;
+import org.utn.application.JobManager;
 import org.utn.modules.ManagerFactory;
-import org.utn.modules.PersistenceUtils;
-import org.utn.modules.RepositoryFactory;
-import org.utn.persistence.job.JobsRepository;
 import org.utn.presentation.incidents_load.CsvReader;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class IncidentsCsvWorker extends DefaultConsumer {
 
     private String queueName;
-    private EntityManagerFactory entityManagerFactory;
     private CsvReader csvReader;
+    private JobManager jobManager;
 
-    public IncidentsCsvWorker(Channel channel, String queueName, EntityManagerFactory entityManagerFactory, CsvReader csvReader) {
+    public IncidentsCsvWorker(Channel channel, String queueName, CsvReader csvReader, JobManager jobManager) {
         super(channel);
         this.queueName = queueName;
-        this.entityManagerFactory = entityManagerFactory;
         this.csvReader = csvReader;
+        this.jobManager = jobManager;
     }
 
     public void init() throws IOException {
@@ -36,46 +28,17 @@ public class IncidentsCsvWorker extends DefaultConsumer {
     }
 
     @Override
-    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-            throws IOException {
+    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
 
         sendAck(envelope);
         String jobId = new String(body, "UTF-8");
 
         try {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-            entityManager.getTransaction().begin();
-
-            JobsRepository jobRepository = RepositoryFactory.createJobRepository();
-
-            Job job = jobRepository.getById(Integer.parseInt(jobId));
-
-            job.setState(ProcessState.IN_PROCESS);
-
-            try {
-                job.process(csvReader, job.getRawText());
-                job.setState(ProcessState.DONE);
-            } catch (CsvException e) {
-                job.setState(ProcessState.DONE_WITH_ERRORS);
-                System.out.println("Error al procesar el CSV en el Worker!!");
-            }
-
-            entityManager.getTransaction().commit();
-
-            entityManager.close();
+            jobManager.processJob(Integer.parseInt(jobId), csvReader);
         }
         catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    @NotNull
-    private static Reader createReader(byte[] body) throws UnsupportedEncodingException {
-        String incidents = new String(body, "UTF-8");
-        InputStream incidentsStream = new ByteArrayInputStream(incidents.getBytes(StandardCharsets.UTF_8));
-        Reader reader = new InputStreamReader(incidentsStream);
-        return reader;
     }
 
     private void sendAck(Envelope envelope) throws IOException {
@@ -105,8 +68,8 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         try{
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            EntityManagerFactory entityManagerFactory =  PersistenceUtils.createEntityManagerFactory();
-            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel, queueName, entityManagerFactory,new CsvReader(ManagerFactory.createIncidentManager()));
+            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel, queueName,
+                    new CsvReader(ManagerFactory.createIncidentManager()), ManagerFactory.createJobManager());
             worker.init();
         } catch (AuthenticationFailureException afe) {
             throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());

@@ -202,7 +202,7 @@ public class IncidentsController {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 if (areCsvHeadersValid(text)) {
-                    Job job = jobManager.createJob(text);
+                    Job job = jobManager.createJob(text); //TODO: pasar a capa aplicación
                     sendToWorker(job.getId().toString());
                     ctx.status(200);
                 } else {
