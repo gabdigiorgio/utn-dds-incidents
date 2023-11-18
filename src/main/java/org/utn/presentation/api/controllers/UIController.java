@@ -91,5 +91,14 @@ public class UIController {
         }
     };
 
+    public Handler getCsvProcessingState = ctx -> {
+        try {
+            ctx.render("incident_processing_csv_state.hbs");
+        } catch (Exception error) {
+            ctx.status(500);
+            ctx.html("Error al procesar el archivo CSV: " + error.getMessage());
+        }
+    };
+
 }
 
