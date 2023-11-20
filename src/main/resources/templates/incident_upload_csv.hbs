@@ -114,13 +114,8 @@
             }
         })
         .then(data => {
-            alert("Archivo cargado con éxito.");
-
             if (data && data.jobId) {
-                // Extracción del jobId de la respuesta JSON
                 const jobId = data.jobId;
-
-                // Redirección a la URL deseada con el jobId
                 window.location.href = `/ui/incidents/processing_csv_state/${jobId}`;
             } else {
                 throw new Error("La respuesta del servidor no contiene un jobId válido.");

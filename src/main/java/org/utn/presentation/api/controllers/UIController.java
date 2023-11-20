@@ -102,10 +102,7 @@ public class UIController {
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
-            ProcessState jobState = jobManager.getJobState(id);
-            String jobErrorMessage = jobManager.getJobErrorMessage(id);
-            model.put("jobState", jobState);
-            model.put("jobErrorMessage", jobErrorMessage);
+            model.put("jobId", id.toString());
             ctx.render("incident_processing_csv_state.hbs", model);
         } catch (Exception error) {
             ctx.status(500);
