@@ -20,10 +20,8 @@ import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
 import org.utn.domain.job.Job;
-import org.utn.presentation.api.dto.ChangeState;
-import org.utn.presentation.api.dto.CreateIncident;
-import org.utn.presentation.api.dto.EditIncident;
-import org.utn.presentation.api.dto.ErrorResponse;
+import org.utn.domain.job.ProcessState;
+import org.utn.presentation.api.dto.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
@@ -31,10 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class IncidentsController {
     private IncidentManager manager;
@@ -215,6 +210,23 @@ public class IncidentsController {
                 ctx.status(400);
                 ctx.json("No se recibió ningún archivo.");
             }
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(400, error.getMessage()));
+            ctx.status(400);
+        }
+    };
+
+    public Handler getCsvProcessingState = ctx -> {
+        try {
+            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+            ProcessState jobState = jobManager.getJobState(id);
+            String jobErrorMessage = jobManager.getJobErrorMessage(id);
+
+            CsvProcessingStateResponse response = new CsvProcessingStateResponse(jobState, jobErrorMessage);
+            String jsonResponse = objectMapper.writeValueAsString(response);
+
+            ctx.status(200).json(jsonResponse);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
