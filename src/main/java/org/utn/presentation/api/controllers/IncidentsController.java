@@ -33,6 +33,7 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class IncidentsController {
@@ -204,6 +205,7 @@ public class IncidentsController {
                 if (areCsvHeadersValid(text)) {
                     Job job = jobManager.createJob(text); //TODO: pasar a capa aplicación
                     sendToWorker(job.getId().toString());
+                    ctx.json(Map.of("jobId", job.getId().toString()));
                     ctx.status(200);
                 } else {
                     ctx.status(400);
