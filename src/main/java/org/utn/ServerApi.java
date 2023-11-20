@@ -39,7 +39,7 @@ public class ServerApi {
         server.routes(new IncidentsResource(incidentManager, jobManager, createObjectMapper()));
 
         // UI
-        server.routes(new UIResource(incidentManager));
+        server.routes(new UIResource(incidentManager, jobManager));
     }
 
     private static ObjectMapper createObjectMapper() {

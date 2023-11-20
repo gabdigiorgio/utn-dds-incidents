@@ -1,7 +1,6 @@
 package org.utn.persistence.job;
 
 import org.utn.domain.job.Job;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
@@ -19,6 +18,13 @@ public class DbJobsRepository implements JobsRepository {
         var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(job);
+        entityManager.getTransaction().commit();
+    }
+
+    public void update(Job job) {
+        var entityManager = createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.merge(job);
         entityManager.getTransaction().commit();
     }
 

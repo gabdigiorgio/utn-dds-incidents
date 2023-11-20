@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class CsvReader {
-    public static void main(String[] args) throws IOException, CsvException {
+    public static void main(String[] args) throws Exception {
         String fileName = args[0]; //Se recibe el nombre del archivo como argumento
         String file_path = "src/main/resources/"+fileName;
 
