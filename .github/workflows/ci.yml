@@ -1,7 +1,9 @@
 name: Mini Ci
 
 on:
-  push:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test_incidents_backoffice:
@@ -10,9 +12,13 @@ jobs:
       - name: Checkout incidents-backoffice
         uses: actions/checkout@v3
       - name: Set up JDK 17 and Run tests for incidents-backoffice
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run tests for incidents-backoffice
         run: |
           cd incidents-backoffice
-          echo "Running tests for incidents-backoffice..."
           mvn verify
 
   test_catalog_code_service:
@@ -21,7 +27,11 @@ jobs:
       - name: Checkout catalog-code-service
         uses: actions/checkout@v3
       - name: Set up JDK 17 and Run tests for catalog-code-service
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run tests for catalog-code-service
         run: |
           cd catalog-code-service
-          echo "Running tests for catalog-code-service..."
           mvn verify
