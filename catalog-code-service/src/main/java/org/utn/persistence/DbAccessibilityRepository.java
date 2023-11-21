@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 public class DbAccessibilityRepository implements AccessibilityRepository {
-    private EntityManagerFactory entityManagerFactory;
+    private final EntityManagerFactory entityManagerFactory;
 
     public DbAccessibilityRepository(EntityManagerFactory entityManagerFactory) {
         super();
@@ -22,13 +22,12 @@ public class DbAccessibilityRepository implements AccessibilityRepository {
     }
 
     @Override
-    public AccessibilityFeature getById(Integer id)  {
+    public AccessibilityFeature getById(Integer id) {
         var entityManager = createEntityManager();
         return entityManager.find(AccessibilityFeature.class, id);
     }
 
-    private EntityManager createEntityManager()
-    {
+    private EntityManager createEntityManager() {
         return this.entityManagerFactory.createEntityManager();
     }
 }

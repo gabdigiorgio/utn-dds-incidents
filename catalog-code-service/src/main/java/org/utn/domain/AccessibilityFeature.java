@@ -10,14 +10,10 @@ public class AccessibilityFeature {
     }
 
     private enum Type {
-        ELEVATOR,
-        ESCALATOR,
-        RAMP,
-        SIGNAGE,
+        ELEVATOR, ESCALATOR, RAMP, SIGNAGE,
     }
 
     private enum Status {
-        FUNCTIONAL,
-        INACCESSIBLE
+        FUNCTIONAL, INACCESSIBLE
     }
 }
