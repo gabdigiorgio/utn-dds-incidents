@@ -1,38 +1,38 @@
 package org.utn.persistence;
 
-import org.utn.domain.CatalogCode;
+import org.utn.domain.AccessibilityFeature;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-public class DbCatalogCodeRepository implements CatalogCodeRepository {
+public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRepository {
     private final EntityManagerFactory entityManagerFactory;
 
-    public DbCatalogCodeRepository(EntityManagerFactory entityManagerFactory) {
+    public DbAccessibilityFeatureRepository(EntityManagerFactory entityManagerFactory) {
         super();
         this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
-    public void save(CatalogCode catalogCode) {
+    public void save(AccessibilityFeature accessibilityFeature) {
         var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(catalogCode);
+        entityManager.persist(accessibilityFeature);
         entityManager.getTransaction().commit();
     }
 
     @Override
-    public void update(CatalogCode catalogCode) {
+    public void update(AccessibilityFeature accessibilityFeature) {
         var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.merge(catalogCode);
+        entityManager.merge(accessibilityFeature);
         entityManager.getTransaction().commit();
     }
 
     @Override
-    public CatalogCode getById(Integer id) {
+    public AccessibilityFeature getById(Integer id) {
         var entityManager = createEntityManager();
-        return entityManager.find(CatalogCode.class, id);
+        return entityManager.find(AccessibilityFeature.class, id);
     }
 
     private EntityManager createEntityManager() {
