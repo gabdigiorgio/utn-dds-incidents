@@ -1,9 +1,7 @@
 name: Mini Ci
 
 on:
-  pull_request:
-    branches:
-      - main
+  push:
 
 jobs:
   test_incidents_backoffice:
