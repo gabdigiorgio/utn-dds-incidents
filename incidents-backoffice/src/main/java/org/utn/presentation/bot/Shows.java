@@ -71,13 +71,13 @@ public class Shows {
         bot.execute(sendMessage);
     }
 
-    public static void showIncidents(TelegramUserBot telegramUserBot, TelegramBot bot, List<Incident> incidencias) throws TelegramApiException {
+    public static void showIncidents(TelegramUserBot telegramUserBot, TelegramBot bot, List<Incident> incidents) throws TelegramApiException {
 
-        for (Incident incidencia : incidencias) {
+        for (Incident incident : incidents) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(telegramUserBot.getId());
 
-            String tmp_msg = msgFromIncidencia(incidencia);
+            String tmp_msg = msgFromIncident(incident);
             sendMessage.setText(tmp_msg);
             bot.execute(sendMessage);
         }
@@ -122,7 +122,7 @@ public class Shows {
     }
 
 
-    private static String msgFromIncidencia(Incident incidencia){
+    private static String msgFromIncident(Incident incidencia){
         StringBuilder msg = new StringBuilder();
 
         // Agregar encabezado de tabla
