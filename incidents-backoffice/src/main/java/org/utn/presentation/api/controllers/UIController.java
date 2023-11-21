@@ -5,8 +5,6 @@ import javassist.NotFoundException;
 import org.utn.application.IncidentManager;
 import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
-import org.utn.domain.job.Job;
-import org.utn.domain.job.ProcessState;
 
 import java.util.HashMap;
 import java.util.List;

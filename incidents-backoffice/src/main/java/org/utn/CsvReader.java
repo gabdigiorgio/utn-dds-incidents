@@ -1,8 +1,7 @@
 package org.utn;
 
-import com.opencsv.exceptions.CsvException;
 import org.utn.modules.ManagerFactory;
-import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 

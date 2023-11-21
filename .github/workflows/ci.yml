@@ -4,15 +4,28 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
-  test_commit:
+  test_incidents_backoffice:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Usamos la JDK 17
+      - name: Usamos la JDK 17 y Correr pruebas para incidents-backoffice
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Correr pruebas
-        run: mvn verify
+        run: |
+          cd incidents-backoffice && mvn verify
+
+  test_catalog_code_service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Usamos la JDK 17 y Correr pruebas para catalog-code-service
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+        run: |
+          cd catalog-code-service && mvn verify
