@@ -7,6 +7,7 @@ import org.utn.domain.IncidentBuilderForTest;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.State;
 import org.utn.domain.incident.Incident;
+import org.utn.persistence.incident.IncidentsInMemoryRepository;
 
 import java.util.ArrayList;
 import java.util.List;

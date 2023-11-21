@@ -68,7 +68,6 @@
       <version>2.15.0</version> <!-- Asegúrate de utilizar la versión más reciente -->
     </dependency>
 
-
     <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -80,6 +79,12 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
       <version>5.6.15.Final</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>4.0.3</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->

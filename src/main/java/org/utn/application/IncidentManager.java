@@ -7,22 +7,21 @@ import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
 import org.utn.domain.incident.factory.IncidentFactory;
-import org.utn.persistence.IncidentsRepository;
-import org.utn.presentation.api.inputs.ChangeState;
-import org.utn.presentation.api.inputs.EditIncident;
+import org.utn.persistence.incident.IncidentsRepository;
+import org.utn.presentation.api.dto.ChangeState;
+import org.utn.presentation.api.dto.EditIncident;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
-
 import java.time.LocalDate;
 import java.util.List;
 
 public class IncidentManager {
 
-    private final IncidentsRepository IncidentRepository;
+    private final IncidentsRepository IncidentsRepository;
 
     public IncidentManager(IncidentsRepository incidentRepository) {
-        this.IncidentRepository = incidentRepository;
+        this.IncidentsRepository = incidentRepository;
     }
 
     public List<Incident> getIncidents(
@@ -33,45 +32,38 @@ public class IncidentManager {
     ) throws InvalidCatalogCodeException {
         List<Incident> incidents;
 
-        incidents = IncidentRepository.findIncidents(limit, state, orderBy, catalogCode);
+        incidents = IncidentsRepository.findIncidents(limit, state, orderBy, catalogCode);
         return incidents;
     }
 
     public Incident getIncident(Integer id) throws NotFoundException {
-        Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
+        Incident incident = IncidentsRepository.getById(id);
         return incident;
     }
 
     public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
-        Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
-
-        // data.status,
+        Incident incident = IncidentsRepository.getById(id);
         if (data.catalogCode != null) incident.catalogCode.setCode(data.catalogCode);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
         if (data.reporterId != null) incident.setReportedBy(data.reporterId);
-
-        // repoIncidencias
-        IncidentRepository.update(incident);
+        IncidentsRepository.update(incident);
         return incident;
     }
 
     public Incident updateIncidentState(Integer id, ChangeState request) throws NotFoundException, StateTransitionException {
-        Incident incident = IncidentRepository.getById(id);
-        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
+        Incident incident = IncidentsRepository.getById(id);
         String formattedState = request.state.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
         StateEnum nextState = StateEnum.valueOf(formattedState);
         incident.updateState(nextState, request.employee, request.rejectedReason);
-        IncidentRepository.update(incident);
+        IncidentsRepository.update(incident);
         return incident;
     }
 
     public void deleteIncident(Integer id) throws NotFoundException {
-        Incident incident = IncidentRepository.getById(id);
+        Incident incident = IncidentsRepository.getById(id);
         if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
-        IncidentRepository.remove(id);
+        IncidentsRepository.remove(id);
     }
 
     public Incident createIncident(
@@ -94,7 +86,7 @@ public class IncidentManager {
                 closingDate,
                 rejectedReason
         );
-        IncidentRepository.save(newIncident);
+        IncidentsRepository.save(newIncident);
         return newIncident;
     }
 

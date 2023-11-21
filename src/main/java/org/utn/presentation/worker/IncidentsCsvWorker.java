@@ -1,12 +1,11 @@
 package org.utn.presentation.worker;
 
-import com.opencsv.exceptions.CsvException;
 import com.rabbitmq.client.*;
-import org.jetbrains.annotations.NotNull;
+import org.utn.application.JobManager;
+import org.utn.modules.ManagerFactory;
 import org.utn.presentation.incidents_load.CsvReader;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -14,11 +13,13 @@ public class IncidentsCsvWorker extends DefaultConsumer {
 
     private String queueName;
     private CsvReader csvReader;
+    private JobManager jobManager;
 
-    public IncidentsCsvWorker(Channel channel, String queueName, CsvReader csvReader) {
+    public IncidentsCsvWorker(Channel channel, String queueName, CsvReader csvReader, JobManager jobManager) {
         super(channel);
         this.queueName = queueName;
         this.csvReader = csvReader;
+        this.jobManager = jobManager;
     }
 
     public void init() throws IOException {
@@ -27,32 +28,17 @@ public class IncidentsCsvWorker extends DefaultConsumer {
     }
 
     @Override
-    public void handleDelivery(
-            String consumerTag,
-            Envelope envelope,
-            AMQP.BasicProperties properties,
-            byte[] body
-    ) throws IOException {
-        sendAck(envelope);
-        Reader reader = createReader(body);
-        try {
-            System.out.println("Mensaje recibido en Worker");
-            csvReader.execute(reader);
-            System.out.println("Mensaje procesado correctamente en Worker");
-        } catch (CsvException e) {
-            System.out.println("Error a procesa el CSV en el Worker!!");
-        }
-        catch (Exception e) {
-            System.out.println("Excepcion no reconocida!!");
-        }
-    }
+    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
 
-    @NotNull
-    private static Reader createReader(byte[] body) throws UnsupportedEncodingException {
-        String incidents = new String(body, "UTF-8");
-        InputStream incidentsStream = new ByteArrayInputStream(incidents.getBytes(StandardCharsets.UTF_8));
-        Reader reader = new InputStreamReader(incidentsStream);
-        return reader;
+        sendAck(envelope);
+        String jobId = new String(body, "UTF-8");
+
+        try {
+            jobManager.processJob(Integer.parseInt(jobId), csvReader);
+        }
+        catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void sendAck(Envelope envelope) throws IOException {
@@ -82,7 +68,8 @@ public class IncidentsCsvWorker extends DefaultConsumer {
         try{
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
-            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel,queueName, new CsvReader());
+            IncidentsCsvWorker worker = new IncidentsCsvWorker(channel, queueName,
+                    new CsvReader(ManagerFactory.createIncidentManager()), ManagerFactory.createJobManager());
             worker.init();
         } catch (AuthenticationFailureException afe) {
             throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());

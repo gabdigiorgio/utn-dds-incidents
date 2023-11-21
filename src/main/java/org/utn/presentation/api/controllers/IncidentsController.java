@@ -2,48 +2,47 @@ package org.utn.presentation.api.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import javassist.NotFoundException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 import org.utn.application.IncidentManager;
+import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
-import org.utn.persistence.DbIncidentsRepository;
-import org.utn.presentation.api.inputs.*;
+import org.utn.domain.job.Job;
+import org.utn.domain.job.ProcessState;
+import org.utn.presentation.api.dto.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URI;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class IncidentsController {
-    static IncidentManager manager = new IncidentManager(DbIncidentsRepository.getInstance());
+    private IncidentManager manager;
+    private JobManager jobManager;
+    private ObjectMapper objectMapper;
 
+    public IncidentsController(IncidentManager manager, JobManager jobManager,ObjectMapper objectMapper) {
+        this.manager = manager;
+        this.jobManager = jobManager;
+        this.objectMapper = objectMapper;
+    }
 
-    public static Handler getIncidents = ctx -> {
+    public Handler getIncidents = ctx -> {
         Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
@@ -53,33 +52,23 @@ public class IncidentsController {
         // get incidents
         List<Incident> incidents = manager.getIncidents(limit, orderBy, status, place);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
         ctx.status(200);
     };
 
-    public static Handler getIncident = ctx -> {
+    public Handler getIncident = ctx -> {
         Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
         // get incident
         Incident incidents = manager.getIncident(id);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
         ctx.status(200);
     };
 
-    public static Handler createIncident = ctx -> {
+    public Handler createIncident = ctx -> {
         try {
             CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
@@ -92,28 +81,19 @@ public class IncidentsController {
                     null,
                     null);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
             String json = objectMapper.writeValueAsString(newIncident);
 
             ctx.json(json);
             ctx.status(201);
 
-        } catch (UnrecognizedPropertyException unRecognizedPropertyError) {
-            String message = String.format("Campo desconocido: '%s'", unRecognizedPropertyError.getPropertyName());
-            ctx.json(parseErrorResponse(400, message));
-            ctx.status(400);
-        } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+        } catch (UnrecognizedPropertyException e) {
+            handleBadRequest(ctx, e);
+        } catch (Exception e) {
+            handleInternalError(ctx, e);
         }
     };
 
-    public static Handler editIncident = ctx -> {
+    public Handler editIncident = ctx -> {
         try {
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
             EditIncident data = ctx.bodyAsClass(EditIncident.class);
@@ -121,35 +101,24 @@ public class IncidentsController {
             // edit incident
             Incident editedIncident = manager.editIncident(id, data);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
             String json = objectMapper.writeValueAsString(editedIncident);
 
             ctx.json(json);
             ctx.status(200);
 
         } catch (NotFoundException notFoundError) {
-            ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
-            ctx.status(404);
+            handleNotFoundException(ctx, notFoundError);
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            handleInternalError(ctx, error);
         }
     };
-    public static Handler updateIncidentState = ctx -> {
+
+    public Handler updateIncidentState = ctx -> {
         try {
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
             ChangeState request = ctx.bodyAsClass(ChangeState.class);
 
             Incident editedIncident = manager.updateIncidentState(id, request);
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
             String json = objectMapper.writeValueAsString(editedIncident);
             ctx.result(json).contentType("application/json");
@@ -169,7 +138,7 @@ public class IncidentsController {
         }
     };
 
-    public static Handler deleteIncident = ctx -> {
+    public Handler deleteIncident = ctx -> {
         try {
             int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
@@ -187,42 +156,109 @@ public class IncidentsController {
         }
     };
 
+    private boolean areCsvHeadersValid(String csvText) {
+        try {
+            CSVParser csvParser = new CSVParserBuilder()
+                    .withSeparator('\t')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreQuotations(true)
+                    .build();
+
+            CSVReader csvReader = new CSVReaderBuilder(new StringReader(csvText))
+                    .withSkipLines(0)
+                    .withCSVParser(csvParser)
+                    .build();
+
+            String[] headers = csvReader.readNext();
+            CsvReader.deleteCharacterBOM(headers);
+            validateCsvHeaders(headers);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void validateCsvHeaders(String[] headers) {
+        try {
+            CsvReader.checkHeaders(headers);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static void sendToWorker(String payload) throws Exception {
         MQCLient mqClient = new MQCLient();
         mqClient.publish(payload);
     }
 
-    public static Handler createMassiveIncident = ctx -> {
+    public Handler createMassiveIncident = ctx -> {
         try {
             UploadedFile file = ctx.uploadedFile("file");
             if (file != null) {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-
-                sendToWorker(text);
-                ctx.status(200);
+                if (areCsvHeadersValid(text)) {
+                    Job job = jobManager.createJob(text); //TODO: pasar a capa aplicación
+                    sendToWorker(job.getId().toString());
+                    ctx.json(Map.of("jobId", job.getId().toString()));
+                    ctx.status(200);
+                } else {
+                    ctx.status(400);
+                    ctx.json(parseErrorResponse(400, "Los headers del archivo CSV no son válidos."));
+                }
             } else {
                 ctx.status(400);
                 ctx.json("No se recibió ningún archivo.");
             }
-
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
         }
     };
 
+    public Handler getCsvProcessingState = ctx -> {
+        try {
+            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+            ProcessState jobState = jobManager.getJobState(id);
+            String jobErrorMessage = jobManager.getJobErrorMessage(id);
+
+            CsvProcessingStateResponse response = new CsvProcessingStateResponse(jobState, jobErrorMessage);
+            String jsonResponse = objectMapper.writeValueAsString(response);
+
+            ctx.status(200).json(jsonResponse);
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(400, error.getMessage()));
+            ctx.status(400);
+        }
+    };
+
+    private void handleBadRequest(Context ctx, UnrecognizedPropertyException e) throws JsonProcessingException {
+        String message = String.format("Campo desconocido: '%s'", e.getPropertyName());
+        ctx.json(parseErrorResponse(400, message));
+        ctx.status(400);
+    }
+
+    private void handleNotFoundException(Context ctx, NotFoundException notFoundError) throws JsonProcessingException {
+        ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
+        ctx.status(404);
+    }
+
+    private void handleInternalError(Context ctx, Exception e) throws JsonProcessingException {
+        ctx.json(parseErrorResponse(500, e.getMessage()));
+        ctx.status(500);
+    }
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.status = statusCode;
-        errorResponse.message = errorMsg;
-        errorResponse.errors = Collections.singletonList(errorMsg);
-
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.status = statusCode;
+        errorResponse.message = errorMsg;
+        errorResponse.errors = Collections.singletonList(errorMsg);
 
         return objectMapper.writeValueAsString(errorResponse);
     }

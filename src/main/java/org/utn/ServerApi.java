@@ -1,21 +1,30 @@
 package org.utn;
 
-import java.util.function.Consumer;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
+import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
 import org.utn.presentation.api.url_mappings.UIResource;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 public class ServerApi {
 
     public static void main(String[] args) {
+
+        var incidentManager = ManagerFactory.createIncidentManager();
+        var jobManager = ManagerFactory.createJobManager();
 
         // TemplateEngine -Handlebars
         initTemplateEngine();
@@ -27,10 +36,19 @@ public class ServerApi {
         server.routes(new TelegramBotResource());
         
         // API
-        server.routes(new IncidentsResource());
+        server.routes(new IncidentsResource(incidentManager, jobManager, createObjectMapper()));
 
         // UI
-        server.routes(new UIResource());
+        server.routes(new UIResource(incidentManager, jobManager));
+    }
+
+    private static ObjectMapper createObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        return objectMapper;
     }
 
     private static void initTemplateEngine() {

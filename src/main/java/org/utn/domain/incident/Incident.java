@@ -1,18 +1,16 @@
 package org.utn.domain.incident;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import net.bytebuddy.asm.Advice;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 public class Incident {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //#TODO
     private Integer id;
-    @OneToOne(cascade = CascadeType.ALL)
+    @Embedded
+    @AttributeOverrides({@AttributeOverride(name = "code", column = @Column(name = "catalogCode"))})
     public CatalogCode catalogCode;
     public LocalDate reportDate;
     public String description;
@@ -23,7 +21,6 @@ public class Incident {
     @Convert(converter = StateConverter.class)
     public State state;
     public String employee; // Posiblemente en un futuro sea una Clase (Pagina 8)
-
 
     public Incident(
         CatalogCode catalogCode,
