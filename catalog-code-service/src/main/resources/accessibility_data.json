@@ -1,20 +1,29 @@
 [
   {
-    "code": "ABCD-12",
+    "code": "1234-01",
     "type": "ELEVATOR",
-    "status": "FUNCTIONAL",
+    "status": "INACCESSIBLE",
     "station": {
-      "line": "Línea A",
-      "stationName": "Plaza de Mayo",
+      "line": "Línea B",
+      "stationName": "Medrano"
+    }
+  },
+  {
+    "code": "1234-02",
+    "type": "ESCALATOR",
+    "status": "INACCESSIBLE",
+    "station": {
+      "line": "Línea B",
+      "stationName": "Carlos Pellegrini",
       "connections": [
         {
           "sourceStation": {
-            "line": "Línea A",
+            "line": "Línea B",
             "stationName": "Plaza de Mayo"
           },
           "destinationStation": {
-            "line": "Línea B",
-            "stationName": "Carlos Pellegrini"
+            "line": "Línea C",
+            "stationName": "Diagonal Norte"
           }
         }
       ]
@@ -42,24 +51,12 @@
     }
   },
   {
-    "code": "1234-AB",
-    "type": "STAIRS",
+    "code": "5647-89",
+    "type": "RAMP",
     "status": "FUNCTIONAL",
     "station": {
-      "line": "Línea C",
-      "stationName": "Constitución",
-      "connections": [
-        {
-          "sourceStation": {
-            "line": "Línea C",
-            "stationName": "Constitución"
-          },
-          "destinationStation": {
-            "line": "Línea D",
-            "stationName": "Catedral"
-          }
-        }
-      ]
+      "line": "Línea D",
+      "stationName": "Palermo"
     }
   }
 ]
