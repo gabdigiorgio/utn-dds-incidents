@@ -5,6 +5,10 @@ public class AccessibilityFeature {
     private Status status;
     private Station station;
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     private enum Type {
         ELEVATOR,
         ESCALATOR,
