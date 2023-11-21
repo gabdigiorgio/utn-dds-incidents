@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Procesamiento de Archivo CSV</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+    <style>
+        .bg-primary {
+            background-color: #212529 !important;
+        }
+        
+        #status-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bi {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #error-message {
+            margin-top: 0.5rem;
+            color: #ff0000;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<header class="p-3 bg-dark text-white fixed-top">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;"><use xlink:href="#icon"/></svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="/" class="nav-link px-2 text-white">Inicio</a></li>
+                <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
+                <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-secondary">Cargar CSV</a></li>
+                <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
+                <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
+                <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
+            </ul>
+
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
+                <button type="button" class="btn btn-warning" >Registrarse</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<body style="background-color: #f8f9fa;">
+
+<div class="container mt-5">
+    <div class="row justify-content-center pt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title">Estado de Procesamiento del CSV</h5>
+                </div>
+                <div class="card-body">
+                    <div class="progress">
+                        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p id="progress-text" class="mt-3">Procesando...</p>
+                    <div id="status-container" class="mt-3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function updateProgressBar(jobId) {
+        const progressBar = $('#progress-bar');
+        const progressText = $('#progress-text');
+        const statusContainer = $('#status-container');
+
+        function fetchAndUpdate() {
+            fetch(`/api/incidents/processing_csv_state/${jobId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const jobState = data.jobState;
+                    const jobErrorMessage = data.jobErrorMessage;
+
+                    switch (jobState) {
+                        case 'CREATED':
+                            progressBar.css('width', '25%').attr('aria-valuenow', 25);
+                            progressText.text('Procesando el CSV, por favor espera.');
+                            break;
+                        case 'IN_PROCESS':
+                            progressBar.css('width', '50%').attr('aria-valuenow', 50);
+                            progressText.text('Procesando el CSV, por favor espera.');
+                            break;
+                        case 'DONE':
+                            progressBar.css('width', '100%').attr('aria-valuenow', 100);
+                            progressText.text('Procesamiento del CSV completado.');
+                            statusContainer.html('<i class="bi bi-check-circle-fill text-success"></i> <strong>Procesamiento completado con éxito<strong>');
+                            clearInterval(intervalId);
+                            break;
+                        case 'DONE_WITH_ERRORS':
+                            progressBar.css('width', '100%').attr('aria-valuenow', 100);
+                            progressText.text('Procesamiento del CSV completado con errores:');
+                            statusContainer.html('<i class="bi bi-exclamation-triangle-fill text-warning"></i> <strong>Procesamiento con errores</strong>');
+                            statusContainer.append('<div id="error-message">' + jobErrorMessage + '</div>');
+                            clearInterval(intervalId);
+                            break;
+                        default:
+                            progressBar.css('width', '0%').attr('aria-valuenow', 0);
+                            progressText.text('Procesando...');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al obtener el estado del procesamiento del CSV:", error);
+                });
+        }
+
+        fetchAndUpdate();
+        const intervalId = setInterval(fetchAndUpdate, 2000); // Fetch cada 2 segundos
+    }
+
+    $(document).ready(function () {
+        const jobId = "{{jobId}}";
+        updateProgressBar(jobId);
+    });
+</script>
+
+
+</body>
+
+</html>

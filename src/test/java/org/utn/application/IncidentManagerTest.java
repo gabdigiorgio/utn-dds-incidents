@@ -7,7 +7,7 @@ import org.mockito.ArgumentMatchers;
 import org.utn.domain.IncidentBuilderForTest;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.Incident;
-import org.utn.persistence.IncidentsRepository;
+import org.utn.persistence.incident.IncidentsRepository;
 
 import java.time.LocalDate;
 

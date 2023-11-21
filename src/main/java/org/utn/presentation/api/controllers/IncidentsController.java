@@ -6,33 +6,39 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import javassist.NotFoundException;
 import org.utn.application.IncidentManager;
+import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
-import org.utn.presentation.api.inputs.ChangeState;
-import org.utn.presentation.api.inputs.CreateIncident;
-import org.utn.presentation.api.inputs.EditIncident;
-import org.utn.presentation.api.inputs.ErrorResponse;
+import org.utn.domain.job.Job;
+import org.utn.domain.job.ProcessState;
+import org.utn.presentation.api.dto.*;
+import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class IncidentsController {
     private IncidentManager manager;
+    private JobManager jobManager;
     private ObjectMapper objectMapper;
 
-    public IncidentsController(IncidentManager manager, ObjectMapper objectMapper) {
+    public IncidentsController(IncidentManager manager, JobManager jobManager,ObjectMapper objectMapper) {
         this.manager = manager;
+        this.jobManager = jobManager;
         this.objectMapper = objectMapper;
     }
 
@@ -150,6 +156,36 @@ public class IncidentsController {
         }
     };
 
+    private boolean areCsvHeadersValid(String csvText) {
+        try {
+            CSVParser csvParser = new CSVParserBuilder()
+                    .withSeparator('\t')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreQuotations(true)
+                    .build();
+
+            CSVReader csvReader = new CSVReaderBuilder(new StringReader(csvText))
+                    .withSkipLines(0)
+                    .withCSVParser(csvParser)
+                    .build();
+
+            String[] headers = csvReader.readNext();
+            CsvReader.deleteCharacterBOM(headers);
+            validateCsvHeaders(headers);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void validateCsvHeaders(String[] headers) {
+        try {
+            CsvReader.checkHeaders(headers);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static void sendToWorker(String payload) throws Exception {
         MQCLient mqClient = new MQCLient();
         mqClient.publish(payload);
@@ -161,14 +197,36 @@ public class IncidentsController {
             if (file != null) {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-
-                sendToWorker(text);
-                ctx.status(200);
+                if (areCsvHeadersValid(text)) {
+                    Job job = jobManager.createJob(text); //TODO: pasar a capa aplicación
+                    sendToWorker(job.getId().toString());
+                    ctx.json(Map.of("jobId", job.getId().toString()));
+                    ctx.status(200);
+                } else {
+                    ctx.status(400);
+                    ctx.json(parseErrorResponse(400, "Los headers del archivo CSV no son válidos."));
+                }
             } else {
                 ctx.status(400);
                 ctx.json("No se recibió ningún archivo.");
             }
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(400, error.getMessage()));
+            ctx.status(400);
+        }
+    };
 
+    public Handler getCsvProcessingState = ctx -> {
+        try {
+            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+            ProcessState jobState = jobManager.getJobState(id);
+            String jobErrorMessage = jobManager.getJobErrorMessage(id);
+
+            CsvProcessingStateResponse response = new CsvProcessingStateResponse(jobState, jobErrorMessage);
+            String jsonResponse = objectMapper.writeValueAsString(response);
+
+            ctx.status(200).json(jsonResponse);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);

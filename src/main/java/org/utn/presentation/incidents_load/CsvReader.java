@@ -12,6 +12,7 @@ import org.utn.utils.DateUtils;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.rmi.server.ExportException;
 import java.util.*;
 
 public class CsvReader {
@@ -26,17 +27,17 @@ public class CsvReader {
             "Codigo de catalogo", "Fecha de reporte", "Descripcion", "Estado", "Operador", "Persona que lo reporto", "Fecha cierre", "Motivo rechazo"
     ));
 
-    public String execute(String file_path) throws IOException, CsvException {
+    public String execute(String file_path) throws Exception {
         //SE HACE LA LECTURA DEL ARCHIVO
         Reader reader = new FileReader(file_path);
         return processFile(reader);
     }
 
-    public String execute(Reader reader) throws IOException, CsvException {
+    public String execute(Reader reader) throws Exception {
         return processFile(reader);
     }
 
-    private String processFile(Reader reader) throws CsvValidationException, IOException {
+    private String processFile(Reader reader) throws Exception {
 
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator('\t')
@@ -106,14 +107,14 @@ public class CsvReader {
                 //FALLO LA CREACIÓN DE LA INCIDENCIA
                 String msg = "No fue posible cargar la incidencia con estos datos: " + Arrays.toString(record);
                 System.err.println(msg);
-                System.err.println("\t" + e.getMessage());
+                throw new Exception(msg);
             }
         }
         return String.format("Se cargaron exitosamente %d incidencias", incidentsLoaded);
 
     }
 
-    private static void checkHeaders(String[] headers) throws Exception {
+    public static void checkHeaders(String[] headers) throws Exception {
         Set<String> headerSet = new HashSet<>(Arrays.asList(headers));
         Set<String> missingHeaders = new HashSet<>(HEADERS);
         missingHeaders.removeAll(headerSet);
@@ -122,7 +123,7 @@ public class CsvReader {
         }
     }
 
-    private static void deleteCharacterBOM(String[] headers) {
+    public static void deleteCharacterBOM(String[] headers) {
         if (headers[0].startsWith("\uFEFF")) {
             // Eliminar el BOM del primer campo
             headers[0] = headers[0].substring(1);

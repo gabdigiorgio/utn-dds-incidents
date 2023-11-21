@@ -106,14 +106,24 @@
         })
         .then(response => {
             if (response.ok) {
-                alert("Archivo cargado con éxito.");
+                return response.json();
             } else {
-                alert("Error al cargar el archivo. Por favor, intentelo de nuevo.");
+                return response.json().then(errorData => {
+                    throw new Error("Error al cargar el archivo: " + errorData.message);
+                });
+            }
+        })
+        .then(data => {
+            if (data && data.jobId) {
+                const jobId = data.jobId;
+                window.location.href = `/ui/incidents/processing_csv_state/${jobId}`;
+            } else {
+                throw new Error("La respuesta del servidor no contiene un jobId válido.");
             }
         })
         .catch(error => {
             console.error("Error:", error);
-            alert("Error al cargar el archivo. Por favor, intentelo de nuevo.");
+            alert(error.message);
         });
     }
     </script>
