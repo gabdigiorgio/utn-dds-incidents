@@ -9,23 +9,21 @@ jobs:
   test_incidents_backoffice:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Usamos la JDK 17 y Correr pruebas para incidents-backoffice
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+      - name: Checkout incidents-backoffice
+        uses: actions/checkout@v3
+      - name: Set up JDK 17 and Run tests for incidents-backoffice
         run: |
-          cd incidents-backoffice && mvn verify
+          cd incidents-backoffice
+          echo "Running tests for incidents-backoffice..."
+          mvn verify
 
   test_catalog_code_service:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Usamos la JDK 17 y Correr pruebas para catalog-code-service
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+      - name: Checkout catalog-code-service
+        uses: actions/checkout@v3
+      - name: Set up JDK 17 and Run tests for catalog-code-service
         run: |
-          cd catalog-code-service && mvn verify
+          cd catalog-code-service
+          echo "Running tests for catalog-code-service..."
+          mvn verify
