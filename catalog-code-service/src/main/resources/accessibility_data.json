@@ -1,0 +1,65 @@
+[
+  {
+    "code": "ABCD-12",
+    "type": "ELEVATOR",
+    "status": "FUNCTIONAL",
+    "station": {
+      "line": "Línea A",
+      "stationName": "Plaza de Mayo",
+      "connections": [
+        {
+          "sourceStation": {
+            "line": "Línea A",
+            "stationName": "Plaza de Mayo"
+          },
+          "destinationStation": {
+            "line": "Línea B",
+            "stationName": "Carlos Pellegrini"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "code": "1234-56",
+    "type": "RAMP",
+    "status": "INACCESSIBLE",
+    "station": {
+      "line": "Línea B",
+      "stationName": "Carlos Pellegrini",
+      "connections": [
+        {
+          "sourceStation": {
+            "line": "Línea B",
+            "stationName": "Carlos Pellegrini"
+          },
+          "destinationStation": {
+            "line": "Línea C",
+            "stationName": "Constitución"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "code": "1234-AB",
+    "type": "STAIRS",
+    "status": "FUNCTIONAL",
+    "station": {
+      "line": "Línea C",
+      "stationName": "Constitución",
+      "connections": [
+        {
+          "sourceStation": {
+            "line": "Línea C",
+            "stationName": "Constitución"
+          },
+          "destinationStation": {
+            "line": "Línea D",
+            "stationName": "Catedral"
+          }
+        }
+      ]
+    }
+  }
+]
