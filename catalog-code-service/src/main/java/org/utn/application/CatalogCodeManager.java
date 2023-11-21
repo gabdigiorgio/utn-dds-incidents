@@ -11,6 +11,11 @@ public class CatalogCodeManager {
     public CatalogCodeManager(CatalogCodeRepository catalogCodeRepository) {
         this.catalogCodeRepository = catalogCodeRepository;
     }
+    
+    public void createCatalogCode(String code, AccessibilityFeature accessibilityFeature) {
+        CatalogCode newCatalogCode = new CatalogCode(code, accessibilityFeature);
+        catalogCodeRepository.save(newCatalogCode);
+    }
 
     public CatalogCode getCatalogCode(Integer id) {
         CatalogCode catalogCode = catalogCodeRepository.getById(id);
