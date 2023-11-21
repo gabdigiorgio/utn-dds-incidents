@@ -1,10 +1,10 @@
 package org.utn.modules;
 
-import org.utn.persistence.DbAccessibilityRepository;
+import org.utn.persistence.DbCatalogCodeRepository;
 
 public class RepositoryFactory {
 
-    public static DbAccessibilityRepository createAccessibilityRepository() {
-        return new DbAccessibilityRepository(PersistenceUtils.createEntityManagerFactory());
+    public static DbCatalogCodeRepository createCatalogCodeRepository() {
+        return new DbCatalogCodeRepository(PersistenceUtils.createEntityManagerFactory());
     }
 }

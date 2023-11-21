@@ -9,7 +9,7 @@ public class AccessibilityFeature {
         this.status = status;
     }
 
-    private enum Type {
+    public enum Type {
         ELEVATOR, ESCALATOR, RAMP, SIGNAGE,
     }
 
