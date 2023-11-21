@@ -14,6 +14,14 @@ public class DbAccessibilityRepository implements AccessibilityRepository {
     }
 
     @Override
+    public void save(AccessibilityFeature accessibilityFeature) {
+        var entityManager = createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.persist(accessibilityFeature);
+        entityManager.getTransaction().commit();
+    }
+
+    @Override
     public void update(AccessibilityFeature accessibilityFeature) {
         var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
