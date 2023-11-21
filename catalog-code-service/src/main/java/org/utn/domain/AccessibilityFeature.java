@@ -13,7 +13,7 @@ public class AccessibilityFeature {
         ELEVATOR, ESCALATOR, RAMP, SIGNAGE,
     }
 
-    private enum Status {
+    public enum Status {
         FUNCTIONAL, INACCESSIBLE
     }
 }
