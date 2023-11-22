@@ -7,7 +7,9 @@ public class AccessibilityFeature {
     @Id
     @Column(name = "catalog_code")
     private String catalogCode;
+    @Enumerated(EnumType.STRING)
     private Type type;
+    @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne
     @JoinColumn(name = "station_id")
