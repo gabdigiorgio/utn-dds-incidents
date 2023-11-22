@@ -15,6 +15,7 @@ import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
 import org.utn.presentation.api.url_mappings.UIResource;
+import org.utn.presentation.api.url_mappings.UsersResource;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -25,6 +26,7 @@ public class ServerApi {
 
         var incidentManager = ManagerFactory.createIncidentManager();
         var jobManager = ManagerFactory.createJobManager();
+        var usersManager = ManagerFactory.createUserManager();
 
         // TemplateEngine -Handlebars
         initTemplateEngine();
@@ -37,6 +39,7 @@ public class ServerApi {
         
         // API
         server.routes(new IncidentsResource(incidentManager, jobManager, createObjectMapper()));
+        server.routes(new UsersResource(usersManager, jobManager, createObjectMapper()));
 
         // UI
         server.routes(new UIResource(incidentManager, jobManager));
