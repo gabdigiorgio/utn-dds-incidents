@@ -30,9 +30,9 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
     }
 
     @Override
-    public AccessibilityFeature getById(Integer id) {
+    public AccessibilityFeature getByCatalogCode(String catalogCode) {
         var entityManager = createEntityManager();
-        return entityManager.find(AccessibilityFeature.class, id);
+        return entityManager.find(AccessibilityFeature.class, catalogCode);
     }
 
     private EntityManager createEntityManager() {

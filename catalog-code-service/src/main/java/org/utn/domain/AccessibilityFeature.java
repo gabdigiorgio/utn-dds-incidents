@@ -1,13 +1,11 @@
 package org.utn.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class AccessibilityFeature {
     @Id
+    @Column(name = "catalog_code")
     private String catalogCode;
     private Type type;
     private Status status;

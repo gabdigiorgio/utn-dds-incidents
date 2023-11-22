@@ -9,7 +9,7 @@ public class Station {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String stationName;
+    private String name;
     private String line;
 
     @OneToMany(mappedBy = "sourceStation")

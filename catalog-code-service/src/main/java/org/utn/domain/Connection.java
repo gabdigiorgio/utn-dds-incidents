@@ -9,11 +9,11 @@ public class Connection {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "sourceStation_id")
+    @JoinColumn(name = "source_station_id")
     private Station sourceStation;
 
     @ManyToOne
-    @JoinColumn(name = "destinationStation_id")
+    @JoinColumn(name = "destination_station_id")
     private Station destinationStation;
 
     protected Connection() {

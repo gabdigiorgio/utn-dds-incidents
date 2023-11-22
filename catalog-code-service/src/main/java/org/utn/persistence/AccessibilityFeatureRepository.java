@@ -4,9 +4,9 @@ import org.utn.domain.AccessibilityFeature;
 
 public interface AccessibilityFeatureRepository {
 
-    void save(AccessibilityFeature catalogCode);
+    void save(AccessibilityFeature accessibilityFeature);
 
-    void update(AccessibilityFeature catalogCode);
+    void update(AccessibilityFeature accessibilityFeature);
 
-    AccessibilityFeature getById(Integer id);
+    AccessibilityFeature getByCatalogCode(String catalogCode);
 }

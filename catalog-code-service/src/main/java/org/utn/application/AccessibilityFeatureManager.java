@@ -16,12 +16,12 @@ public class AccessibilityFeatureManager {
         accessibilityFeatureRepository.save(new AccessibilityFeature(catalogCode, type, status, station));
     }
 
-    public AccessibilityFeature getCatalogCode(Integer id) {
-        return accessibilityFeatureRepository.getById(id);
+    public AccessibilityFeature getAccessibilityFeature(String catalogCode) {
+        return accessibilityFeatureRepository.getByCatalogCode(catalogCode);
     }
 
-    public AccessibilityFeature updateAccessibilityFeatureStatus(Integer id, AccessibilityFeature.Status status) {
-        AccessibilityFeature accessibilityFeature = accessibilityFeatureRepository.getById(id);
+    public AccessibilityFeature updateAccessibilityFeatureStatus(String catalogCode, AccessibilityFeature.Status status) {
+        AccessibilityFeature accessibilityFeature = accessibilityFeatureRepository.getByCatalogCode(catalogCode);
         accessibilityFeature.setStatus(status);
         accessibilityFeatureRepository.update(accessibilityFeature);
         return accessibilityFeature;
