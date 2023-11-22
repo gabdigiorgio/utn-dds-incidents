@@ -28,7 +28,7 @@ public class UIResource implements EndpointGroup {
 
             // Agrega una nueva ruta '/about'
             ApiBuilder.get("/faqs", ctx -> {
-                ctx.render("404.hbs");
+                ctx.render("faqs.hbs");
             });
 
             ApiBuilder.get("/nosotros", ctx -> {
