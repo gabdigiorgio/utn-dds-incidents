@@ -12,8 +12,8 @@ public class AccessibilityFeatureManager {
         this.accessibilityFeatureRepository = accessibilityFeatureRepository;
     }
     
-    public void createAccessibilityFeature(String code, AccessibilityFeature.Type type, AccessibilityFeature.Status status, Station station) {
-        accessibilityFeatureRepository.save(new AccessibilityFeature(code, type, status, station));
+    public void createAccessibilityFeature(String catalogCode, AccessibilityFeature.Type type, AccessibilityFeature.Status status, Station station) {
+        accessibilityFeatureRepository.save(new AccessibilityFeature(catalogCode, type, status, station));
     }
 
     public AccessibilityFeature getCatalogCode(Integer id) {

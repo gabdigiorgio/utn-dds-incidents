@@ -1,22 +1,22 @@
 package org.utn.domain;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class AccessibilityFeature {
     @Id
-    private String code;
-    @Enumerated(EnumType.STRING)
+    private String catalogCode;
     private Type type;
-    @Enumerated(EnumType.STRING)
     private Status status;
+    @ManyToOne
+    @JoinColumn(name = "station_id")
     private Station station;
 
-    public AccessibilityFeature(String code, Type type, Status status, Station station) {
-        this.code = code;
+    public AccessibilityFeature(String catalogCode, Type type, Status status, Station station) {
+        this.catalogCode = catalogCode;
         this.type = type;
         this.status = status;
         this.station = station;
@@ -32,5 +32,9 @@ public class AccessibilityFeature {
 
     public enum Status {
         FUNCTIONAL, INACCESSIBLE
+    }
+
+    protected AccessibilityFeature() {
+        super();
     }
 }

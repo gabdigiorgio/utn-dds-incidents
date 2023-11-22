@@ -4,7 +4,7 @@ import org.utn.application.AccessibilityFeatureManager;
 
 public class ManagerFactory {
 
-    public static AccessibilityFeatureManager createCatalogCodeManager() {
+    public static AccessibilityFeatureManager createAccessibilityFeatureManager() {
         return new AccessibilityFeatureManager(RepositoryFactory.createCatalogCodeRepository());
     }
 }
