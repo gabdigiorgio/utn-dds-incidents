@@ -41,6 +41,10 @@ public class IncidentManager {
         return incident;
     }
 
+    public String getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
+        return inventoryService.getInaccessibleAccessibilityFeatures(limit, line, station);
+    }
+
     public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
         Incident incident = incidentsRepository.getById(id);
         if (data.catalogCode != null) incident.setCatalogCode(data.catalogCode);

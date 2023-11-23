@@ -17,6 +17,7 @@ import javassist.NotFoundException;
 import org.utn.application.IncidentManager;
 import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.InventoryService;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
 import org.utn.domain.job.Job;
@@ -57,6 +58,17 @@ public class IncidentsController {
 
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
+        ctx.status(200);
+    };
+
+    public Handler getInaccessibleAccessibilityFeatures = ctx -> {
+        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
+        String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
+        String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
+
+        var accessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(limit, line, station);
+
+        ctx.json(accessibilityFeatures);
         ctx.status(200);
     };
 

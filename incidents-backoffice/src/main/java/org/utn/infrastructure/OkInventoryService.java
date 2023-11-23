@@ -3,9 +3,11 @@ package org.utn.infrastructure;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.utn.domain.incident.InventoryService;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
+import java.io.Console;
 import java.io.IOException;
 
 public class OkInventoryService implements InventoryService {
@@ -27,6 +29,28 @@ public class OkInventoryService implements InventoryService {
 
         if (isNotSuccessful) {
             throw new InvalidCatalogCodeException(catalogCode);
+        }
+    }
+
+    @Override
+    public String getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
+        var baseUrl = "http://localhost:8081/api/accessibilityFeatures/";
+
+        var urlBuilder = new StringBuilder(baseUrl + "?limit=" + limit + "&inaccessible=true");
+        if (line != null) {
+            urlBuilder.append("&line=").append(line);
+        }
+        if (station != null) {
+            urlBuilder.append("&station=").append(station);
+        }
+        var url = urlBuilder.toString();
+
+        var request = buildRequest(url);
+
+        var response = execute(request);
+
+        try (ResponseBody responseBody = response.body()) {
+            return responseBody.string();
         }
     }
 
