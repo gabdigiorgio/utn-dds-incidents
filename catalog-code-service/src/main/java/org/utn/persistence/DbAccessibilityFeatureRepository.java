@@ -1,9 +1,11 @@
 package org.utn.persistence;
 
 import org.utn.domain.AccessibilityFeature;
+import org.utn.domain.Station;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +41,8 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
     }
 
     @Override
-    public List<AccessibilityFeature> findAccessibilityFeatures(int quantity, String catalogCode, String line, String station,
-                                                                String status, String type) {
+    public List<AccessibilityFeature> findAccessibilityFeatures(int quantity, String catalogCode, String line, String stationName,
+                                                                AccessibilityFeature.Status status, AccessibilityFeature.Type type) {
         var entityManager = createEntityManager();
         var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(AccessibilityFeature.class);
@@ -53,11 +55,11 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
         }
 
         if (line != null) {
-            predicates.add(criteriaBuilder.equal(root.get("line"), line));
+            predicates.add(criteriaBuilder.equal(root.get("station").get("line"), line));
         }
 
-        if (station != null) {
-            predicates.add(criteriaBuilder.equal(root.get("station"), station));
+        if (stationName != null) {
+            predicates.add(criteriaBuilder.equal(root.get("station").get("name"), stationName));
         }
 
         if (status != null) {

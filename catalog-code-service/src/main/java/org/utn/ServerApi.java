@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.Javalin;
+import io.javalin.validation.JavalinValidation;
+import org.utn.domain.AccessibilityFeature;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.url_mappings.AccessibilityResource;
 
