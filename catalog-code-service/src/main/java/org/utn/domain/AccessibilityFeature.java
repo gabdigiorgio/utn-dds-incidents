@@ -26,6 +26,22 @@ public class AccessibilityFeature {
         this.status = status;
     }
 
+    public String getCatalogCode() {
+        return catalogCode;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public Station getStation() {
+        return station;
+    }
+
     public enum Type {
         ELEVATOR, ESCALATOR, RAMP, SIGNAGE,
     }

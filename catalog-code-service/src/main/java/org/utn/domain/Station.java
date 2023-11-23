@@ -23,4 +23,16 @@ public class Station {
     protected Station() {
         super();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public Integer getId() {
+        return id;
+    }
 }

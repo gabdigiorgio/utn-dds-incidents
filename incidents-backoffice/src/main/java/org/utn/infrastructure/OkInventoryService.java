@@ -8,7 +8,6 @@ import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
 import java.io.IOException;
 
-
 public class OkInventoryService implements InventoryService {
 
     private final OkHttpClient client;

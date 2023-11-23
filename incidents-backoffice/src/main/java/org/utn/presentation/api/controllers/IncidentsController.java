@@ -32,12 +32,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class IncidentsController {
-    private IncidentManager manager;
+    private IncidentManager incidentManager;
     private JobManager jobManager;
     private ObjectMapper objectMapper;
 
-    public IncidentsController(IncidentManager manager, JobManager jobManager,ObjectMapper objectMapper) {
-        this.manager = manager;
+    public IncidentsController(IncidentManager incidentManager, JobManager jobManager, ObjectMapper objectMapper) {
+        this.incidentManager = incidentManager;
         this.jobManager = jobManager;
         this.objectMapper = objectMapper;
     }
@@ -50,7 +50,7 @@ public class IncidentsController {
         Integer from = ctx.queryParamAsClass("from", Integer.class).getOrDefault(0);
 
         // get incidents
-        List<Incident> incidents = manager.getIncidents(limit, orderBy, status, place);
+        List<Incident> incidents = incidentManager.getIncidents(limit, orderBy, status, place);
 
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
@@ -61,9 +61,9 @@ public class IncidentsController {
         Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
         // get incident
-        Incident incidents = manager.getIncident(id);
+        Incident incident = incidentManager.getIncident(id);
 
-        String json = objectMapper.writeValueAsString(incidents);
+        String json = objectMapper.writeValueAsString(incident);
         ctx.json(json);
         ctx.status(200);
     };
@@ -73,7 +73,7 @@ public class IncidentsController {
             CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
             // create incident
-            Incident newIncident = manager.createIncident(data.catalogCode,
+            Incident newIncident = incidentManager.createIncident(data.catalogCode,
                     DateUtils.parseDate(data.reportDate),
                     data.description,StateEnum.REPORTED.getStateName(),
                     null,
@@ -99,7 +99,7 @@ public class IncidentsController {
             EditIncident data = ctx.bodyAsClass(EditIncident.class);
 
             // edit incident
-            Incident editedIncident = manager.editIncident(id, data);
+            Incident editedIncident = incidentManager.editIncident(id, data);
 
             String json = objectMapper.writeValueAsString(editedIncident);
 
@@ -118,7 +118,7 @@ public class IncidentsController {
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
             ChangeState request = ctx.bodyAsClass(ChangeState.class);
 
-            Incident editedIncident = manager.updateIncidentState(id, request);
+            Incident editedIncident = incidentManager.updateIncidentState(id, request);
 
             String json = objectMapper.writeValueAsString(editedIncident);
             ctx.result(json).contentType("application/json");
@@ -143,7 +143,7 @@ public class IncidentsController {
             int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
             // delete incident
-            manager.deleteIncident(id);
+            incidentManager.deleteIncident(id);
 
             ctx.status(204);
 
