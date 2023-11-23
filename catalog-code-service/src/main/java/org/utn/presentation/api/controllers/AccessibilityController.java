@@ -12,6 +12,7 @@ import io.javalin.http.Handler;
 import org.utn.application.AccessibilityFeatureManager;
 import org.utn.domain.AccessibilityFeature;
 import org.utn.presentation.api.dto.ErrorResponse;
+import org.utn.presentation.api.dto.StatusRequest;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,9 +79,11 @@ public class AccessibilityController {
     public Handler updateAccessibilityFeature = ctx -> {
         try {
             String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
-            String statusStr = Objects.requireNonNull(ctx.pathParam("status"));
+            var statusRequest = ctx.bodyAsClass(StatusRequest.class);
+            var statusStr = statusRequest.getStatus();
+            var upperCaseStatus = statusStr.toUpperCase();
 
-            AccessibilityFeature.Status status = AccessibilityFeature.Status.valueOf(statusStr.toUpperCase());
+            AccessibilityFeature.Status status = AccessibilityFeature.Status.valueOf(upperCaseStatus);
 
             AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.updateAccessibilityFeatureStatus(catalogCode, status);
 
