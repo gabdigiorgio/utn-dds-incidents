@@ -38,7 +38,7 @@ public class MainMenu extends UserBotState {
                 2️⃣ ☞ Obtener N incidencias (La mas antigua primero)
                 3️⃣ ☞ Obtener N incidencias  filtrando por estado
                 4️⃣ ☞ Obtener las incidencias de un codigo de catalogo
-                5️⃣ ☞ Obtener las medidas de accesibilidad inaccesibles""");
+                5️⃣ ☞ Obtener las medidas de accesibilidad inaccesibles filtrando por Linea y Estacion""");
         try {
             bot.execute(response);
             this.setSubState(SubState.WAITING_RESPONSE_OPTION);
