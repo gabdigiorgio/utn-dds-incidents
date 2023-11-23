@@ -20,9 +20,9 @@ public class GetIncidentsByState extends UserBotState {
         return "GetIncidentsFirstReport";
     }
 
-    private IncidentManager manager;
-    public GetIncidentsByState(IncidentManager manager) {
-        this.manager = manager;
+    private IncidentManager incidentManager;
+    public GetIncidentsByState(IncidentManager incidentManager) {
+        this.incidentManager = incidentManager;
     }
 
     @Override
@@ -44,6 +44,8 @@ public class GetIncidentsByState extends UserBotState {
             Shows.showMainMenu(telegramUserBot, bot);
         } else {
             if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)) {
+                invalidMessage(telegramUserBot,bot);
+                showGetQuantityIncidents(telegramUserBot, bot);
                 return;
             }
             telegramUserBot.setIncidentsQuantity(Integer.parseInt(messageText));
@@ -63,7 +65,7 @@ public class GetIncidentsByState extends UserBotState {
                 return;
             }
 
-            List<Incident> incidents = manager.getIncidents(telegramUserBot.getIncidentsQuantity(), null, messageText, null);
+            List<Incident> incidents = incidentManager.getIncidents(telegramUserBot.getIncidentsQuantity(), null, messageText, null);
             showIncidents(telegramUserBot, bot, incidents);
         }
     }

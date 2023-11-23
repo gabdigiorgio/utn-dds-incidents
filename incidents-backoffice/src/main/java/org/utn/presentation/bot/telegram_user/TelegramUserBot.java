@@ -7,6 +7,8 @@ public class TelegramUserBot {
     private final Long id;
     private int messageCount;
     private int incidentsQuantity;
+    private int inaccessibleAccessibilityFeaturesQuantity;
+    private String line;
     private UserBotState state;
 
     public UserBotState getState() {
@@ -45,4 +47,19 @@ public class TelegramUserBot {
         this.state.execute(this,msg,bot);
     }
 
+    public int getInaccessibleAccessibilityFeaturesQuantity() {
+        return inaccessibleAccessibilityFeaturesQuantity;
+    }
+
+    public void setInaccessibleAccessibilityFeaturesQuantity(int inaccessibleAccessibilityFeaturesQuantity) {
+        this.inaccessibleAccessibilityFeaturesQuantity = inaccessibleAccessibilityFeaturesQuantity;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getLine() {
+        return line;
+    }
 }

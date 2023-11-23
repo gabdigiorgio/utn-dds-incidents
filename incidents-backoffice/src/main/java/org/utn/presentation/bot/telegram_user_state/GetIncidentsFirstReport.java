@@ -10,13 +10,14 @@ import org.utn.presentation.bot.Shows;
 
 import java.util.List;
 
+import static org.utn.presentation.bot.Shows.invalidMessage;
 import static org.utn.presentation.bot.Shows.showGetQuantityIncidents;
 
 public class GetIncidentsFirstReport extends UserBotState {
 
-    private IncidentManager manager;
-    public GetIncidentsFirstReport(IncidentManager manager) {
-        this.manager = manager;
+    private IncidentManager incidentManager;
+    public GetIncidentsFirstReport(IncidentManager incidentManager) {
+        this.incidentManager = incidentManager;
     }
 
     @Override
@@ -42,9 +43,13 @@ public class GetIncidentsFirstReport extends UserBotState {
             telegramUserBot.setState(new MainMenu());
             telegramUserBot.execute(messageText,bot);
         } else{
-            if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)){return;}
+            if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)){
+                invalidMessage(telegramUserBot,bot);
+                showGetQuantityIncidents(telegramUserBot, bot);
+                return;
+            }
 
-            List<Incident> incidents = manager.getIncidents(Integer.parseInt(messageText), "createdAtDesc", null, null);
+            List<Incident> incidents = incidentManager.getIncidents(Integer.parseInt(messageText), "createdAtDesc", null, null);
             Shows.showIncidents(telegramUserBot,bot,incidents);
         }
     }

@@ -5,14 +5,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
 import org.utn.application.IncidentManager;
 import org.utn.modules.ManagerFactory;
-import org.utn.persistence.incident.IncidentsInMemoryRepository;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 
 import static org.utn.presentation.bot.Shows.invalidMessage;
 
 public class MainMenu extends UserBotState {
 
-    static IncidentManager manager = ManagerFactory.createIncidentManager();
+    static IncidentManager incidentManager = ManagerFactory.createIncidentManager();
 
     public MainMenu() {
     }
@@ -38,7 +37,8 @@ public class MainMenu extends UserBotState {
                 1️⃣ ☞ Obtener N incidencias (La mas recientes primero)
                 2️⃣ ☞ Obtener N incidencias (La mas antigua primero)
                 3️⃣ ☞ Obtener N incidencias  filtrando por estado
-                4️⃣ ☞ Obtener las incidencias de un codigo de catalogo""");
+                4️⃣ ☞ Obtener las incidencias de un codigo de catalogo
+                5️⃣ ☞ Obtener las medidas de accesibilidad inaccesibles""");
         try {
             bot.execute(response);
             this.setSubState(SubState.WAITING_RESPONSE_OPTION);
@@ -54,19 +54,23 @@ public class MainMenu extends UserBotState {
 
         switch (messageText) {
             case "1" -> {
-                telegramUserBot.setState(new GetIncidentsLastReport(manager));
+                telegramUserBot.setState(new GetIncidentsLastReport(incidentManager));
                 telegramUserBot.execute(messageText, bot);
             }
             case "2" -> {
-                telegramUserBot.setState(new GetIncidentsFirstReport(manager));
+                telegramUserBot.setState(new GetIncidentsFirstReport(incidentManager));
                 telegramUserBot.execute(messageText, bot);
             }
             case "3" -> {
-                telegramUserBot.setState(new GetIncidentsByState(manager));
+                telegramUserBot.setState(new GetIncidentsByState(incidentManager));
                 telegramUserBot.execute(messageText, bot);
             }
             case "4" -> {
-                telegramUserBot.setState(new GetIncidentsByPlace(manager));
+                telegramUserBot.setState(new GetIncidentsByPlace(incidentManager));
+                telegramUserBot.execute(messageText, bot);
+            }
+            case "5" -> {
+                telegramUserBot.setState(new GetInaccessibleAccessibilityFeatures(incidentManager));
                 telegramUserBot.execute(messageText, bot);
             }
             default -> invalidMessage(telegramUserBot, bot);

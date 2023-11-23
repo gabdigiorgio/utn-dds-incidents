@@ -11,8 +11,6 @@ public class UtilsBot {
 
     public static boolean validateIsNumber(TelegramUserBot telegramUserBot, String messageText, TelegramBot bot) throws TelegramApiException {
         if (!StringValidatorUtils.isNumber(messageText)){
-            invalidMessage(telegramUserBot,bot);
-            showGetQuantityIncidents(telegramUserBot,bot);
             return true;
         }
         return false;
