@@ -47,7 +47,6 @@ public class IncidentManager {
 
     public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
         Incident incident = incidentsRepository.getById(id);
-        if (data.catalogCode != null) incident.setCatalogCode(data.catalogCode);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
         if (data.reporterId != null) incident.setReportedBy(data.reporterId);
