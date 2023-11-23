@@ -34,8 +34,6 @@ public class OkInventoryService implements InventoryService {
 
     @Override
     public String getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
-        var baseUrl = "http://localhost:8081/api/accessibilityFeatures/";
-
         var urlBuilder = new StringBuilder(baseUrl + "?limit=" + limit + "&inaccessible=true");
         if (line != null) {
             urlBuilder.append("&line=").append(line);
