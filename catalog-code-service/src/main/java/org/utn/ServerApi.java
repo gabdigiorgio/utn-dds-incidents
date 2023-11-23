@@ -10,5 +10,7 @@ public class ServerApi {
 
         Integer port = Integer.parseInt(System.getProperty("port", "8080"));
         Javalin server = Javalin.create().start(port);
+
+   //     server.routes(new );
     }
 }

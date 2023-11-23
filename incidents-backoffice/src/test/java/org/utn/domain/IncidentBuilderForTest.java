@@ -8,7 +8,7 @@ import org.utn.domain.incident.Incident;
 import java.time.LocalDate;
 
 public class IncidentBuilderForTest {
-    public static Incident DefaultIncident = new Incident(new CatalogCode("1234-56"),
+    public static Incident DefaultIncident = new Incident("1234-56",
             LocalDate.of(2023, 5, 26),
             "Descripcion de prueba",
             "Operador de prueba",
@@ -17,7 +17,7 @@ public class IncidentBuilderForTest {
             "",
             StateEnum.DISMISSED);
 
-    private CatalogCode catalogCode = DefaultIncident.getCatalogCode();
+    private String catalogCode = DefaultIncident.getCatalogCode();
     private LocalDate reportDate = DefaultIncident.getReportDate();
     private String description = DefaultIncident.getDescription();
     private String operator = DefaultIncident.getOperator();
@@ -27,7 +27,7 @@ public class IncidentBuilderForTest {
     private State state = DefaultIncident.getState();
 
     public IncidentBuilderForTest withCatalogCode(String code) {
-        catalogCode = new CatalogCode(code);
+        catalogCode = code;
         return this;
     }
 

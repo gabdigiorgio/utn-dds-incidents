@@ -12,14 +12,13 @@ public class Station {
     private String name;
     private String line;
 
-    @OneToMany(mappedBy = "sourceStation")
-    private List<Connection> sourceConnections;
-
-    @OneToMany(mappedBy = "destinationStation")
-    private List<Connection> destinationConnections;
-
-    @OneToMany(mappedBy = "station")
-    private List<AccessibilityFeature> accessibilityFeatures;
+    @ManyToMany
+    @JoinTable(
+            name = "station_connections",
+            joinColumns = @JoinColumn(name = "station_id"),
+            inverseJoinColumns = @JoinColumn(name = "connected_station_id")
+    )
+    private List<Station> connections;
 
     protected Station() {
         super();

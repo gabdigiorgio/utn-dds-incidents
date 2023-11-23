@@ -1,7 +1,6 @@
 package org.utn.application;
 
 import org.utn.domain.AccessibilityFeature;
-import org.utn.domain.Station;
 import org.utn.persistence.AccessibilityFeatureRepository;
 
 public class AccessibilityFeatureManager {
@@ -10,10 +9,6 @@ public class AccessibilityFeatureManager {
 
     public AccessibilityFeatureManager(AccessibilityFeatureRepository accessibilityFeatureRepository) {
         this.accessibilityFeatureRepository = accessibilityFeatureRepository;
-    }
-    
-    public void createAccessibilityFeature(String catalogCode, AccessibilityFeature.Type type, AccessibilityFeature.Status status, Station station) {
-        accessibilityFeatureRepository.save(new AccessibilityFeature(catalogCode, type, status, station));
     }
 
     public AccessibilityFeature getAccessibilityFeature(String catalogCode) {

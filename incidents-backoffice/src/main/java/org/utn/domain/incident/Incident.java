@@ -7,23 +7,21 @@ import java.time.LocalDate;
 @Entity
 public class Incident {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //#TODO
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Embedded
-    @AttributeOverrides({@AttributeOverride(name = "code", column = @Column(name = "catalogCode"))})
-    public CatalogCode catalogCode;
+    public String catalogCode;
     public LocalDate reportDate;
     public String description;
     public String operator;
-    public String reportedBy; // Posiblemente en un futuro sea una Clase (Pagina 7)
+    public String reportedBy;
     public LocalDate closingDate;
     public String rejectedReason;
     @Convert(converter = StateConverter.class)
     public State state;
-    public String employee; // Posiblemente en un futuro sea una Clase (Pagina 8)
+    public String employee;
 
     public Incident(
-        CatalogCode catalogCode,
+        String catalogCode,
         LocalDate reportDate,
         String description,
         String operator,
@@ -55,9 +53,9 @@ public class Incident {
         return id;
     }
 
-    public CatalogCode getCatalogCode() {
-        return catalogCode;
-    }
+    public String getCatalogCode() { return catalogCode; }
+
+    public void setCatalogCode(String catalogCode) { this.catalogCode = catalogCode; }
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     public LocalDate getReportDate() {
@@ -110,10 +108,10 @@ public class Incident {
         this.state.confirmIncident(this);
     }
 
-    public void dismissIncident(String motivoRechazo) throws IllegalArgumentException, StateTransitionException {
-        if (motivoRechazo == null || motivoRechazo.isEmpty()) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo ni vacío.");
+    public void dismissIncident(String rejectedReason) throws IllegalArgumentException, StateTransitionException {
+        if (rejectedReason == null || rejectedReason.isEmpty()) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo ni vacío.");
         this.state.dismissIncident(this);
-        this.setRejectedReason(motivoRechazo);
+        this.setRejectedReason(rejectedReason);
     }
 
     public void startProgress() throws StateTransitionException {

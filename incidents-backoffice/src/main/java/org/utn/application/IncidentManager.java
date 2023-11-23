@@ -2,10 +2,7 @@ package org.utn.application;
 
 import javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
-import org.utn.domain.incident.CatalogCode;
-import org.utn.domain.incident.Incident;
-import org.utn.domain.incident.StateEnum;
-import org.utn.domain.incident.StateTransitionException;
+import org.utn.domain.incident.*;
 import org.utn.domain.incident.factory.IncidentFactory;
 import org.utn.persistence.incident.IncidentsRepository;
 import org.utn.presentation.api.dto.ChangeState;
@@ -13,15 +10,19 @@ import org.utn.presentation.api.dto.EditIncident;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 public class IncidentManager {
 
-    private final IncidentsRepository IncidentsRepository;
+    private final IncidentsRepository incidentsRepository;
+    private InventoryService inventoryService;
 
-    public IncidentManager(IncidentsRepository incidentRepository) {
-        this.IncidentsRepository = incidentRepository;
+    public IncidentManager(IncidentsRepository incidentRepository, InventoryService inventoryService) {
+        this.incidentsRepository = incidentRepository;
+        this.inventoryService = inventoryService;
     }
 
     public List<Incident> getIncidents(
@@ -32,38 +33,38 @@ public class IncidentManager {
     ) throws InvalidCatalogCodeException {
         List<Incident> incidents;
 
-        incidents = IncidentsRepository.findIncidents(limit, state, orderBy, catalogCode);
+        incidents = incidentsRepository.findIncidents(limit, state, orderBy, catalogCode);
         return incidents;
     }
 
     public Incident getIncident(Integer id) throws NotFoundException {
-        Incident incident = IncidentsRepository.getById(id);
+        Incident incident = incidentsRepository.getById(id);
         return incident;
     }
 
     public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
-        Incident incident = IncidentsRepository.getById(id);
-        if (data.catalogCode != null) incident.catalogCode.setCode(data.catalogCode);
+        Incident incident = incidentsRepository.getById(id);
+        if (data.catalogCode != null) incident.setCatalogCode(data.catalogCode);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
         if (data.reporterId != null) incident.setReportedBy(data.reporterId);
-        IncidentsRepository.update(incident);
+        incidentsRepository.update(incident);
         return incident;
     }
 
     public Incident updateIncidentState(Integer id, ChangeState request) throws NotFoundException, StateTransitionException {
-        Incident incident = IncidentsRepository.getById(id);
+        Incident incident = incidentsRepository.getById(id);
         String formattedState = request.state.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
         StateEnum nextState = StateEnum.valueOf(formattedState);
         incident.updateState(nextState, request.employee, request.rejectedReason);
-        IncidentsRepository.update(incident);
+        incidentsRepository.update(incident);
         return incident;
     }
 
     public void deleteIncident(Integer id) throws NotFoundException {
-        Incident incident = IncidentsRepository.getById(id);
+        Incident incident = incidentsRepository.getById(id);
         if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
-        IncidentsRepository.remove(id);
+        incidentsRepository.remove(id);
     }
 
     public Incident createIncident(
@@ -75,9 +76,10 @@ public class IncidentManager {
             String reportedBy,
             LocalDate closingDate,
             String rejectedReason
-    ) throws InvalidCatalogCodeException {
+    ) throws InvalidCatalogCodeException, IOException {
+        inventoryService.validateCatalogCode(catalogCode);
         Incident newIncident = newIncident(
-                new CatalogCode(catalogCode),
+                catalogCode,
                 reportDate,
                 description,
                 state,
@@ -86,12 +88,12 @@ public class IncidentManager {
                 closingDate,
                 rejectedReason
         );
-        IncidentsRepository.save(newIncident);
+        incidentsRepository.save(newIncident);
         return newIncident;
     }
 
     @NotNull
-    private static Incident newIncident(CatalogCode catalogCode,
+    private static Incident newIncident(String catalogCode,
                                         LocalDate reportDate,
                                         String description,
                                         String state,

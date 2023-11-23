@@ -7,8 +7,10 @@ import org.mockito.ArgumentMatchers;
 import org.utn.domain.IncidentBuilderForTest;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.Incident;
+import org.utn.infrastructure.OkInventoryService;
 import org.utn.persistence.incident.IncidentsRepository;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.mockito.Mockito.mock;
@@ -17,11 +19,12 @@ import static org.mockito.Mockito.verify;
 public class IncidentManagerTest {
 
     private IncidentsRepository repo = mock(IncidentsRepository.class);
-    private IncidentManager manager = new IncidentManager(repo);
+    private OkInventoryService inventoryService = mock(OkInventoryService.class);
+    private IncidentManager manager = new IncidentManager(repo, inventoryService);
     private Incident expectedIncident;
 
     @Test
-    public void shouldSaveIncidentInRepo() {
+    public void shouldSaveIncidentInRepo() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest().build());
 
@@ -31,7 +34,7 @@ public class IncidentManagerTest {
     }
 
     @Test
-    public void shouldCreateCorrectReportedIncident() {
+    public void shouldCreateCorrectReportedIncident() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest().withState(StateEnum.REPORTED).build());
 
@@ -41,7 +44,7 @@ public class IncidentManagerTest {
     }
 
     @Test
-    public void shouldCreateCorrectAssignedIncident() {
+    public void shouldCreateCorrectAssignedIncident() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest().withState(StateEnum.ASSIGNED).build());
 
@@ -51,7 +54,7 @@ public class IncidentManagerTest {
     }
 
     @Test
-    public void shouldCreateCorrectConfirmedIncident() {
+    public void shouldCreateCorrectConfirmedIncident() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest().withState(StateEnum.CONFIRMED).build());
 
@@ -61,7 +64,7 @@ public class IncidentManagerTest {
     }
 
     @Test
-    public void shouldCreateCorrectDismissedIncident() {
+    public void shouldCreateCorrectDismissedIncident() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest()
                 .withState(StateEnum.DISMISSED)
@@ -75,7 +78,7 @@ public class IncidentManagerTest {
     }
 
     @Test
-    public void shouldCreateCorrectInProgressIncident() {
+    public void shouldCreateCorrectInProgressIncident() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest().withState(StateEnum.IN_PROGRESS).build());
 
@@ -85,7 +88,7 @@ public class IncidentManagerTest {
     }
 
     @Test
-    public void shouldCreateCorrectResolvedIncident() {
+    public void shouldCreateCorrectResolvedIncident() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest()
                 .withState(StateEnum.RESOLVED)
@@ -101,8 +104,8 @@ public class IncidentManagerTest {
         this.expectedIncident = expectedIncident;
     }
 
-    private void whenCreateIncident() {
-        manager.createIncident(expectedIncident.getCatalogCode().getCode(),
+    private void whenCreateIncident() throws IOException {
+        manager.createIncident(expectedIncident.getCatalogCode(),
                 expectedIncident.getReportDate(),
                 expectedIncident.getDescription(),
                 expectedIncident.getState().getStateName(),
