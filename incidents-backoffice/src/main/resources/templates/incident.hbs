@@ -62,11 +62,31 @@
                 <td>{{incident.reportedBy}}</td>
                 <td class="text-nowrap">{{incident.closingDate}}</td>
                 <td>{{incident.rejectedReason}}</td>
-                <td class="text-nowrap">{{incident.state}}</td>
+                <td class="text-nowrap estado">{{incident.state}}</td>
                 <td>{{incident.employee}}</td>
             </tr>
         </table>
     </div>
 </div>
 </body>
+
+<script>
+const estadoMapping = {
+  REPORTED: "Reportado",
+  ASSIGNED: "Asignado",
+  CONFIRMED: "Confirmado",
+  DISMISSED: "Desestimado",
+  IN_PROGRESS: "En Progreso",
+  RESOLVED: "Resuelto"
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+    const estadoElement = document.querySelector('.estado');
+    const estado = estadoElement.textContent.trim();
+    
+    if (estadoMapping.hasOwnProperty(estado)) {
+        estadoElement.textContent = estadoMapping[estado];
+    }
+});
+</script>
 </html>
