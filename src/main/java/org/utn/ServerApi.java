@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.Template;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
+import io.javalin.http.staticfiles.Location;
 import io.javalin.rendering.JavalinRenderer;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
@@ -21,7 +22,11 @@ public class ServerApi {
         initTemplateEngine();
 
         Integer port = Integer.parseInt( System.getProperty("port", "8080"));
-        Javalin server =Javalin.create().start(port);
+        Javalin server = Javalin.create(config -> config.staticFiles.add(staticFiles -> {
+            staticFiles.directory = "src/main/resources/public";
+            staticFiles.location = Location.EXTERNAL;
+            staticFiles.precompress = true;
+        })).start(port);
 
 
         // bot

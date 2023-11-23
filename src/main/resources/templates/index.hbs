@@ -7,7 +7,7 @@
     <meta name="author" content="Grupo 1 - DDS 2023 - K3003">
 
     <title>SMESTPE</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+      <i rel="icon" type="image/x-icon" class="fa-solid fa-1" style="color: #ff8000;"></i>
 
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
       <symbol id="icon" viewBox="0 0 16 16">
@@ -42,6 +42,7 @@ body {
 
     /* CUSTOMIZE THE CAROUSEL */
     .carousel {
+        position:relative;
         margin-bottom: 4rem;
     }
 
@@ -62,7 +63,7 @@ body {
         top: 0;
         left: 0;
         min-width: 100%;
-        height: 32rem;
+
     }
 
     /* RESPONSIVE CSS */
@@ -167,7 +168,6 @@ body {
     }
 }
 
-
       </style>
 
 
@@ -179,37 +179,34 @@ body {
   </head>
 
   <body>
-    <header class="p-3 bg-dark text-white fixed-top">
-    <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-          <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;"><use xlink:href="#icon"/></svg>
-        </a>
+    <header class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;"><use xlink:href="#icon"/></svg>
+                </a>
 
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
-          <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
-          <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
-          <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
-          <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
-          <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
-        </ul>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
+                    <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
+                    <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
+                    <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
+                    <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
+                </ul>
 
 
-        <div class="text-end">
-          <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
-          <button type="button" class="btn btn-warning" >Registrarse</button>
-        </div>
-      </div>
-    </div>
-  </header>
+                <form class="form-inline my-2 my-lg-0">
+                    <button type="button" class="btn btn-outline-light my-2 my-sm-0">Ingresar</button>
+                    <button type="button" class="btn btn-warning" >Registrarse</button>
+                </form>
+            </div>
+    </header>
 
     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
+
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img src="https://www.clarin.com/2020/12/30/GlBS3hf-v_1256x620__4.jpg" class="img-responsive" alt="">  
@@ -229,18 +226,7 @@ body {
             <div class="carousel-caption">
               <h1>Consulte</h1>
               <p>Visite nuestra página de información sobre discapacidad y accesibilidad.</p>
-              <p><a class="btn btn-lg btn-primary" href="#">Ir al FAQ</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img src="https://www.escuelaeuropeaexcelencia.com/wp-content/uploads/2020/10/10-consejos-para-liderar-un-equipo-de-trabajo.jpg" class="img-responsive" alt="">  
-  
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Quienes somos</h1>
-              <p>Conozca nuestro equipo.</p>
-              <p><a class="btn btn-lg btn-primary" href="#">Visitar</a></p>
+              <p><a class="btn btn-lg btn-primary" href="faqs.hbs">Ir al FAQ</a></p>
             </div>
           </div>
         </div>
