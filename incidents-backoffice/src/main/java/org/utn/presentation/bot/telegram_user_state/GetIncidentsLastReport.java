@@ -14,9 +14,9 @@ import static org.utn.presentation.bot.Shows.*;
 
 public class GetIncidentsLastReport extends UserBotState {
 
-    private IncidentManager manager;
-    public GetIncidentsLastReport(IncidentManager manager) {
-        this.manager = manager;
+    private IncidentManager incidentManager;
+    public GetIncidentsLastReport(IncidentManager incidentManager) {
+        this.incidentManager = incidentManager;
     }
 
     @Override
@@ -42,9 +42,13 @@ public class GetIncidentsLastReport extends UserBotState {
             telegramUserBot.setState(new MainMenu());
             telegramUserBot.execute(messageText,bot);
         } else{
-            if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)){return;}
+            if (UtilsBot.validateIsNumber(telegramUserBot, messageText, bot)){
+                invalidMessage(telegramUserBot,bot);
+                showGetQuantityIncidents(telegramUserBot, bot);
+                return;
+            }
 
-            List<Incident> incidents = manager.getIncidents(Integer.parseInt(messageText), "createdAt", null, null);
+            List<Incident> incidents = incidentManager.getIncidents(Integer.parseInt(messageText), "createdAt", null, null);
             Shows.showIncidents(telegramUserBot,bot,incidents);
         }
     }

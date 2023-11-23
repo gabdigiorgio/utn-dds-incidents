@@ -1,11 +1,16 @@
 package org.utn.presentation.bot;
 
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 import org.utn.domain.incident.Incident;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Shows {
@@ -51,6 +56,36 @@ public class Shows {
         bot.execute(sendMessage);
     }
 
+    public static void showGetQuantityInaccessibleAccessibilityFeatures(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+        String msg = "➡️ Escriba el número de medidas de accesibilidad inaccesibles que desea visualizar\n"
+                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+
+        sendMessage.setText(msg);
+        bot.execute(sendMessage);
+    }
+
+    public static void showGetLineInaccessibleAccessibilityFeatures(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+        String msg = "➡️ Escriba la linea de subte de las medidas de accesibilidad inaccesibles que desea visualizar\n"
+                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+
+        sendMessage.setText(msg);
+        bot.execute(sendMessage);
+    }
+
+    public static void showGetStationInaccessibleAccessibilityFeatures(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+        String msg = "➡️ Escriba la estación de las medidas de accesibilidad inaccesibles que desea visualizar\n"
+                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+
+        sendMessage.setText(msg);
+        bot.execute(sendMessage);
+    }
+
     public static void showGetPlaceIncidents(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
@@ -83,6 +118,16 @@ public class Shows {
         }
 
         showBackMainMenu(telegramUserBot,bot);
+    }
+
+    public static void showInaccessibleAccessibilityFeatures(TelegramUserBot telegramUserBot,
+                                                             TelegramBot bot, String inaccessibleAccessibilityFeature) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+        String tmp_msg = msgFromAccessibilityFeature(inaccessibleAccessibilityFeature);
+        sendMessage.setText(tmp_msg);
+        bot.execute(sendMessage);
+        showBackMainMenu(telegramUserBot, bot);
     }
 
 
@@ -121,6 +166,19 @@ public class Shows {
         bot.execute(sendMessage);
     }
 
+    public static void showPossibleLines(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+        String msg = "Las líneas de subte posibles son las siguientes:\n"
+                + "🔵 Linea A\n"
+                + "🔴 Linea B\n"
+                + "🔵 Linea C\n"
+                + "🟢 Linea D\n"
+                + "🟣 Linea E\n"
+                + "🟡 Linea H\n";
+        sendMessage.setText(msg);
+        bot.execute(sendMessage);
+    }
 
     private static String msgFromIncident(Incident incidencia){
         StringBuilder msg = new StringBuilder();
@@ -137,5 +195,64 @@ public class Shows {
 
         return msg.toString();
     }
+
+    public static String msgFromAccessibilityFeature(String inaccessibleAccessibilityFeatures) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            JsonNode jsonNode = objectMapper.readTree(inaccessibleAccessibilityFeatures);
+
+            StringBuilder formattedJson = new StringBuilder("Medidas de Accesibilidad Inaccesibles:\n");
+
+            for (JsonNode featureNode : jsonNode) {
+                String catalogCode = featureNode.get("catalogCode").asText();
+                String type = translateType(featureNode.get("type").asText());
+                String status = translateStatus(featureNode.get("status").asText());
+                JsonNode stationNode = featureNode.get("station");
+                String stationName = stationNode.get("name").asText();
+                String stationLine = stationNode.get("line").asText();
+
+                formattedJson.append("\n🔍 Código de Catálogo: ").append(catalogCode)
+                        .append("\n🛠️ Tipo: ").append(type)
+                        .append("\n🚦 Estado: ").append(status)
+                        .append("\n🚉 Estación: ").append(stationName)
+                        .append("\n🛤️ Línea: ").append(stationLine)
+                        .append("\n---------------------------");
+            }
+
+            return formattedJson.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error al formatear la información de accesibilidad.";
+        }
+    }
+
+    private static String translateType(String type) {
+        switch (type) {
+            case "ELEVATOR":
+                return "Ascensor";
+            case "ESCALATOR":
+                return "Escalera Mecánica";
+            case "RAMP":
+                return "Rampa";
+            case "SIGNAGE":
+                return "Señalización";
+            default:
+                return type;
+        }
+    }
+
+    private static String translateStatus(String status) {
+        switch (status) {
+            case "FUNCTIONAL":
+                return "Funcional";
+            case "INACCESSIBLE":
+                return "Inaccesible";
+            default:
+                return status;
+        }
+    }
+
+
 
 }

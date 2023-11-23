@@ -30,8 +30,7 @@ public class ServerApi {
         initTemplateEngine();
 
         Integer port = Integer.parseInt( System.getProperty("port", "8080"));
-        Javalin server =Javalin.create().start(port);
-
+        Javalin server = Javalin.create().start(port);
 
         // bot
         server.routes(new TelegramBotResource());

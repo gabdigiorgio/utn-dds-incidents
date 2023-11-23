@@ -1,5 +1,7 @@
 package org.utn.utils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class StringValidatorUtils {
@@ -19,6 +21,11 @@ public class StringValidatorUtils {
     public static boolean isUserState(String state) {
         return validateRegularExpression(state, "^(Asignado|Confirmado|Desestimado|En progreso|Reportado|Solucionado)$");
     }
+
+    public static boolean isLine(String line) {
+        return validateRegularExpression(line, "^(Linea A|Linea B|Linea C|Linea D|Linea E|Linea H)$");
+    }
+
 
     public static boolean isCatalogCode(String catalogCode) {
         return validateRegularExpression(catalogCode, "^[a-zA-Z0-9]{4}-[a-zA-Z0-9]{2}$");

@@ -3,6 +3,8 @@ package org.utn.application;
 import org.utn.domain.AccessibilityFeature;
 import org.utn.persistence.AccessibilityFeatureRepository;
 
+import java.util.List;
+
 public class AccessibilityFeatureManager {
 
     private final AccessibilityFeatureRepository accessibilityFeatureRepository;
@@ -13,6 +15,12 @@ public class AccessibilityFeatureManager {
 
     public AccessibilityFeature getAccessibilityFeature(String catalogCode) {
         return accessibilityFeatureRepository.getByCatalogCode(catalogCode);
+    }
+
+    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String catalogCode, String line, String station,
+                                                               AccessibilityFeature.Status status, AccessibilityFeature.Type type) {
+        var accessibilityFeatures = accessibilityFeatureRepository.findAccessibilityFeatures(limit, catalogCode, line, station, status, type);
+        return accessibilityFeatures;
     }
 
     public AccessibilityFeature updateAccessibilityFeatureStatus(String catalogCode, AccessibilityFeature.Status status) {

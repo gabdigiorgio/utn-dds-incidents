@@ -14,9 +14,9 @@ import static org.utn.presentation.bot.Shows.invalidMessage;
 import static org.utn.presentation.bot.Shows.showIncidents;
 
 public class GetIncidentsByPlace extends UserBotState {
-    private IncidentManager manager;
-    public GetIncidentsByPlace(IncidentManager manager) {
-        this.manager = manager;
+    private IncidentManager incidentManager;
+    public GetIncidentsByPlace(IncidentManager incidentManager) {
+        this.incidentManager = incidentManager;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class GetIncidentsByPlace extends UserBotState {
             if (messageText.isEmpty()){ invalidMessage(telegramUserBot,bot); }
             if (!UtilsBot.validateCodePlaceFormat(telegramUserBot,messageText,bot)){return;}
 
-            List<Incident> incidents = manager.getIncidents(10, null, null, messageText);
+            List<Incident> incidents = incidentManager.getIncidents(10, null, null, messageText);
             showIncidents(telegramUserBot,bot,incidents);
         }
     }
