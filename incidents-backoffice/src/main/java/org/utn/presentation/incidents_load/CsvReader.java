@@ -6,6 +6,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.utn.application.IncidentManager;
 import org.utn.utils.DateUtils;
+import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
 import java.io.FileReader;
 import java.io.Reader;

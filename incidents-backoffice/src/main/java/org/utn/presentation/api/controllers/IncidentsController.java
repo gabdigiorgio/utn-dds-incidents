@@ -25,6 +25,9 @@ import org.utn.presentation.api.dto.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
+import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
+import org.utn.utils.exceptions.validator.InvalidDateException;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -75,7 +78,8 @@ public class IncidentsController {
             // create incident
             Incident newIncident = incidentManager.createIncident(data.catalogCode,
                     DateUtils.parseDate(data.reportDate),
-                    data.description,StateEnum.REPORTED.getStateName(),
+                    data.description,
+                    StateEnum.REPORTED.getStateName(),
                     null,
                     data.reporterId,
                     null,
@@ -86,7 +90,14 @@ public class IncidentsController {
             ctx.json(json);
             ctx.status(201);
 
-        } catch (UnrecognizedPropertyException e) {
+        }
+        catch (InvalidCatalogCodeException e) {
+            handleBadRequest(ctx, e);
+        }
+        catch (InvalidDateException e) {
+            handleBadRequest(ctx, e);
+        }
+        catch (UnrecognizedPropertyException e) {
             handleBadRequest(ctx, e);
         } catch (Exception e) {
             handleInternalError(ctx, e);
@@ -106,7 +117,8 @@ public class IncidentsController {
             ctx.json(json);
             ctx.status(200);
 
-        } catch (NotFoundException notFoundError) {
+        }
+        catch (NotFoundException notFoundError) {
             handleNotFoundException(ctx, notFoundError);
         } catch (Exception error) {
             handleInternalError(ctx, error);
@@ -236,6 +248,16 @@ public class IncidentsController {
     private void handleBadRequest(Context ctx, UnrecognizedPropertyException e) throws JsonProcessingException {
         String message = String.format("Campo desconocido: '%s'", e.getPropertyName());
         ctx.json(parseErrorResponse(400, message));
+        ctx.status(400);
+    }
+
+    private void handleBadRequest(Context ctx,  InvalidDateException e) throws JsonProcessingException {
+        ctx.json(parseErrorResponse(400, e.getMessage()));
+        ctx.status(400);
+    }
+
+    private void handleBadRequest(Context ctx,  InvalidCatalogCodeException e) throws JsonProcessingException {
+        ctx.json(parseErrorResponse(400, e.getMessage()));
         ctx.status(400);
     }
 

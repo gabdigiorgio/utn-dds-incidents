@@ -9,7 +9,6 @@
                       transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>org.utn.domain.incident.Incident</class>
-        <class>org.utn.domain.incident.CatalogCode</class>
 
         <!-- Aquí comienzan las propiedades de configuración -->
         <properties>

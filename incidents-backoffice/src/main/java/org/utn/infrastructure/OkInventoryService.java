@@ -11,16 +11,17 @@ import java.io.IOException;
 public class OkInventoryService implements InventoryService {
 
     private final OkHttpClient client;
-    private final String url;
+    private final String baseUrl;
 
-    public OkInventoryService(OkHttpClient client, String url){
+    public OkInventoryService(OkHttpClient client, String baseUrl){
         this.client = client;
-        this.url = url;
+        this.baseUrl = baseUrl;
     }
     
     @Override
     public void validateCatalogCode(String catalogCode) throws IOException {
-        var request = buildRequest();
+        var url = baseUrl + catalogCode;
+        var request = buildRequest(url);
         var response = execute(request);
         var isNotSuccessful = !response.isSuccessful();
 
@@ -33,7 +34,7 @@ public class OkInventoryService implements InventoryService {
         return client.newCall(request).execute();
     }
 
-    private Request buildRequest() {
+    private Request buildRequest(String url) {
         return new Request.Builder()
                 .url(url)
                 .build();

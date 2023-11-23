@@ -10,7 +10,6 @@ import org.utn.presentation.api.dto.EditIncident;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;

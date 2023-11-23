@@ -4,6 +4,7 @@ import org.utn.domain.job.Job;
 import org.utn.domain.job.ProcessState;
 import org.utn.persistence.job.JobsRepository;
 import org.utn.presentation.incidents_load.CsvReader;
+import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
 public class JobManager {
 

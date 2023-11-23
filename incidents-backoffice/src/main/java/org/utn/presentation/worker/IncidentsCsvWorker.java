@@ -4,6 +4,7 @@ import com.rabbitmq.client.*;
 import org.utn.application.JobManager;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.incidents_load.CsvReader;
+import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
 import java.io.IOException;
 import java.util.Map;

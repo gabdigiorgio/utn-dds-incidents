@@ -14,7 +14,7 @@ public class ServerApi {
 
         var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
 
-        Integer port = Integer.parseInt(System.getProperty("port", "8080"));
+        Integer port = Integer.parseInt(System.getProperty("port", "8081")); //TODO: CAMBIAR CON DEPLOY
         Javalin server = Javalin.create().start(port);
 
         server.routes(new AccessibilityResource(accessibilityFeatureManager, createObjectMapper()));

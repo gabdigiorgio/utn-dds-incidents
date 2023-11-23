@@ -7,7 +7,7 @@ public class ServiceFactory {
 
     public static OkInventoryService createInventoryService() {
         OkHttpClient client = new OkHttpClient();
-        String url = "https://api.example.com/endpoint"; //TODO: CAMBIAR
-        return new OkInventoryService(client, url);
+        String baseUrl = "http://localhost:8081/api/accessibilityFeature/"; //TODO: CAMBIAR CON DEPLOY
+        return new OkInventoryService(client, baseUrl);
     }
 }

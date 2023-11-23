@@ -1,6 +1,5 @@
 package org.utn.domain;
 
-import org.utn.domain.incident.CatalogCode;
 import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.State;
 import org.utn.domain.incident.Incident;
