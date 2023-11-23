@@ -75,6 +75,29 @@ public class AccessibilityController {
         }
     };
 
+    public Handler updateAccessibilityFeature = ctx -> {
+        try {
+            String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
+            String statusStr = Objects.requireNonNull(ctx.pathParam("status"));
+
+            AccessibilityFeature.Status status = AccessibilityFeature.Status.valueOf(statusStr.toUpperCase());
+
+            AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.updateAccessibilityFeatureStatus(catalogCode, status);
+
+            if (accessibilityFeature != null) {
+                String json = objectMapper.writeValueAsString(accessibilityFeature);
+                ctx.json(json);
+                ctx.status(200);
+            } else {
+                ctx.status(404).result("Accessibility Feature not found");
+            }
+        } catch (IllegalArgumentException e) {
+            ctx.status(400).result("Invalid status value");
+        } catch (Exception e) {
+            handleInternalError(ctx, e);
+        }
+    };
+
     private void handleBadRequest(Context ctx, IllegalArgumentException e) throws JsonProcessingException {
         ctx.json(parseErrorResponse(400, e.getMessage()));
         ctx.status(400);

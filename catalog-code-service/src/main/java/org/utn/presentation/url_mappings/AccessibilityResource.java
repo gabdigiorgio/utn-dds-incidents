@@ -21,6 +21,7 @@ public class AccessibilityResource implements EndpointGroup {
         ApiBuilder.path("/api/accessibilityFeatures", () -> {
             ApiBuilder.get("/", accessibilityController.getAccessibilityFeatures);
             ApiBuilder.get("/{catalogCode}", accessibilityController.getAccessibilityFeature);
+            ApiBuilder.put("/{catalogCode}", accessibilityController.updateAccessibilityFeature);
         });
     }
 }
