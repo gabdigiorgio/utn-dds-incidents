@@ -1,18 +1,37 @@
-name: Mini Ci
+name: Mini CI
 
 on:
   pull_request:
     branches:
       - main
+
 jobs:
-  test_commit:
+  test_incidents_backoffice:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Usamos la JDK 17
+      - name: Clonar repositorio incidents-backoffice
+        uses: actions/checkout@v3
+      - name: Configurar JDK 17 y Ejecutar pruebas para incidents-backoffice
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Correr pruebas
-        run: mvn verify
+      - name: Ejecutar pruebas para incidents-backoffice
+        run: |
+          cd incidents-backoffice
+          mvn verify
+
+  test_catalog_code_service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio catalog-code-service
+        uses: actions/checkout@v3
+      - name: Configurar JDK 17 y Ejecutar pruebas para catalog-code-service
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Ejecutar pruebas para catalog-code-service
+        run: |
+          cd catalog-code-service
+          mvn verify
