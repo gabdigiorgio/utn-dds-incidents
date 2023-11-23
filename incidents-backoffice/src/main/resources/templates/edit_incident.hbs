@@ -46,8 +46,9 @@
 
         <form id="form">
             <div class="form-floating mt-3 mb-3">
-                <input type="text" class="form-control" id="reportDate" value="{{incident.reportDate}}" placeholder="Enter reportDate" name="reportDate">
-                <label for="reportDate">Fecha</label>
+                    <input type="date" class="form-control" id="reportDate" value="{{incident.reportDate}}"
+                        name="reportDate">
+                    <label for="reportDate">Fecha</label>
             </div>
             <div class="form-floating mt-3 mb-3">
                 <input type="text" class="form-control" id="description" value="{{incident.description}}" placeholder="Enter description" name="description">
@@ -55,19 +56,7 @@
             </div>
             <div class="form-floating mt-3 mb-3">
                 <input type="text" class="form-control" id="reporterId" value="{{incident.reporterId}}" placeholder="reporterId" name="reporterId">
-                <label for="reporterId">Id de la persona que hace el reporte</label>
-            </div>
-
-            <div class="form-floating mt-3 mb-3">
-                <select class="form-select" id="estado" name="estado">
-                    <option value="Seleccionar estado" disabled selected>Seleccionar estado</option>
-                    <option value="Asignado">Asignado</option>
-                    <option value="Confirmado">Confirmado</option>
-                    <option value="Desestimado">Desestimado</option>
-                    <option value="En progreso">EnProgreso</option>
-                    <option value="Resuelto">Resuelto</option>
-                </select>
-                <label for="estado">Estado</label>
+                <label for="reporterId">Reportado por</label>
             </div>
 
             <div class="form-floating mt-3 mb-3" id="campo-empleado" style="display: none;">
@@ -83,44 +72,12 @@
             <button type="submit" class="btn btn-primary">Finalizar</button>
         </form>
 
-        <!-- ... (código posterior) ... -->
     </div>
 </div>
 </body>
-<script>
-const selectEstado = document.querySelector('select[name="estado"]');
-    const campoEmpleado = document.getElementById('campo-empleado');
-    const campoMotivo = document.getElementById('campo-motivo');
 
-    selectEstado.addEventListener('change', function () {
-        const estadoSeleccionado = selectEstado.value;
-
-        campoEmpleado.style.display = 'none';
-        campoMotivo.style.display = 'none';
-
-        if (estadoSeleccionado === 'Asignado') {
-            campoEmpleado.style.display = 'block';
-        } else if (estadoSeleccionado === 'Desestimado') {
-            campoMotivo.style.display = 'block';
-        }
-
-        if (estadoSeleccionado !== 'En progreso') {
-            document.querySelector('input[name="empleado"]').value = '';
-            document.querySelector('input[name="motivo"]').value = '';
-        }
-    });
-</script>
 
 <script>
-// Mapeo de estados
-const estadoMapping = {
-  Asignado: "assigned",
-  Reportado: "reported",
-  EnProgreso: "inProgress",
-  Desestimado: "dismissed",
-  Resuelto: "resolved"
-};
-
 form.onsubmit = async (e) => {
   e.preventDefault();
   const form = document.querySelector("#form");
@@ -140,17 +97,8 @@ form.onsubmit = async (e) => {
 
   incidenciaData.reportDate = formattedDate;
 
-  const estadoSeleccionado = selectEstado.value;
-
-  const estadoData = {
-    state: estadoMapping[estadoSeleccionado],
-    employee: form.querySelector('input[name="empleado"]').value,
-    rejectedReason: form.querySelector('input[name="motivo"]').value
-  };
-
   const id = {{incident.id}};
   const incidenciaUrl = `/api/incidents/${id}`;
-  const estadoUrl = `/api/incidents/${id}/estado`;
 
   const responseIncidencia = await fetch(incidenciaUrl, {
     method: 'PUT',
@@ -167,26 +115,8 @@ form.onsubmit = async (e) => {
     alert("Incidencia editada con éxito");
   }
 
-  if (estadoSeleccionado !== 'Seleccionar estado') {
-    const responseEstado = await fetch(estadoUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(estadoData),
-    });
-
-    const responseDataEstado = await responseEstado.json();
-    if (responseDataEstado.status === 422) {
-      alert(responseDataEstado.message);
-    } else if (responseDataEstado.status === 400) {
-      alert(responseDataEstado.message);
-    } else if (responseEstado.status === 200) {
-      alert("Cambio de estado realizado con éxito");
-    }
-  }
-
   window.location.href = `http://localhost:8080/ui/incidents/${id}`;
 };
 </script>
+
 </html>
