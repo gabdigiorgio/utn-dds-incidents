@@ -32,14 +32,13 @@ public class AccessibilityController {
             String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
             String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
             String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
-            // Convertir status a AccessibilityFeature.Status
+
             AccessibilityFeature.Status status = null;
             String statusParam = ctx.queryParam("status");
             if (statusParam != null) {
                 status = AccessibilityFeature.Status.valueOf(statusParam.toUpperCase());
             }
 
-            // Convertir type a AccessibilityFeature.Type
             AccessibilityFeature.Type type = null;
             String typeParam = ctx.queryParam("type");
             if (typeParam != null) {

@@ -6,6 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <style>
+    .select2-container {
+    width: 100% !important;
+    }
+
+    /* Estilo para aumentar la altura del cuadro de entrada del catálogo */
+    .select2-container .select2-selection--single {
+    height: 3em !important;
+    z-index: 9999; /* Agrega un z-index alto para que esté por encima del label */
+    }
+
+    /* Estilo para ajustar el margen superior del campo de entrada del catálogo */
+    .custom-height {
+    margin-top: 20px; /* Puedes ajustar este valor según tus necesidades */
+    }
+
+    /* Estilo para ajustar el posicionamiento del label */
+    label[for="catalogCode"] {
+    margin-top: 25px; /* Puedes ajustar este valor según tus necesidades */
+    }
+    </style>
+
 </head>
 <body>
 <header class="p-3 bg-dark text-white fixed-top">
@@ -24,10 +51,9 @@
                 <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
             </ul>
 
-
             <div class="text-end">
                 <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
-                <button type="button" class="btn btn-warning" >Registrarse</button>
+                <button type="button" class="btn btn-warning">Registrarse</button>
             </div>
         </div>
     </div>
@@ -35,68 +61,167 @@
 
 <div class="container mt-3">
     <div class="row justify-content-between pt-5">
-    <div class="col-10 pt-3">
-        <h2>Crear nueva incidencia</h2>
-    </div>
-    <div class="col-2 pt-3">
-        <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
-    </div>
+        <div class="col-10 pt-3">
+            <h2>Crear nueva incidencia</h2>
+        </div>
+        <div class="col-2 pt-3">
+            <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
+        </div>
 
-    <form id="form">
-        <div class="form-floating mt-3 mb-3">
-            <input type="text" class="form-control" id="catalogCode" placeholder="Enter catalogCode" name="catalogCode">
-            <label for="catalogCode">Codigo de catalogo</label>
-        </div>
-        <div class="form-floating mt-3 mb-3">
-            <!-- Cambié el tipo de input de text a date -->
-            <input type="date" class="form-control" id="reportDate" placeholder="Enter reportDate" name="reportDate">
-            <label for="reportDate">Fecha</label>
-        </div>
-        <div class="form-floating mt-3 mb-3">
-            <input type="text" class="form-control" id="description" placeholder="Enter description" name="description">
-            <label for="description">Descripcion</label>
-        </div>
-        <div class="form-floating mt-3 mb-3">
-            <input type="text" class="form-control" id="reporterId" placeholder="reporterId" name="reporterId">
-            <label for="reporterId">Id de la persona que hace el reporte</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Finalizar</button>
-    </form>
+        <form id="form">
+            <div class="form-floating mt-3 mb-3">
+                <!-- Utilizando Select2 para autocompletar la línea -->
+                <select class="form-select" id="line" name="line">
+                    <option value="Linea A">Linea A</option>
+                    <option value="Linea B">Linea B</option>
+                    <option value="Linea C">Linea C</option>
+                    <option value="Linea D">Linea D</option>
+                    <option value="Linea E">Linea E</option>
+                    <option value="Linea H">Linea H</option>
+                </select>
+                <label for="line">Línea</label>
+            </div>
+            <div class="form-floating mt-3 mb-3">
+                <!-- Utilizando Select2 para seleccionar la estación -->
+                <select class="form-select" id="station" name="station"></select>
+                <label for="station">Estación</label>
+            </div>  
+            <div class="form-floating mt-3 mb-3">
+                <!-- Utilizando Select2 para el catálogo de medidas de accesibilidad -->
+                <select class="form-select custom-height" id="catalogCode" name="catalogCode"></select>
+                <label for="catalogCode">Código de Catálogo</label>
+            </div>
+            <div class="form-floating mt-3 mb-3">
+                <input type="date" class="form-control" id="reportDate" placeholder="Enter reportDate" name="reportDate">
+                <label for="reportDate">Fecha</label>
+            </div>
+            <div class="form-floating mt-3 mb-3">
+                <input type="text" class="form-control" id="description" placeholder="Enter description" name="description">
+                <label for="description">Descripcion</label>
+            </div>
+            <div class="form-floating mt-3 mb-3">
+                <input type="text" class="form-control" id="reporterId" placeholder="reporterId" name="reporterId">
+                <label for="reporterId">Id de la persona que hace el reporte</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Finalizar</button>
+        </form>
     </div>
 </div>
-</body>
+
 <script>
     const form = document.querySelector("#form");
 
-    form.onsubmit = async (e) => {
-      e.preventDefault();
+    // Mapa de traducción de tipos
+    const typeTranslations = {
+        ELEVATOR: 'Ascensor',
+        RAMP: 'Rampa',
+        ESCALATOR: 'Escalera mecánica',
+        SIGNAGE: 'Señalización',
+    };
 
-      const formatDate = (inputDate) => {
-        const date = new Date(inputDate);
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}${month}${year}`;
-      };
+    const lineStations = {
+        "Linea A": [],
+        "Linea B": ["Leandro N. Alem", "Florida", "Carlos Pellegrini", "Uruguay", "Callao", "Pasteur", "Pueyrredón", "Carlos Gardel", "Medrano", "Ángel Gallardo", "Malabia", "Dorrego", "Federico Lacroze"],
+        "Linea C": [],
+        "Linea D": [],
+        "Linea E": [],
+        "Linea H": [],
+    };
 
-      const data = {
-        catalogCode: form.querySelector('input[name="catalogCode"]').value,
-        reportDate: formatDate(form.querySelector('input[name="reportDate"]').value),
-        description: form.querySelector('input[name="description"]').value,
-        reporterId: form.querySelector('input[name="reporterId"]').value
-      };
+    // Inicializando Select2 para el catálogo de medidas de accesibilidad
+    $('#catalogCode').select2({
+        ajax: {
+            url: 'http://localhost:8081/api/accessibilityFeatures',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                const station = form.querySelector('select[name="station"]').value;
+                const line = form.querySelector('select[name="line"]').value;
 
-      const response = await fetch('/api/incidents', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+                return {
+                    term: params.term,
+                    station: station,
+                    line: line,
+                    _type: 'query',
+                    q: params.term,
+                };
+            },
+            processResults: function (data) {
+                const formattedResults = data.map(item => {
+                    const typeTranslation = typeTranslations[item.type] || item.type;
+                    const displayName = `${typeTranslation} (${item.catalogCode})`;
+
+                    return {
+                        id: item.catalogCode,
+                        text: displayName,
+                    };
+                });
+
+                return {
+                    results: formattedResults,
+                };
+            },
+            cache: true,
         },
-        body: JSON.stringify(data),
-      });
+    });
 
-      const responseData = await response.json(); // read response body as json
-      if (responseData.status === 400) alert(responseData.message);
-      else window.location.href = "http://localhost:8080/ui/incidents";
+    // Inicializando la selección para la línea
+    const lineSelect = document.querySelector('#line');
+    const initialLine = lineSelect.value;
+    const initialStations = lineStations[initialLine] || [];
+    const stationSelect = document.querySelector('#station');
+
+    initialStations.forEach(station => {
+        const option = new Option(station, station);
+        stationSelect.add(option);
+    });
+
+    // Evento para cambiar las estaciones cuando cambia la línea
+    lineSelect.addEventListener('change', function () {
+        const selectedLine = this.value;
+        const stations = lineStations[selectedLine] || [];
+
+        // Limpia las opciones actuales
+        stationSelect.innerHTML = '';
+
+        // Agrega las nuevas opciones
+        stations.forEach(station => {
+            const option = new Option(station, station);
+            stationSelect.add(option);
+        });
+    });
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+
+        const formatDate = (inputDate) => {
+            const date = new Date(inputDate);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}${month}${year}`;
+        };
+
+        const data = {
+            catalogCode: form.querySelector('select[name="catalogCode"]').value,
+            reportDate: formatDate(form.querySelector('input[name="reportDate"]').value),
+            description: form.querySelector('input[name="description"]').value,
+            reporterId: form.querySelector('input[name="reporterId"]').value
+        };
+
+        const response = await fetch('/api/incidents', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        const responseData = await response.json();
+        if (responseData.status === 400) alert(responseData.message);
+        else window.location.href = "http://localhost:8080/ui/incidents";
     };
 </script>
+
+</body>
 </html>
