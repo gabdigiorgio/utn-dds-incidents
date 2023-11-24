@@ -1,10 +1,14 @@
 package org.utn.presentation.api.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Handler;
 import javassist.NotFoundException;
 import org.utn.application.IncidentManager;
 import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
+import org.utn.infrastructure.OkInventoryService;
+import org.utn.presentation.api.dto.AccessibilityFeatureDTO;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
@@ -25,16 +29,29 @@ public class UIController {
 
     public Handler getIncidents = ctx -> {
         try {
-
             Map<String, Object> model = new HashMap<>();
-
             // get incidents
-
             List<Incident> incidents = incidentManager.getIncidents(10, "createdAt", null, null);
             model.put("incidents", incidents);
             ctx.render("incidents.hbs", model);
 
 
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(400, error.getMessage()));
+            ctx.status(400);
+        }
+    };
+
+    public Handler getInaccessibleAccessibilityFeatures = ctx -> {
+        try {
+            Map<String, Object> model = new HashMap<>();
+            String inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(10, null, null);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<AccessibilityFeatureDTO> featuresList = objectMapper.readValue(inaccessibleAccessibilityFeatures, new TypeReference<>() {});
+
+            model.put("inaccessibleAccessibilityFeatures", featuresList);
+            ctx.render("inaccessible_accessibility_features.hbs", model);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
