@@ -71,9 +71,10 @@
 </div>
 </body>
 <script>
-const selectEstado = document.querySelector('select[name="estado"]');
+    const selectEstado = document.querySelector('select[name="estado"]');
     const campoEmpleado = document.getElementById('campo-empleado');
     const campoMotivo = document.getElementById('campo-motivo');
+    const form = document.getElementById('form'); // Agrega un ID al formulario
 
     selectEstado.addEventListener('change', function () {
         const estadoSeleccionado = selectEstado.value;
@@ -92,17 +93,28 @@ const selectEstado = document.querySelector('select[name="estado"]');
             document.querySelector('input[name="motivo"]').value = '';
         }
     });
+
+    form.addEventListener('submit', function (event) {
+        const estadoSeleccionado = selectEstado.value;
+
+        if (estadoSeleccionado === 'Asignado' && !document.querySelector('input[name="empleado"]').value.trim()) {
+            alert('Por favor, llene el campo "Empleado" antes de enviar el formulario.');
+            event.preventDefault(); 
+        } else if (estadoSeleccionado === 'Desestimado' && !document.querySelector('input[name="motivo"]').value.trim()) {
+            alert('Por favor, llene el campo "Motivo" antes de enviar el formulario.');
+            event.preventDefault();
+        }
+    });
 </script>
 
 <script>
-// Mapeo de estados
 const estadoMapping = {
-  Asignado: "ASSIGNED",
-  Reportado: "REPORTED",
-  Confirmado: "CONFIRMED",
-  EnProgreso: "IN_PROGRESS",
-  Desestimado: "DISMISSED",
-  Resuelto: "RESOLVED"
+  Asignado: "assigned",
+  Reportado: "reported",
+  Confirmado: "confirmed",
+  EnProgreso: "inProgress",
+  Desestimado: "dismissed",
+  Resuelto: "resolved"
 };
 
 form.onsubmit = async (e) => {
