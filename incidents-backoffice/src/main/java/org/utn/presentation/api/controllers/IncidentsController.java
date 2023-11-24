@@ -73,14 +73,19 @@ public class IncidentsController {
     };
 
     public Handler getIncident = ctx -> {
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        try {
+            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
-        // get incident
-        Incident incident = incidentManager.getIncident(id);
+            Incident incident = incidentManager.getIncident(id);
 
-        String json = objectMapper.writeValueAsString(incident);
-        ctx.json(json);
-        ctx.status(200);
+            String json = objectMapper.writeValueAsString(incident);
+            ctx.json(json);
+            ctx.status(200);
+        } catch (NotFoundException notFoundError) {
+            handleNotFoundException(ctx, notFoundError);
+        } catch (Exception error) {
+            handleInternalError(ctx, error);
+        }
     };
 
     public Handler createIncident = ctx -> {
