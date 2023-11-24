@@ -108,5 +108,17 @@ public class UIController {
         }
     };
 
+    public Handler getRegisterUser = ctx -> {
+        try {
+            Map<String, Object> model = new HashMap<>();
+            ctx.render("registerUser.hbs", model);
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
+
+        }
+    };
+
 }
 
