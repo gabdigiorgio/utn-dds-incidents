@@ -146,19 +146,17 @@ public class IncidentsController {
 
             String json = objectMapper.writeValueAsString(editedIncident);
             ctx.result(json).contentType("application/json");
-
-            //ctx.json(objectMapper.writeValueAsString(editedIncident));
             ctx.status(200);
 
         } catch (StateTransitionException transitionError) {
-            ctx.json(parseErrorResponse(422, transitionError.getMessage()));
-            ctx.status(422);
-        } catch (NotFoundException notFoundError) {
-            ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
-            ctx.status(404);
+            handleBadRequest(ctx, transitionError);
+        } catch (IllegalArgumentException illegalArgumentError) {
+            handleBadRequest(ctx, illegalArgumentError);
+        }
+        catch (NotFoundException notFoundError) {
+            handleNotFoundException(ctx, notFoundError);
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            handleInternalError(ctx, error);
         }
     };
 
@@ -256,6 +254,18 @@ public class IncidentsController {
             ctx.status(400);
         }
     };
+
+    private void handleBadRequest(Context ctx,  IllegalArgumentException e) throws JsonProcessingException {
+        String message = String.format(e.getMessage());
+        ctx.json(parseErrorResponse(400, message));
+        ctx.status(400);
+    }
+
+    private void handleBadRequest(Context ctx,  StateTransitionException e) throws JsonProcessingException {
+        String message = String.format(e.getMessage());
+        ctx.json(parseErrorResponse(400, message));
+        ctx.status(400);
+    }
 
     private void handleBadRequest(Context ctx, UnrecognizedPropertyException e) throws JsonProcessingException {
         String message = String.format("Campo desconocido: '%s'", e.getPropertyName());

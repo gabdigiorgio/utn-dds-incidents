@@ -17,6 +17,7 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
                 <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
+                <li><a href="/ui/incidents/inaccessible_accessibility_features" class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
                 <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
                 <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
@@ -62,11 +63,31 @@
                 <td>{{incident.reportedBy}}</td>
                 <td class="text-nowrap">{{incident.closingDate}}</td>
                 <td>{{incident.rejectedReason}}</td>
-                <td class="text-nowrap">{{incident.state}}</td>
+                <td class="text-nowrap estado">{{incident.state}}</td>
                 <td>{{incident.employee}}</td>
             </tr>
         </table>
     </div>
 </div>
 </body>
+
+<script>
+const estadoMapping = {
+  REPORTED: "Reportado",
+  ASSIGNED: "Asignado",
+  CONFIRMED: "Confirmado",
+  DISMISSED: "Desestimado",
+  IN_PROGRESS: "En Progreso",
+  RESOLVED: "Resuelto"
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+    const estadoElement = document.querySelector('.estado');
+    const estado = estadoElement.textContent.trim();
+    
+    if (estadoMapping.hasOwnProperty(estado)) {
+        estadoElement.textContent = estadoMapping[estado];
+    }
+});
+</script>
 </html>
