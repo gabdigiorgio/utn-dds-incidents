@@ -42,6 +42,7 @@ public class UIResource implements EndpointGroup {
 
         UIController UIController = new UIController(incidentManager, jobManager);
         ApiBuilder.path("/ui/incidents", () -> {
+            ApiBuilder.get("/login", UIController.getLogin);
             ApiBuilder.get("/", UIController.getIncidents);
             ApiBuilder.get("/inaccessible_accessibility_features", UIController.getInaccessibleAccessibilityFeatures);
             ApiBuilder.get("/upload_csv", UIController.createMassiveIncident);

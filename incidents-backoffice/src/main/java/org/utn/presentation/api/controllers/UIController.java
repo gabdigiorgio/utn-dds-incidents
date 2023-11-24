@@ -27,6 +27,18 @@ public class UIController {
         this.jobManager = jobManager;
     }
 
+    public Handler getLogin = ctx -> {
+        try {
+            Map<String, Object> model = new HashMap<>();
+            ctx.render("login.hbs", model);
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
+
+        }
+    };
+
     public Handler getIncidents = ctx -> {
         try {
             Map<String, Object> model = new HashMap<>();
@@ -37,8 +49,10 @@ public class UIController {
 
 
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
+
         }
     };
 
