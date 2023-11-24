@@ -31,7 +31,6 @@ public class ServerApi {
 
         Integer port = Integer.parseInt( System.getProperty("port", "8080"));
         Javalin server = Javalin.create().start(port);
-
         // bot
         server.routes(new TelegramBotResource());
         
@@ -74,7 +73,7 @@ public class ServerApi {
         return config -> {
             config.staticFiles.add(staticFiles -> {
                 staticFiles.hostedPath = "/";
-                staticFiles.directory = "/public";
+                staticFiles.directory = "/incidents-backoffice/src/main/resources/public";
             });
         };
     }
