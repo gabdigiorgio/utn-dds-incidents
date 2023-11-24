@@ -99,7 +99,7 @@
             </div>
             <div class="form-floating mt-3 mb-3">
                 <input type="text" class="form-control" id="reporterId" placeholder="reporterId" name="reporterId">
-                <label for="reporterId">Id de la persona que hace el reporte</label>
+                <label for="reporterId">Reportado por</label>
             </div>
             <button type="submit" class="btn btn-primary">Finalizar</button>
         </form>
@@ -174,15 +174,12 @@
         stationSelect.add(option);
     });
 
-    // Evento para cambiar las estaciones cuando cambia la línea
     lineSelect.addEventListener('change', function () {
         const selectedLine = this.value;
         const stations = lineStations[selectedLine] || [];
 
-        // Limpia las opciones actuales
         stationSelect.innerHTML = '';
 
-        // Agrega las nuevas opciones
         stations.forEach(station => {
             const option = new Option(station, station);
             stationSelect.add(option);

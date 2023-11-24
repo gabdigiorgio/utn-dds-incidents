@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Editar incidencia</title>
     <meta charset="utf-8">
@@ -7,121 +8,127 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body>
-<header class="p-3 bg-dark text-white fixed-top">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;"><use xlink:href="#icon"/></svg>
-            </a>
+    <header class="p-3 bg-dark text-white fixed-top">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;">
+                        <use xlink:href="#icon" />
+                    </svg>
+                </a>
 
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
-                <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
-                <li><a href="/ui/incidents/inaccessible_accessibility_features" class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
-                <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
-                <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
-                <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
-            </ul>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
+                    <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
+                    <li><a href="/ui/incidents/inaccessible_accessibility_features"
+                            class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
+                    <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
+                    <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
+                    <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
+                    <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
+                </ul>
 
 
-            <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
-                <button type="button" class="btn btn-warning" >Registrarse</button>
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
+                    <button type="button" class="btn btn-warning">Registrarse</button>
+                </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<div class="container mt-3">
-    <div class="row justify-content-between pt-5">
-    <div class="col-10 pt-3">
-        <h2>Editar incidencia {{incident.id}}</h2>
-    </div>
+    <div class="container mt-3">
+        <div class="row justify-content-between pt-5">
+            <div class="col-10 pt-3">
+                <h2>Editar incidencia {{incident.id}}</h2>
+            </div>
 
-    <div class="col-2 pt-3">
-        <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
-    </div>
+            <div class="col-2 pt-3">
+                <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
+            </div>
 
-        <form id="form">
-            <div class="form-floating mt-3 mb-3">
+            <form id="form">
+                <div class="form-floating mt-3 mb-3">
                     <input type="date" class="form-control" id="reportDate" value="{{incident.reportDate}}"
                         name="reportDate">
                     <label for="reportDate">Fecha</label>
-            </div>
-            <div class="form-floating mt-3 mb-3">
-                <input type="text" class="form-control" id="description" value="{{incident.description}}" placeholder="Enter description" name="description">
-                <label for="description">Descripcion</label>
-            </div>
-            <div class="form-floating mt-3 mb-3">
-                <input type="text" class="form-control" id="reporterId" value="{{incident.reporterId}}" placeholder="reporterId" name="reporterId">
-                <label for="reporterId">Reportado por</label>
-            </div>
+                </div>
+                <div class="form-floating mt-3 mb-3">
+                    <input type="text" class="form-control" id="description" value="{{incident.description}}"
+                        placeholder="Enter description" name="description">
+                    <label for="description">Descripcion</label>
+                </div>
+                <div class="form-floating mt-3 mb-3">
+                    <input type="text" class="form-control" id="reporterId" value="{{incident.reportedBy}}"
+                        placeholder="reporterId" name="reporterId">
+                    <label for="reporterId">Reportado por</label>
+                </div>
 
-            <div class="form-floating mt-3 mb-3" id="campo-empleado" style="display: none;">
-                <input type="text" class="form-control" id="empleado" placeholder="Empleado" name="empleado">
-                <label for="empleado">Empleado</label>
-            </div>
+                <div class="form-floating mt-3 mb-3" id="campo-empleado" style="display: none;">
+                    <input type="text" class="form-control" id="empleado" placeholder="Empleado" name="empleado">
+                    <label for="empleado">Empleado</label>
+                </div>
 
-            <div class="form-floating mt-3 mb-3" id="campo-motivo" style="display: none;">
-                <input type="text" class="form-control" id="motivo" placeholder="Motivo de rechazo" name="motivo">
-                <label for="motivo">Motivo de rechazo</label>
-            </div>
+                <div class="form-floating mt-3 mb-3" id="campo-motivo" style="display: none;">
+                    <input type="text" class="form-control" id="motivo" placeholder="Motivo de rechazo" name="motivo">
+                    <label for="motivo">Motivo de rechazo</label>
+                </div>
 
-            <div class="form-floating mt-3 mb-3">
-                <a class="btn btn-secondary" href="/ui/incidents/edit/{{incident.id}}/state">Editar Estado</a>
-            </div>
+                <div class="form-floating mt-3 mb-3">
+                    <a class="btn btn-secondary" href="/ui/incidents/edit/{{incident.id}}/state">Editar Estado</a>
+                </div>
 
-            <div class="form-floating mt-3 mb-3">
-                <button type="submit" class="btn btn-primary">Finalizar</button>
-            </div>
-        </form>
+                <div class="form-floating mt-3 mb-3">
+                    <button type="submit" class="btn btn-primary">Finalizar</button>
+                </div>
+            </form>
 
+        </div>
     </div>
-</div>
 </body>
 
 
 <script>
-form.onsubmit = async (e) => {
-  e.preventDefault();
-  const form = document.querySelector("#form");
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const form = document.querySelector("#form");
 
-  const incidenciaData = {
-    reportDate: form.querySelector('input[name="reportDate"]').value,
-    description: form.querySelector('input[name="description"]').value,
-    reporterId: form.querySelector('input[name="reporterId"]').value
-  }
+        const incidenciaData = {
+            reportDate: form.querySelector('input[name="reportDate"]').value,
+            description: form.querySelector('input[name="description"]').value,
+            reporterId: form.querySelector('input[name="reporterId"]').value
+        }
 
-  const rawDate = form.querySelector('input[name="reportDate"]').value;
-  const parts = rawDate.split('-');
-  const year = parts[0];
-  const month = parts[1];
-  const day = parts[2];
-  const formattedDate = `${day}${month}${year}`;
+        const rawDate = form.querySelector('input[name="reportDate"]').value;
+        const parts = rawDate.split('-');
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
+        const formattedDate = `${day}${month}${year}`;
 
-  incidenciaData.reportDate = formattedDate;
+        incidenciaData.reportDate = formattedDate;
 
-  const id = {{incident.id}};
-  const incidenciaUrl = `/api/incidents/${id}`;
+        const id = {{ incident.id }};
+    const incidenciaUrl = `/api/incidents/${id}`;
 
-  const responseIncidencia = await fetch(incidenciaUrl, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(incidenciaData),
-  });
+    const responseIncidencia = await fetch(incidenciaUrl, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(incidenciaData),
+    });
 
-  const responseDataIncidencia = await responseIncidencia.json();
-  if (responseDataIncidencia.status === 400) {
-    alert(responseDataIncidencia.message);
-  } else {
-    alert("Incidencia editada con éxito");
-  }
+    const responseDataIncidencia = await responseIncidencia.json();
+    if (responseDataIncidencia.status === 400) {
+        alert(responseDataIncidencia.message);
+    } else {
+        alert("Incidencia editada con éxito");
+    }
 
-  window.location.href = `/ui/incidents/${id}`;
+    window.location.href = `/ui/incidents/${id}`;
 };
 </script>
 

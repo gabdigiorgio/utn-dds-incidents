@@ -22,7 +22,7 @@ public class IncidentsResource implements EndpointGroup {
     public void addEndpoints() {
         IncidentsController incidentsController = new IncidentsController(manager, jobManager,objectMapper);
         ApiBuilder.path("/api/incidents", () -> {
-            ApiBuilder.get("/inaccessibleAccessibilityFeatures", incidentsController.getInaccessibleAccessibilityFeatures);
+            ApiBuilder.get("/inaccessible_accessibility_features", incidentsController.getInaccessibleAccessibilityFeatures);
             ApiBuilder.get("/", incidentsController.getIncidents);
             ApiBuilder.get("/{id}", incidentsController.getIncident);
             ApiBuilder.post("/", incidentsController.createIncident);
