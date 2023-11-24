@@ -145,20 +145,17 @@ public class IncidentsController {
             Incident editedIncident = incidentManager.updateIncidentState(id, request);
 
             String json = objectMapper.writeValueAsString(editedIncident);
-            ctx.result(json).contentType("application/json");
 
-            //ctx.json(objectMapper.writeValueAsString(editedIncident));
+            ctx.json(objectMapper.writeValueAsString(editedIncident));
             ctx.status(200);
 
         } catch (StateTransitionException transitionError) {
             ctx.json(parseErrorResponse(422, transitionError.getMessage()));
             ctx.status(422);
         } catch (NotFoundException notFoundError) {
-            ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
-            ctx.status(404);
+            handleNotFoundException(ctx, notFoundError);
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            handleInternalError(ctx, error);
         }
     };
 

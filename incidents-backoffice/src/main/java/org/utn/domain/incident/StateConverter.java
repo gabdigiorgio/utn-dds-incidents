@@ -17,7 +17,7 @@ public class StateConverter implements AttributeConverter<State, String> {
             case "Asignado" -> state = StateEnum.ASSIGNED;
             case "Confirmado" -> state = StateEnum.CONFIRMED;
             case "Desestimado" -> state = StateEnum.DISMISSED;
-            case "EnProgreso" -> state = StateEnum.IN_PROGRESS;
+            case "En progreso" -> state = StateEnum.IN_PROGRESS;
             case "Reportado" -> state = StateEnum.REPORTED;
             case "Solucionado" -> state = StateEnum.RESOLVED;
         }
