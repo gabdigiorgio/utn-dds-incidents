@@ -93,7 +93,15 @@ public class UIController {
 
     public Handler createIncident = ctx -> {
         try {
-            ctx.render("create_incident.hbs");
+            String inventoryServiceUrl = System.getenv("INVENTORY_SERVICE_URL");
+            if (inventoryServiceUrl == null || inventoryServiceUrl.isEmpty()) {
+                inventoryServiceUrl = "http://localhost:8081/api/accessibilityFeatures/";
+            }
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("inventoryServiceUrl", inventoryServiceUrl);
+
+            ctx.render("create_incident.hbs", model);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);

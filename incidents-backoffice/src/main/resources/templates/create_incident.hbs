@@ -129,7 +129,7 @@
     // Inicializando Select2 para el catálogo de medidas de accesibilidad
     $('#catalogCode').select2({
         ajax: {
-            url: 'http://localhost:8081/api/accessibilityFeatures',
+            url: "{{inventoryServiceUrl}}",
             dataType: 'json',
             delay: 250,
             data: function (params) {
