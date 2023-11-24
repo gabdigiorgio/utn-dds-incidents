@@ -16,7 +16,7 @@ public class ServerApi {
 
         var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
 
-        Integer port = Integer.parseInt(System.getProperty("port", "8081")); //TODO: CAMBIAR CON DEPLOY
+        Integer port = Integer.parseInt(System.getProperty("port", "8080")); //para correr en local puerto: 8081
         Javalin server = Javalin.create(config -> {
             config.plugins.enableCors(cors -> {
                 cors.add(it -> {
@@ -36,14 +36,4 @@ public class ServerApi {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return objectMapper;
     }
-
-    private static Handler cors = new Handler() {
-        @Override
-        public void handle(Context ctx) throws Exception {
-            ctx.header("Access-Control-Allow-Origin", "*");
-            ctx.header("Access-Control-Allow-Credentials", "true");
-            ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-            ctx.header("Access-Control-Allow-Headers", "*");
-        }
-    };
 }
