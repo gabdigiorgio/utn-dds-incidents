@@ -9,6 +9,8 @@ public class TelegramUserBot {
     private int incidentsQuantity;
     private int inaccessibleAccessibilityFeaturesQuantity;
     private String line;
+    private int lineIndex;
+    private String station;
     private UserBotState state;
 
     public UserBotState getState() {
@@ -61,5 +63,21 @@ public class TelegramUserBot {
 
     public String getLine() {
         return line;
+    }
+
+    public int getLineIndex() {
+        return lineIndex;
+    }
+
+    public void setLineIndex(int lineIndex) {
+        this.lineIndex = lineIndex;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
     }
 }

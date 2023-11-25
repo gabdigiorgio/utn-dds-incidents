@@ -1,14 +1,12 @@
 package org.utn.presentation.bot;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
-import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 import org.utn.domain.incident.Incident;
+import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 
 import java.io.IOException;
 import java.util.List;
@@ -169,14 +167,42 @@ public class Shows {
     public static void showPossibleLines(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg = "Las líneas de subte posibles son las siguientes:\n"
-                + "🔵 Linea A\n"
-                + "🔴 Linea B\n"
-                + "🔵 Linea C\n"
-                + "🟢 Linea D\n"
-                + "🟣 Linea E\n"
-                + "🟡 Linea H\n";
+        String msg = "Elija la linea de subte:\n"
+                + "1️⃣ ☞ 🔵 Linea A\n"
+                + "2️⃣ ☞ 🔴 Linea B\n"
+                + "3️⃣ ☞ 🔵 Linea C\n"
+                + "4️⃣ ☞ 🟢 Linea D\n"
+                + "5️⃣ ☞ 🟣 Linea E\n"
+                + "6️⃣ ☞ 🟡 Linea H\n";
         sendMessage.setText(msg);
+        bot.execute(sendMessage);
+    }
+
+    public static void showPossibleStations(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramUserBot.getId());
+
+        String[][] stationsPerLine = {
+                {"Plaza de Mayo", "Perú", "Piedras", "Lima", "Sáenz Peña", "Congreso", "Pasco", "Alberti", "Plaza Miserere", "Loria", "Castro Barros", "Río de Janeiro", "Acoyte", "Primera Junta"},
+                {"Leandro N. Alem", "Florida", "Carlos Pellegrini", "Uruguay", "Callao", "Pasteur", "Pueyrredón", "Carlos Gardel", "Medrano", "Ángel Gallardo", "Malabia", "Dorrego", "Federico Lacroze"},
+                {"Retiro", "General San Martín", "Lavalle", "Diagonal Norte", "Avenida de Mayo", "Moreno", "Independencia", "San Juan", "Constitución"},
+                {"Catedral", "9 de Julio", "Tribunales", "Callao", "Facultad de Medicina", "Pueyrredón", "Agüero", "Bulnes", "Scalabrini Ortiz", "Plaza Italia", "Palermo"},
+                {"Bolívar", "Belgrano", "Independencia", "San José", "Entre Ríos", "Pichincha", "Jujuy", "General Urquiza", "Boedo", "Avenida La Plata"},
+                {"Facultad de Derecho", "Las Heras", "Santa Fe", "Córdoba", "Corrientes", "Once", "Venezuela", "Humberto I", "Inclán", "Caseros", "Parque Patricios", "Hospitales"}
+        };
+
+        String selectedLine = telegramUserBot.getLine();
+        int lineIndex = telegramUserBot.getLineIndex();
+        if (lineIndex != -1) {
+            StringBuilder stationsMsg = new StringBuilder("Estaciones de la " + selectedLine + ":\n");
+            for (int i = 0; i < stationsPerLine[lineIndex].length; i++) {
+                stationsMsg.append((i + 1)).append("️⃣ ☞ ").append(stationsPerLine[lineIndex][i]).append("\n");
+            }
+            sendMessage.setText(stationsMsg.toString());
+        } else {
+            sendMessage.setText("Línea no encontrada.");
+        }
         bot.execute(sendMessage);
     }
 
