@@ -21,7 +21,9 @@ public class UIResource implements EndpointGroup {
     public void addEndpoints() {
 
         // con esto podríamos generar un home y otras cositas, a evaluar si corresponde o no hacer esto
+
         ApiBuilder.path("/", () -> {
+
             ApiBuilder.get("/", ctx -> {
                 ctx.render("index.hbs");
             });
@@ -31,14 +33,15 @@ public class UIResource implements EndpointGroup {
                 ctx.render("faqs.hbs");
             });
 
-            ApiBuilder.get("/nosotros", ctx -> {
-                ctx.render("404.hbs");
+            ApiBuilder.get("/ui/incidents/upload_csv", ctx -> {
+                ctx.render("incident_upload_csv.hbs");
             });
 
-            ApiBuilder.get("/contacto", ctx -> {
-                ctx.render("404.hbs");
+            ApiBuilder.get("/ui/incidents/login", ctx -> {
+                ctx.render("login.hbs");
             });
         });
+
 
         UIController UIController = new UIController(incidentManager, jobManager);
         ApiBuilder.path("/ui/incidents", () -> {
