@@ -32,7 +32,12 @@ public class ServerApi {
         initTemplateEngine();
 
         Integer port = Integer.parseInt( System.getProperty("port", "8080"));
-        Javalin server = Javalin.create().start(port);
+        Javalin server = Javalin.create()
+                .start(port)
+                .error(404, ctx -> ctx.render("404.hbs"))
+                .exception(Exception.class, (e, ctx) -> {
+                    ctx.render("ErrorPage.hbs");
+                });
         // bot
         server.routes(new TelegramBotResource());
         
