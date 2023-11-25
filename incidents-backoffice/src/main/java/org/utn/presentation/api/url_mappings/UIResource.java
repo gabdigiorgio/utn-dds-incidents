@@ -41,6 +41,14 @@ public class UIResource implements EndpointGroup {
                 ctx.render("login.hbs");
             });
 
+            ApiBuilder.get("/error", ctx -> {
+                ctx.render("404.hbs");
+            });
+
+            ApiBuilder.get("/ui/incidents/inaccessible_accessibility_features", ctx -> {
+                ctx.render("inaccessible_accessibility_features.hbs");
+            });
+
         });
 
 

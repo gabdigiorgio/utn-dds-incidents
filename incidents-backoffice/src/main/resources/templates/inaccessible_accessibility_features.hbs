@@ -159,6 +159,9 @@ body {
                 <li class="nav-item">
                     <a class="nav-link" href="/ui/incidents">Incidencias</a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link active" aria-current="page" href="#">Medidas de Accesibilidad</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/ui/incidents/upload_csv">Cargar</a>
                 </li>
@@ -167,8 +170,8 @@ body {
                 </li>
             </ul>
             <form class="d-flex">
-                <a type="button" href="#" class="btn me-2 btn-outline-light">Ingresar</a>
-                <a type="button" href="#" class="btn me-2 btn-warning">Registrarse</a>
+                <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
+                <a type="button" href="/error" class="btn me-2 btn-warning">Registrarse</a>
             </form>
         </div>
     </div>
@@ -180,10 +183,6 @@ body {
         <div class="col-15 d-flex justify-content-between">
                 <h2 style="display: inline;">Medidas de Accesibilidad Inaccesibles</h2>
             </div>
-            <link rel="stylesheet"
-                href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
-            <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
-
             <hr class="featurette-divider">
 
             <table id="tablax" class="table table-hover">

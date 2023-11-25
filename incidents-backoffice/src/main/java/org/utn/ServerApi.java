@@ -34,7 +34,6 @@ public class ServerApi {
         Integer port = Integer.parseInt( System.getProperty("port", "8080"));
         Javalin server = Javalin.create()
                 .start(port)
-                .error(404, ctx -> ctx.result("Error 404, NOT FOUND!"))
                 .exception(Exception.class, (e, ctx) -> {
                     ctx.result("Ups, hubo un error...");
                 });
