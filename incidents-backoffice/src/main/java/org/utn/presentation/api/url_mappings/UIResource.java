@@ -40,6 +40,7 @@ public class UIResource implements EndpointGroup {
             ApiBuilder.get("/ui/incidents/login", ctx -> {
                 ctx.render("login.hbs");
             });
+
         });
 
 

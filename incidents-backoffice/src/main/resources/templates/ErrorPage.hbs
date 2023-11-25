@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale-1.0">
     <meta name="author" content="Grupo 1 - DDS 2023 - K3003">
 
-    <title>SMESTPE - Medidas inaccesibles</title>
+    <title>SMESTPE - Error</title>
     <link rel="icon"
           href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='orange' class='fa-solid fa-1' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm7.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z'/%3E%3C/svg%3E"
           sizes="any" type="image/svg+xml">
@@ -200,87 +200,31 @@ body {
     </div>
 </nav>
 
+  <!-- Marketing messaging and featurettes
+    ================================================== -->
+  <!-- Wrap the rest of the page in another container to center all the content. -->
 
-<div class="container mt-3">
-        <div class="row justify-content-between pt-5">
-            <div class="col-15 pt-3 d-flex justify-content-between" style="padding-top: 2rem !important;">
-                <h2 style="display: inline;">Medidas de Accesibilidad Inaccesibles</h2>
-            </div>
-            <link rel="stylesheet"
-                href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
-            <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+  <div class="container marketing">
 
-            <hr class="featurette-divider">
+    <!-- START THE FEATURETTES -->
 
-            <table id="tablax" class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Código de catalogo</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">Línea</th>
-                        <th scope="col">Estación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each inaccessibleAccessibilityFeatures}}
-                    <tr>
-                        <td>{{this.catalogCode}}</td>
-                        <td>{{this.type}}</td>
-                        <td>{{this.status}}</td>
-                        <td>{{this.station.line}}</td>
-                        <td>{{this.station.name}}</td>
-                    </tr>
-                    {{/each}}
+    <h1 class="featurette-heading" style="color: rgb(236, 42, 42);padding-top: 5rem;">Ups ! <span class="text-muted"
+        style="color: #6c757d;"> Esto no debería estar pasando.</span></h1>
+    <p class="lead">Felicitaciones, encontraste un bug ! Reportalo para que pueda ser tratado.</p>
 
-                    <body>
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-                    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-                    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-                        </script>
+    <!-- /END THE FEATURETTES -->
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function () {
-                                function traducirValores() {
-                                    const traduccionesType = {
-                                        'ELEVATOR': 'Ascensor',
-                                        'ESCALATOR': 'Escalera mecánica',
-                                        'SIGNAGE': 'Señalización',
-                                        'RAMP': 'Rampa'
-                                    };
+  </div><!-- /.container -->
 
-                                    const traduccionesStatus = {
-                                        'FUNCTIONAL': 'Funcional',
-                                        'INACCESSIBLE': 'Inaccesible'
-                                    };
-                                    const celdasType = document.querySelectorAll('#tablax tbody td:nth-child(2)');
-                                    const celdasStatus = document.querySelectorAll('#tablax tbody td:nth-child(3)');
 
-                                    celdasType.forEach(function (celda) {
-                                        const valorOriginal = celda.textContent.trim();
-                                        if (traduccionesType[valorOriginal]) {
-                                            celda.textContent = traduccionesType[valorOriginal];
-                                        }
-                                    });
+<!-- FOOTER -->
+<footer class="container">
+    <p>&copy; 2023 - Grupo 1 - DDS - K3003 - UTN FRBA &middot;</p>
+</footer>
 
-                                    celdasStatus.forEach(function (celda) {
-                                        const valorOriginal = celda.textContent.trim();
-                                        if (traduccionesStatus[valorOriginal]) {
-                                            celda.textContent = traduccionesStatus[valorOriginal];
-                                        }
-                                    });
-                                }
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 
-                                traducirValores();
-
-                                $('#tablax').DataTable();
-                            });
-                        </script>
-                    </body>
-                </tbody>
-            </table>
-        </div>
-    </div>
 </body>
-
 </html>
