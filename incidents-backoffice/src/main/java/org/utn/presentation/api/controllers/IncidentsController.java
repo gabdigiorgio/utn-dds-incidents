@@ -47,14 +47,15 @@ public class IncidentsController {
     }
 
     public Handler getIncidents = ctx -> {
-        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
         String place = ctx.queryParamAsClass("place", String.class).getOrDefault(null);
-        Integer from = ctx.queryParamAsClass("from", Integer.class).getOrDefault(0);
+        Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+        Integer pageSize = ctx.queryParamAsClass("page_size", Integer.class).getOrDefault(10);
 
-        // get incidents
-        List<Incident> incidents = incidentManager.getIncidents(limit, orderBy, status, place);
+        Integer startIndex = (page - 1) * pageSize;
+        
+        List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, status, place);
 
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);

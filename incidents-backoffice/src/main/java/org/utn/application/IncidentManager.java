@@ -36,6 +36,19 @@ public class IncidentManager {
         return incidents;
     }
 
+    public List<Incident> getIncidentsWithPagination(
+            Integer startIndex,
+            Integer pageSize,
+            String orderBy,
+            String state,
+            String catalogCode
+    ) throws InvalidCatalogCodeException {
+        List<Incident> incidents;
+
+        incidents = incidentsRepository.findIncidentsWithPagination(startIndex, pageSize, state, orderBy, catalogCode);
+        return incidents;
+    }
+
     public Incident getIncident(Integer id) throws NotFoundException {
         Incident incident = incidentsRepository.getById(id);
         return incident;

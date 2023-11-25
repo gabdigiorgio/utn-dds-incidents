@@ -66,6 +66,11 @@ public final class IncidentsInMemoryRepository implements IncidentsRepository {
         return filterByQuantity(list, quantity);
     }
 
+    @Override
+    public List<Incident> findIncidentsWithPagination(int startIndex, int pageSize, String state, String orderBy, String catalogCode) {
+        return null;
+    }
+
     public int count() {
         return incidents.size();
     }

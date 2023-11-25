@@ -4,8 +4,13 @@ import org.utn.domain.incident.Incident;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.ws.rs.NotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DbIncidentsRepository implements IncidentsRepository {
@@ -80,6 +85,39 @@ public class DbIncidentsRepository implements IncidentsRepository {
         var results = entityManager.createQuery(criteriaQuery).setMaxResults(quantity).getResultList();
 
         return results;
+    }
+
+    @Override
+    public List<Incident> findIncidentsWithPagination(int startIndex, int pageSize, String state, String orderBy, String catalogCode) {
+        var entityManager = createEntityManager();
+        var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(Incident.class);
+        var root = criteriaQuery.from(Incident.class);
+
+        if (state != null) {
+            Predicate stateFilter = criteriaBuilder.equal(root.get("state").as(String.class), state);
+            criteriaQuery.where(stateFilter);
+        }
+
+        if (catalogCode != null) {
+            Predicate catalogCodeFilter = criteriaBuilder.equal(root.get("catalogCode"), catalogCode);
+            criteriaQuery.where(catalogCodeFilter);
+        }
+
+        if (orderBy != null) {
+            if (orderBy.equals("createdAt")) {
+                criteriaQuery.orderBy(criteriaBuilder.asc(root.get("reportDate")));
+            } else {
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("reportDate")));
+            }
+        }
+
+        TypedQuery<Incident> query = entityManager.createQuery(criteriaQuery);
+
+        query.setFirstResult(startIndex);
+        query.setMaxResults(pageSize);
+
+        return query.getResultList();
     }
 
     @Override

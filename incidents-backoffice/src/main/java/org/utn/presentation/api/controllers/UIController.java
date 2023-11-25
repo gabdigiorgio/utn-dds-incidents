@@ -47,7 +47,6 @@ public class UIController {
             model.put("incidents", incidents);
             ctx.render("incidents.hbs", model);
 
-
         } catch (Exception error) {
             ctx.json(parseErrorResponse(500, error.getMessage()));
             ctx.status(500);
