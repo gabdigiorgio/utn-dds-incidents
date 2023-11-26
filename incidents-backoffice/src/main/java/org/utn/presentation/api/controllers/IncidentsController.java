@@ -90,36 +90,23 @@ public class IncidentsController {
     };
 
     public Handler createIncident = ctx -> {
-        try {
-            CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
-            // create incident
-            Incident newIncident = incidentManager.createIncident(data.catalogCode,
-                    DateUtils.parseDate(data.reportDate),
-                    data.description,
-                    StateEnum.REPORTED.getStateName(),
-                    null,
-                    data.reporterId,
-                    null,
-                    null);
+        CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
-            String json = objectMapper.writeValueAsString(newIncident);
+        // create incident
+        Incident newIncident = incidentManager.createIncident(data.catalogCode,
+                DateUtils.parseDate(data.reportDate),
+                data.description,
+                StateEnum.REPORTED.getStateName(),
+                null,
+                data.reporterId,
+                null,
+                null);
 
-            ctx.json(json);
-            ctx.status(201);
+        String json = objectMapper.writeValueAsString(newIncident);
 
-        }
-        catch (InvalidCatalogCodeException e) {
-            handleBadRequest(ctx, e);
-        }
-        catch (InvalidDateException e) {
-            handleBadRequest(ctx, e);
-        }
-        catch (UnrecognizedPropertyException e) {
-            handleBadRequest(ctx, e);
-        } catch (Exception e) {
-            handleInternalError(ctx, e);
-        }
+        ctx.json(json);
+        ctx.status(201);
     };
 
     public Handler editIncident = ctx -> {

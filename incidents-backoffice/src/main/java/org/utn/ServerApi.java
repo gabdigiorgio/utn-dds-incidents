@@ -1,9 +1,11 @@
 package org.utn;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
@@ -11,11 +13,15 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
+import org.utn.domain.incident.StateTransitionException;
 import org.utn.modules.ManagerFactory;
+import org.utn.presentation.api.controllers.IncidentsController;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
 import org.utn.presentation.api.url_mappings.UIResource;
 import org.utn.presentation.api.url_mappings.UsersResource;
+import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
+import org.utn.utils.exceptions.validator.InvalidDateException;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -31,21 +37,60 @@ public class ServerApi {
         // TemplateEngine -Handlebars
         initTemplateEngine();
 
-        Integer port = Integer.parseInt( System.getProperty("port", "8080"));
-        Javalin server = Javalin.create()
-                .start(port)
-                .exception(Exception.class, (e, ctx) -> {
-                    ctx.result("Ups, hubo un error...");
-                });
+        Integer port = Integer.parseInt(System.getProperty("port", "8080"));
+        Javalin server = Javalin.create().start(port);
+
+        setupExceptions(server);
+
         // bot
         server.routes(new TelegramBotResource());
-        
+
         // API
         server.routes(new IncidentsResource(incidentManager, jobManager, createObjectMapper()));
         server.routes(new UsersResource(usersManager, jobManager, createObjectMapper()));
 
         // UI
         server.routes(new UIResource(incidentManager, jobManager));
+    }
+
+    private static void setupExceptions(Javalin server) {
+        server.exception(IllegalArgumentException.class, (e, ctx) -> {
+            try {
+                ctx.json(IncidentsController.parseErrorResponse(400, e.getMessage()));
+            } catch (JsonProcessingException ex) {
+                throw new RuntimeException(ex);
+            }
+            ctx.status(400);
+        });
+        server.exception(StateTransitionException.class, (e, ctx) -> {
+            ctx.json(e.getMessage());
+            ctx.status(400);
+        });
+        server.exception(UnrecognizedPropertyException.class, (e, ctx) -> {
+            String message = String.format("Campo desconocido: '%s'", e.getPropertyName());
+            try {
+                ctx.json(IncidentsController.parseErrorResponse(400, message));
+            } catch (JsonProcessingException ex) {
+                throw new RuntimeException(ex);
+            }
+            ctx.status(400);
+        });
+        server.exception(InvalidDateException.class, (e, ctx) -> {
+            try {
+                ctx.json(IncidentsController.parseErrorResponse(400, e.getMessage()));
+            } catch (JsonProcessingException ex) {
+                throw new RuntimeException(ex);
+            }
+            ctx.status(400);
+        });
+        server.exception(InvalidCatalogCodeException.class, (e, ctx) -> {
+            try {
+                ctx.json(IncidentsController.parseErrorResponse(400, e.getMessage()));
+            } catch (JsonProcessingException ex) {
+                throw new RuntimeException(ex);
+            }
+            ctx.status(400);
+        });
     }
 
     private static ObjectMapper createObjectMapper() {
@@ -58,22 +103,22 @@ public class ServerApi {
     }
 
     private static void initTemplateEngine() {
-    JavalinRenderer.register(
-            (path, model, context) -> { // Template render, expresion lambda para definir la renderizacion
-              Handlebars hb = new Handlebars(); // le cambio el nombre a hb para identificarlo mejor
-              try {
+        JavalinRenderer.register(
+                (path, model, context) -> { // Template render, expresion lambda para definir la renderizacion
+                    Handlebars hb = new Handlebars(); // le cambio el nombre a hb para identificarlo mejor
+                    try {
 
-                Template tp = hb.compile("templates/" + path.replace(".hbs", ""));
-                return tp.apply(model);
+                        Template tp = hb.compile("templates/" + path.replace(".hbs", ""));
+                        return tp.apply(model);
 
-              } catch (IOException e) {
-                e.printStackTrace();
-                context.status(HttpStatus.NOT_FOUND);
-                return "No se encuentra la página indicada...";
-              }
-            }, ".hbs" // Handlebars extension
-    );
-  }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        context.status(HttpStatus.NOT_FOUND);
+                        return "No se encuentra la página indicada...";
+                    }
+                }, ".hbs" // Handlebars extension
+        );
+    }
 
 
     private static Consumer<JavalinConfig> config() {
