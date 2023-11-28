@@ -103,11 +103,11 @@ public class Incident {
         this.setEmployee(employee);
     }
 
-    public void confirmIncident() throws StateTransitionException {
+    public void confirm() throws StateTransitionException {
         this.setState(State.CONFIRMED);
     }
 
-    public void dismissIncident(String rejectedReason) throws IllegalArgumentException, StateTransitionException {
+    public void dismiss(String rejectedReason) throws IllegalArgumentException, StateTransitionException {
         this.setState(State.DISMISSED);
         if (rejectedReason == null || rejectedReason.isEmpty()) throw new IllegalArgumentException("The 'rejection reason' field cannot be null or empty.");
         this.setRejectedReason(rejectedReason);
@@ -153,10 +153,10 @@ public class Incident {
                 this.assignEmployee(employee);
                 break;
             case CONFIRMED:
-                this.confirmIncident();
+                this.confirm();
                 break;
             case DISMISSED:
-                this.dismissIncident(rejectedReason);
+                this.dismiss(rejectedReason);
                 break;
             case IN_PROGRESS:
                 this.startProgress();

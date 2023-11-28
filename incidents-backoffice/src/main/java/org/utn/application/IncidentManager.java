@@ -67,6 +67,41 @@ public class IncidentManager {
         return incident;
     }
 
+    public Incident assignEmployeeIncident(Integer id, String employee) throws StateTransitionException {
+        Incident incident = incidentsRepository.getById(id);
+        incident.assignEmployee(employee);
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
+    public Incident confirmIncident(Integer id) throws StateTransitionException {
+        Incident incident = incidentsRepository.getById(id);
+        incident.confirm();
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
+    public Incident startProgressIncident(Integer id) throws StateTransitionException {
+        Incident incident = incidentsRepository.getById(id);
+        incident.startProgress();
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
+    public Incident resolveIncident(Integer id) throws StateTransitionException {
+        Incident incident = incidentsRepository.getById(id);
+        incident.resolveIncident();
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
+    public Incident dismissIncident(Integer id, String rejectedReason) throws StateTransitionException {
+        Incident incident = incidentsRepository.getById(id);
+        incident.dismiss(rejectedReason);
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
     public Incident updateIncidentState(Integer id, ChangeState request) throws StateTransitionException {
         Incident incident = incidentsRepository.getById(id);
         String formattedState = request.state.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();

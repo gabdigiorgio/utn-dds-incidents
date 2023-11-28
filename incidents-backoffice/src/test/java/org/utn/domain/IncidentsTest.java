@@ -254,14 +254,14 @@ public class IncidentsTest {
     }
 
     private void whenConfirmIncident() throws StateTransitionException {
-        incident.confirmIncident();
+        incident.confirm();
     }
 
     private void whenDismissIncident() throws IllegalArgumentException, StateTransitionException {
-        incident.dismissIncident("");
+        incident.dismiss("");
     }
     private void whenDismissIncident(String reason) throws IllegalArgumentException, StateTransitionException {
-        incident.dismissIncident(reason);
+        incident.dismiss(reason);
     }
 
     private void whenResolveIncident() throws StateTransitionException {

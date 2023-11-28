@@ -115,6 +115,65 @@ public class IncidentsController {
         ctx.result(json);
     };
 
+    public Handler assignEmployeeIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        EmployeeRequest request = ctx.bodyAsClass(EmployeeRequest.class);
+
+        Incident editedIncident = incidentManager.assignEmployeeIncident(id, request.getEmployee());
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
+    public Handler confirmIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        Incident editedIncident = incidentManager.confirmIncident(id);
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
+    public Handler startProgressIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        Incident editedIncident = incidentManager.startProgressIncident(id);
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
+    public Handler resolveIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        Incident editedIncident = incidentManager.resolveIncident(id);
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
+    public Handler dismissIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        RejectedReasonRequest request = ctx.bodyAsClass(RejectedReasonRequest.class);
+
+        Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
     public Handler deleteIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
