@@ -58,7 +58,6 @@ public class IncidentsController {
 
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
-        ctx.status(200);
     };
 
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
@@ -70,7 +69,6 @@ public class IncidentsController {
         var accessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(limit, line, station);
 
         ctx.json(accessibilityFeatures);
-        ctx.status(200);
     };
 
     public Handler getIncident = ctx -> {
@@ -81,7 +79,6 @@ public class IncidentsController {
 
         String json = objectMapper.writeValueAsString(incident);
         ctx.json(json);
-        ctx.status(200);
     };
 
     public Handler createIncident = ctx -> {
@@ -118,7 +115,6 @@ public class IncidentsController {
         String json = objectMapper.writeValueAsString(editedIncident);
 
         ctx.json(json);
-        ctx.status(200);
     };
 
     public Handler updateIncidentState = ctx -> {
@@ -131,7 +127,6 @@ public class IncidentsController {
 
         String json = objectMapper.writeValueAsString(editedIncident);
         ctx.result(json);
-        ctx.status(200);
     };
 
     public Handler deleteIncident = ctx -> {
@@ -208,7 +203,7 @@ public class IncidentsController {
         var job = jobManager.getJob(id);
         CsvProcessingStateResponse response = new CsvProcessingStateResponse(job.getState(), job.getErrorMessage());
         String jsonResponse = objectMapper.writeValueAsString(response);
-        ctx.status(200).json(jsonResponse);
+        ctx.json(jsonResponse);
 
     };
 
