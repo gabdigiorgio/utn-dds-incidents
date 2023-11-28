@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DbIncidentsRepository implements IncidentsRepository {
     private EntityManagerFactory entityManagerFactory;
@@ -37,24 +38,17 @@ public class DbIncidentsRepository implements IncidentsRepository {
     }
 
     @Override
-    public void remove(Integer id) {
+    public void remove(Incident incident) {
         var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
-        Incident incident = entityManager.find(Incident.class, id);
-        if (incident != null) {
-            entityManager.remove(incident);
-        }
+        entityManager.remove(incident);
         entityManager.getTransaction().commit();
     }
 
     @Override
     public Incident getById(Integer id) {
         var entityManager = createEntityManager();
-        try {
-            return entityManager.find(Incident.class, id);
-        } catch (EntityNotFoundException e) {
-            throw new NotFoundException();
-        }
+        return Optional.ofNullable(entityManager.find(Incident.class, id)).orElseThrow(() -> new EntityNotFoundException("Incident not found with ID: " + id));
     }
 
     @Override
@@ -123,7 +117,7 @@ public class DbIncidentsRepository implements IncidentsRepository {
     @Override
     public int count() {
         var entityManager = createEntityManager();
-        var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Long.class);
         criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Incident.class)));
 

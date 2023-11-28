@@ -13,6 +13,7 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
+import javassist.NotFoundException;
 import org.utn.domain.incident.StateTransitionException;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.controllers.IncidentsController;
@@ -23,6 +24,7 @@ import org.utn.presentation.api.url_mappings.UsersResource;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -42,54 +44,32 @@ public class ServerApi {
 
         setupExceptions(server);
 
-        // bot
         server.routes(new TelegramBotResource());
 
-        // API
         server.routes(new IncidentsResource(incidentManager, jobManager, createObjectMapper()));
         server.routes(new UsersResource(usersManager, jobManager, createObjectMapper()));
 
-        // UI
         server.routes(new UIResource(incidentManager, jobManager));
     }
 
     private static void setupExceptions(Javalin server) {
-        server.exception(IllegalArgumentException.class, (e, ctx) -> {
+        setupExceptionHandling(server, EntityNotFoundException.class, 404);
+        setupExceptionHandling(server, IllegalArgumentException.class, 400);
+        setupExceptionHandling(server, StateTransitionException.class, 400);
+        setupExceptionHandling(server, UnrecognizedPropertyException.class, 400);
+        setupExceptionHandling(server, InvalidDateException.class, 400);
+        setupExceptionHandling(server, InvalidCatalogCodeException.class, 400);
+        setupExceptionHandling(server, Exception.class, 500);
+    }
+
+    private static <T extends Exception> void setupExceptionHandling(Javalin server, Class<T> exceptionClass, int statusCode) {
+        server.exception(exceptionClass, (e, ctx) -> {
             try {
-                ctx.json(IncidentsController.parseErrorResponse(400, e.getMessage()));
+                ctx.json(IncidentsController.parseErrorResponse(statusCode, e.getMessage()));
             } catch (JsonProcessingException ex) {
-                throw new RuntimeException(ex);
+                ctx.status(statusCode);
             }
-            ctx.status(400);
-        });
-        server.exception(StateTransitionException.class, (e, ctx) -> {
-            ctx.json(e.getMessage());
-            ctx.status(400);
-        });
-        server.exception(UnrecognizedPropertyException.class, (e, ctx) -> {
-            String message = String.format("Campo desconocido: '%s'", e.getPropertyName());
-            try {
-                ctx.json(IncidentsController.parseErrorResponse(400, message));
-            } catch (JsonProcessingException ex) {
-                throw new RuntimeException(ex);
-            }
-            ctx.status(400);
-        });
-        server.exception(InvalidDateException.class, (e, ctx) -> {
-            try {
-                ctx.json(IncidentsController.parseErrorResponse(400, e.getMessage()));
-            } catch (JsonProcessingException ex) {
-                throw new RuntimeException(ex);
-            }
-            ctx.status(400);
-        });
-        server.exception(InvalidCatalogCodeException.class, (e, ctx) -> {
-            try {
-                ctx.json(IncidentsController.parseErrorResponse(400, e.getMessage()));
-            } catch (JsonProcessingException ex) {
-                throw new RuntimeException(ex);
-            }
-            ctx.status(400);
+            ctx.status(statusCode);
         });
     }
 

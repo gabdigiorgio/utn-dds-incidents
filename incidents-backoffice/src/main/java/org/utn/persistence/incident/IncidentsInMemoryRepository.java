@@ -2,10 +2,8 @@ package org.utn.persistence.incident;
 
 import org.utn.domain.incident.Incident;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.OptionalInt;
+import javax.persistence.EntityNotFoundException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,15 +38,13 @@ public final class IncidentsInMemoryRepository implements IncidentsRepository {
 
     public void update(Incident incident) {}
 
-    public void remove(Integer id) {
-        OptionalInt incidentToRemove = IntStream.range(0, incidents.size()).filter(i -> incidents.get(i).getId().equals(id)).findFirst();
-        if (incidentToRemove.isPresent()) incidents.remove(incidentToRemove.getAsInt());
+    @Override
+    public void remove(Incident incident) {
+        incidents.remove(incident);
     }
 
     public Incident getById(Integer id) {
-        List<Incident> result = incidents.stream().filter(i -> i.getId().equals(id)).collect(Collectors.toList());
-        if (result.size() != 1) return null;
-        return result.get(0);
+        return this.incidents.get(id);
     }
 
     public List<Incident> findIncidents(int quantity, String state, String orderBy, String catalogCode) {
@@ -84,7 +80,7 @@ public final class IncidentsInMemoryRepository implements IncidentsRepository {
     }
 
     public static List<Incident> getOrdered(List<Incident> incidents, Boolean newsFirst) {
-        Collections.sort(incidents, (unaIncidencia, otra) -> unaIncidencia.getReportDate().compareTo(otra.getReportDate()));
+        Collections.sort(incidents, Comparator.comparing(Incident::getReportDate));
         if (newsFirst) Collections.reverse(incidents);
         return incidents;
     }

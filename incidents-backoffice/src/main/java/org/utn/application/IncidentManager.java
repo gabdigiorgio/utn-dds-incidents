@@ -67,19 +67,22 @@ public class IncidentManager {
         return incident;
     }
 
-    public Incident updateIncidentState(Integer id, ChangeState request) throws NotFoundException, StateTransitionException {
+    public Incident updateIncidentState(Integer id, ChangeState request) throws StateTransitionException {
         Incident incident = incidentsRepository.getById(id);
         String formattedState = request.state.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
-        StateEnum nextState = StateEnum.valueOf(formattedState);
-        incident.updateState(nextState, request.employee, request.rejectedReason);
-        incidentsRepository.update(incident);
-        return incident;
+        try {
+            StateEnum nextState = StateEnum.valueOf(formattedState);
+            incident.updateState(nextState, request.employee, request.rejectedReason);
+            incidentsRepository.update(incident);
+            return incident;
+        } catch (IllegalArgumentException e) {
+            throw new StateTransitionException("Invalid state: " + request.state);
+        }
     }
 
-    public void deleteIncident(Integer id) throws NotFoundException {
+    public void deleteIncident(Integer id) {
         Incident incident = incidentsRepository.getById(id);
-        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
-        incidentsRepository.remove(id);
+        incidentsRepository.remove(incident);
     }
 
     public Incident createIncident(
