@@ -6,7 +6,7 @@ import org.utn.domain.incident.*;
 import org.utn.domain.incident.factory.IncidentFactory;
 import org.utn.persistence.incident.IncidentsRepository;
 import org.utn.presentation.api.dto.ChangeState;
-import org.utn.presentation.api.dto.EditIncident;
+import org.utn.presentation.api.dto.EditIncidentRequest;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
@@ -36,6 +36,10 @@ public class IncidentManager {
         return incidents;
     }
 
+    public int getTotalIncidentsCount()  {
+        return incidentsRepository.count();
+    }
+
     public List<Incident> getIncidentsWithPagination(
             Integer startIndex,
             Integer pageSize,
@@ -58,7 +62,7 @@ public class IncidentManager {
         return inventoryService.getInaccessibleAccessibilityFeatures(limit, line, station);
     }
 
-    public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
+    public Incident editIncident(Integer id, EditIncidentRequest data) throws InvalidDateException {
         Incident incident = incidentsRepository.getById(id);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
@@ -67,19 +71,44 @@ public class IncidentManager {
         return incident;
     }
 
-    public Incident updateIncidentState(Integer id, ChangeState request) throws NotFoundException, StateTransitionException {
+    public Incident assignEmployeeIncident(Integer id, String employee) throws StateTransitionException {
         Incident incident = incidentsRepository.getById(id);
-        String formattedState = request.state.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
-        StateEnum nextState = StateEnum.valueOf(formattedState);
-        incident.updateState(nextState, request.employee, request.rejectedReason);
+        incident.assignEmployee(employee);
         incidentsRepository.update(incident);
         return incident;
     }
 
-    public void deleteIncident(Integer id) throws NotFoundException {
+    public Incident confirmIncident(Integer id) throws StateTransitionException {
         Incident incident = incidentsRepository.getById(id);
-        if (incident == null) throw new NotFoundException("INCIDENT_NOT_FOUND");
-        incidentsRepository.remove(id);
+        incident.confirm();
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
+    public Incident startProgressIncident(Integer id) throws StateTransitionException {
+        Incident incident = incidentsRepository.getById(id);
+        incident.startProgress();
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
+    public Incident resolveIncident(Integer id) throws StateTransitionException {
+        Incident incident = incidentsRepository.getById(id);
+        incident.resolveIncident();
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
+    public Incident dismissIncident(Integer id, String rejectedReason) throws StateTransitionException {
+        Incident incident = incidentsRepository.getById(id);
+        incident.dismiss(rejectedReason);
+        incidentsRepository.update(incident);
+        return incident;
+    }
+
+    public void deleteIncident(Integer id) {
+        Incident incident = incidentsRepository.getById(id);
+        incidentsRepository.remove(incident);
     }
 
     public Incident createIncident(

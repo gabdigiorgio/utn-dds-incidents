@@ -1,6 +1,5 @@
 package org.utn.domain;
 
-import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.State;
 import org.utn.domain.incident.Incident;
 
@@ -14,7 +13,7 @@ public class IncidentBuilderForTest {
             "Reportado por de prueba",
             null,
             "",
-            StateEnum.DISMISSED);
+            State.DISMISSED);
 
     private String catalogCode = DefaultIncident.getCatalogCode();
     private LocalDate reportDate = DefaultIncident.getReportDate();

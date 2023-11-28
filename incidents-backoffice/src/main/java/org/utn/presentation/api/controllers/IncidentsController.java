@@ -4,30 +4,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
-import javassist.NotFoundException;
-import org.utn.application.IncidentManager;
-import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
-import org.utn.domain.incident.InventoryService;
-import org.utn.domain.incident.StateEnum;
-import org.utn.domain.incident.StateTransitionException;
+import org.utn.domain.incident.State;
 import org.utn.domain.job.Job;
-import org.utn.domain.job.ProcessState;
+import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
-import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
-import org.utn.utils.exceptions.validator.InvalidDateException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -36,33 +27,30 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class IncidentsController {
-    private IncidentManager incidentManager;
-    private JobManager jobManager;
     private ObjectMapper objectMapper;
 
-    public IncidentsController(IncidentManager incidentManager, JobManager jobManager, ObjectMapper objectMapper) {
-        this.incidentManager = incidentManager;
-        this.jobManager = jobManager;
+    public IncidentsController(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     public Handler getIncidents = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
-        String place = ctx.queryParamAsClass("place", String.class).getOrDefault(null);
+        String place = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
         Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
-        Integer pageSize = ctx.queryParamAsClass("page_size", Integer.class).getOrDefault(10);
+        Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(10);
 
         Integer startIndex = (page - 1) * pageSize;
-        
+
         List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, status, place);
 
         String json = objectMapper.writeValueAsString(incidents);
         ctx.json(json);
-        ctx.status(200);
     };
 
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
         Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
         String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
@@ -70,118 +58,117 @@ public class IncidentsController {
         var accessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(limit, line, station);
 
         ctx.json(accessibilityFeatures);
-        ctx.status(200);
     };
 
     public Handler getIncident = ctx -> {
-        try {
-            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        var incidentManager = ManagerFactory.createIncidentManager();
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
-            Incident incident = incidentManager.getIncident(id);
+        Incident incident = incidentManager.getIncident(id);
 
-            String json = objectMapper.writeValueAsString(incident);
-            ctx.json(json);
-            ctx.status(200);
-        } catch (NotFoundException notFoundError) {
-            handleNotFoundException(ctx, notFoundError);
-        } catch (Exception error) {
-            handleInternalError(ctx, error);
-        }
+        String json = objectMapper.writeValueAsString(incident);
+        ctx.json(json);
     };
 
     public Handler createIncident = ctx -> {
-        try {
-            CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
+        var incidentManager = ManagerFactory.createIncidentManager();
 
-            // create incident
-            Incident newIncident = incidentManager.createIncident(data.catalogCode,
-                    DateUtils.parseDate(data.reportDate),
-                    data.description,
-                    StateEnum.REPORTED.getStateName(),
-                    null,
-                    data.reporterId,
-                    null,
-                    null);
+        CreateIncident request = ctx.bodyAsClass(CreateIncident.class);
 
-            String json = objectMapper.writeValueAsString(newIncident);
+        Incident newIncident = incidentManager.createIncident(request.catalogCode,
+                DateUtils.parseDate(request.reportDate),
+                request.description,
+                State.REPORTED.toString(),
+                null,
+                request.reporterId,
+                null,
+                null);
 
-            ctx.json(json);
-            ctx.status(201);
+        String json = objectMapper.writeValueAsString(newIncident);
 
-        }
-        catch (InvalidCatalogCodeException e) {
-            handleBadRequest(ctx, e);
-        }
-        catch (InvalidDateException e) {
-            handleBadRequest(ctx, e);
-        }
-        catch (UnrecognizedPropertyException e) {
-            handleBadRequest(ctx, e);
-        } catch (Exception e) {
-            handleInternalError(ctx, e);
-        }
+        ctx.json(json);
+        ctx.status(201);
     };
 
     public Handler editIncident = ctx -> {
-        try {
-            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-            EditIncident data = ctx.bodyAsClass(EditIncident.class);
+        var incidentManager = ManagerFactory.createIncidentManager();
 
-            // edit incident
-            Incident editedIncident = incidentManager.editIncident(id, data);
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        EditIncidentRequest request = ctx.bodyAsClass(EditIncidentRequest.class);
 
-            String json = objectMapper.writeValueAsString(editedIncident);
+        Incident editedIncident = incidentManager.editIncident(id, request);
 
-            ctx.json(json);
-            ctx.status(200);
+        String json = objectMapper.writeValueAsString(editedIncident);
 
-        }
-        catch (NotFoundException notFoundError) {
-            handleNotFoundException(ctx, notFoundError);
-        } catch (Exception error) {
-            handleInternalError(ctx, error);
-        }
+        ctx.json(json);
     };
 
-    public Handler updateIncidentState = ctx -> {
-        try {
-            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-            ChangeState request = ctx.bodyAsClass(ChangeState.class);
+    public Handler assignEmployeeIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
 
-            Incident editedIncident = incidentManager.updateIncidentState(id, request);
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
-            String json = objectMapper.writeValueAsString(editedIncident);
-            ctx.result(json).contentType("application/json");
-            ctx.status(200);
+        EmployeeRequest request = ctx.bodyAsClass(EmployeeRequest.class);
 
-        } catch (StateTransitionException transitionError) {
-            handleBadRequest(ctx, transitionError);
-        } catch (IllegalArgumentException illegalArgumentError) {
-            handleBadRequest(ctx, illegalArgumentError);
-        }
-        catch (NotFoundException notFoundError) {
-            handleNotFoundException(ctx, notFoundError);
-        } catch (Exception error) {
-            handleInternalError(ctx, error);
-        }
+        Incident editedIncident = incidentManager.assignEmployeeIncident(id, request.getEmployee());
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
+    public Handler confirmIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        Incident editedIncident = incidentManager.confirmIncident(id);
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
+    public Handler startProgressIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        Incident editedIncident = incidentManager.startProgressIncident(id);
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
+    public Handler resolveIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        Incident editedIncident = incidentManager.resolveIncident(id);
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
+    };
+
+    public Handler dismissIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
+        RejectedReasonRequest request = ctx.bodyAsClass(RejectedReasonRequest.class);
+
+        Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
+
+        String json = objectMapper.writeValueAsString(editedIncident);
+        ctx.result(json);
     };
 
     public Handler deleteIncident = ctx -> {
-        try {
-            int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        var incidentManager = ManagerFactory.createIncidentManager();
 
-            // delete incident
-            incidentManager.deleteIncident(id);
+        int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
-            ctx.status(204);
-
-        } catch (NotFoundException notFoundError) {
-            ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
-            ctx.status(404);
-        } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
-        }
+        incidentManager.deleteIncident(id);
+        ctx.status(204);
     };
 
     private boolean areCsvHeadersValid(String csvText) {
@@ -226,7 +213,7 @@ public class IncidentsController {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 if (areCsvHeadersValid(text)) {
-                    Job job = jobManager.createJob(text); //TODO: pasar a capa aplicación
+                    Job job = ManagerFactory.createJobManager().createJob(text); //TODO: pasar a capa aplicación
                     sendToWorker(job.getId().toString());
                     ctx.json(Map.of("jobId", job.getId().toString()));
                     ctx.status(200);
@@ -245,59 +232,14 @@ public class IncidentsController {
     };
 
     public Handler getCsvProcessingState = ctx -> {
-        try {
-            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        var jobManager = ManagerFactory.createJobManager();
+        var job = jobManager.getJob(id);
+        CsvProcessingStateResponse response = new CsvProcessingStateResponse(job.getState(), job.getErrorMessage());
+        String jsonResponse = objectMapper.writeValueAsString(response);
+        ctx.json(jsonResponse);
 
-            ProcessState jobState = jobManager.getJobState(id);
-            String jobErrorMessage = jobManager.getJobErrorMessage(id);
-
-            CsvProcessingStateResponse response = new CsvProcessingStateResponse(jobState, jobErrorMessage);
-            String jsonResponse = objectMapper.writeValueAsString(response);
-
-            ctx.status(200).json(jsonResponse);
-        } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
-        }
     };
-
-    private void handleBadRequest(Context ctx,  IllegalArgumentException e) throws JsonProcessingException {
-        String message = String.format(e.getMessage());
-        ctx.json(parseErrorResponse(400, message));
-        ctx.status(400);
-    }
-
-    private void handleBadRequest(Context ctx,  StateTransitionException e) throws JsonProcessingException {
-        String message = String.format(e.getMessage());
-        ctx.json(parseErrorResponse(400, message));
-        ctx.status(400);
-    }
-
-    private void handleBadRequest(Context ctx, UnrecognizedPropertyException e) throws JsonProcessingException {
-        String message = String.format("Campo desconocido: '%s'", e.getPropertyName());
-        ctx.json(parseErrorResponse(400, message));
-        ctx.status(400);
-    }
-
-    private void handleBadRequest(Context ctx,  InvalidDateException e) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(400, e.getMessage()));
-        ctx.status(400);
-    }
-
-    private void handleBadRequest(Context ctx,  InvalidCatalogCodeException e) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(400, e.getMessage()));
-        ctx.status(400);
-    }
-
-    private void handleNotFoundException(Context ctx, NotFoundException notFoundError) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
-        ctx.status(404);
-    }
-
-    private void handleInternalError(Context ctx, Exception e) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(500, e.getMessage()));
-        ctx.status(500);
-    }
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.utn.domain.IncidentBuilderForTest;
-import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.State;
 import org.utn.domain.incident.Incident;
 import org.utn.persistence.incident.IncidentsInMemoryRepository;
@@ -30,12 +29,12 @@ public class IncidentsInMemoryRepositoryTest {
 
     @Before
     public void loadIncidents() {
-        givenIncidentWithState(StateEnum.REPORTED);
-        givenIncidentWithState(StateEnum.ASSIGNED);
-        givenIncidentWithState(StateEnum.CONFIRMED);
-        givenIncidentWithState(StateEnum.DISMISSED);
-        givenIncidentWithState(StateEnum.IN_PROGRESS);
-        givenIncidentWithState(StateEnum.RESOLVED);
+        givenIncidentWithState(State.REPORTED);
+        givenIncidentWithState(State.ASSIGNED);
+        givenIncidentWithState(State.CONFIRMED);
+        givenIncidentWithState(State.DISMISSED);
+        givenIncidentWithState(State.IN_PROGRESS);
+        givenIncidentWithState(State.RESOLVED);
     }
 
     @Test
@@ -54,61 +53,61 @@ public class IncidentsInMemoryRepositoryTest {
     @Test
     public void shouldFilterOneIncidentByReportedState(){
 
-        List<Incident> filteredIncidents = whenFindByState(StateEnum.REPORTED);
+        List<Incident> filteredIncidents = whenFindByState(State.REPORTED);
 
         shouldFilterIncidents(1, filteredIncidents);
 
-        shouldBeIncidentOfState(StateEnum.REPORTED.getClass(), filteredIncidents);
+        shouldBeIncidentOfState(State.REPORTED.getClass(), filteredIncidents);
     }
 
     @Test
     public void shouldFilterOneIncidentByAssignedState(){
 
-        List<Incident> filteredIncidents = whenFindByState(StateEnum.ASSIGNED);
+        List<Incident> filteredIncidents = whenFindByState(State.ASSIGNED);
 
         shouldFilterIncidents(1, filteredIncidents);
 
-        shouldBeIncidentOfState(StateEnum.ASSIGNED.getClass(), filteredIncidents);
+        shouldBeIncidentOfState(State.ASSIGNED.getClass(), filteredIncidents);
     }
 
     @Test
     public void shouldFilterOneIncidentByConfirmedState(){
 
-        List<Incident> filteredIncidents = whenFindByState(StateEnum.CONFIRMED);
+        List<Incident> filteredIncidents = whenFindByState(State.CONFIRMED);
 
         shouldFilterIncidents(1, filteredIncidents);
 
-        shouldBeIncidentOfState(StateEnum.CONFIRMED.getClass(), filteredIncidents);
+        shouldBeIncidentOfState(State.CONFIRMED.getClass(), filteredIncidents);
     }
 
     @Test
     public void shouldFilterOneIncidentByDismissedState(){
 
-        List<Incident> filteredIncidents = whenFindByState(StateEnum.DISMISSED);
+        List<Incident> filteredIncidents = whenFindByState(State.DISMISSED);
 
         shouldFilterIncidents(1, filteredIncidents);
 
-        shouldBeIncidentOfState(StateEnum.DISMISSED.getClass(), filteredIncidents);
+        shouldBeIncidentOfState(State.DISMISSED.getClass(), filteredIncidents);
     }
 
     @Test
     public void shouldFilterOneIncidentByInProgressState(){
 
-        List<Incident> filteredIncidents = whenFindByState(StateEnum.IN_PROGRESS);
+        List<Incident> filteredIncidents = whenFindByState(State.IN_PROGRESS);
 
         shouldFilterIncidents(1, filteredIncidents);
 
-        shouldBeIncidentOfState(StateEnum.IN_PROGRESS.getClass(), filteredIncidents);
+        shouldBeIncidentOfState(State.IN_PROGRESS.getClass(), filteredIncidents);
     }
 
     @Test
     public void shouldFilterOneIncidentByResolvedState(){
 
-        List<Incident> filteredIncidents = whenFindByState(StateEnum.RESOLVED);
+        List<Incident> filteredIncidents = whenFindByState(State.RESOLVED);
 
         shouldFilterIncidents(1, filteredIncidents);
 
-        shouldBeIncidentOfState(StateEnum.RESOLVED.getClass(), filteredIncidents);
+        shouldBeIncidentOfState(State.RESOLVED.getClass(), filteredIncidents);
     }
 
     private void givenIncident(Incident incident){
@@ -125,7 +124,7 @@ public class IncidentsInMemoryRepositoryTest {
     }
 
     private List<Incident> whenFindByState(State state) {
-        return incidentRepo.findIncidents(10, state.getStateName(), null, null);
+        return incidentRepo.findIncidents(10, state.toString(), null, null);
     }
 
     private void shouldSaveIncident() {
@@ -139,32 +138,4 @@ public class IncidentsInMemoryRepositoryTest {
     private void shouldBeIncidentOfState(Class <? extends State> type, List <Incident> filteredIncidents){
         assertTrue(type.isInstance(filteredIncidents.get(0).getState()));
     }
-
-    /*
-    @Test
-    public void ultimosReportados(){
-
-        assertEquals(repoIncidencias.obtenerIncidencias(3,"ordenarPorMasReciente").size(),3);
-    }
-
-    @Test
-    public void desdeLaMasVieja(){
-
-        assertEquals(repoIncidencias.obtenerIncidencias(5,"ordenarPorLaMasVieja").size(),4);
-    }
-
-    @Test
-    public void ordenXestado(){
-        //pido 4 incidencias pero solo hay 3 de ese estado
-        assertEquals(repoIncidencias.obtenerIncidencias(4,EnumEstado.ASIGNADO).size(),3);
-
-        assertEquals(repoIncidencias.obtenerIncidencias(3,EnumEstado.REPORTADO).size(),1);
-    }*/
-
-    /*@Test
-    public void ordenXLugar(){
-
-        assertEquals(repoIncidencias.obtenerIncidencias(2,"1533-24").size(),2);
-    }*/
-
 }

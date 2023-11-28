@@ -1,6 +1,7 @@
 package org.utn.domain.incident;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -87,43 +88,39 @@ public class Incident {
         return state;
     }
 
-    public String getStateName(){return state.getStateName();}
-
     public String getReporter(){
         return reportedBy;
     }
 
-    public void setState(StateEnum state) {
-        this.state = state;
+    public void setState(State targetState) throws StateTransitionException {
+        this.state.verifyCanTransition(targetState);
+        this.state = targetState;
     }
 
-    /******   Inicio metodos que impactan a estados   ******/
     public void assignEmployee(String employee) throws StateTransitionException, IllegalArgumentException {
-        if (employee == null || employee.isEmpty()) throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo ni vacío.");
-        this.state.assignEmployee(this);
+        this.setState(State.ASSIGNED);
+        if (employee == null || employee.isEmpty()) throw new IllegalArgumentException("The 'employee' field cannot be null or empty.");
         this.setEmployee(employee);
     }
 
-    public void confirmIncident() throws StateTransitionException {
-        this.state.confirmIncident(this);
+    public void confirm() throws StateTransitionException {
+        this.setState(State.CONFIRMED);
     }
 
-    public void dismissIncident(String rejectedReason) throws IllegalArgumentException, StateTransitionException {
-        if (rejectedReason == null || rejectedReason.isEmpty()) throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo ni vacío.");
-        this.state.dismissIncident(this);
+    public void dismiss(String rejectedReason) throws IllegalArgumentException, StateTransitionException {
+        this.setState(State.DISMISSED);
+        if (rejectedReason == null || rejectedReason.isEmpty()) throw new IllegalArgumentException("The 'rejection reason' field cannot be null or empty.");
         this.setRejectedReason(rejectedReason);
     }
 
     public void startProgress() throws StateTransitionException {
-        this.state.startProgress(this);
+        this.setState(State.IN_PROGRESS);
     }
 
     public void resolveIncident() throws StateTransitionException {
-        this.state.resolveIncident(this);
+        this.setState(State.RESOLVED);
     }
 
-    /******   Fin metodos que impactan a estados   ******/
-//////////////////////////////////////////
     public String getEmployee() { return employee;}
 
     public void setEmployee(String employee) {
@@ -150,25 +147,4 @@ public class Incident {
         this.rejectedReason = rejectedReason;
     }
 
-    public void updateState(StateEnum nextState, String employee, String rejectedReason) throws StateTransitionException {
-        switch (nextState) {
-            case ASSIGNED:
-                this.assignEmployee(employee);
-                break;
-            case CONFIRMED:
-                this.confirmIncident();
-                break;
-            case DISMISSED:
-                this.dismissIncident(rejectedReason);
-                break;
-            case IN_PROGRESS:
-                this.startProgress();
-                break;
-            case RESOLVED:
-                this.resolveIncident();
-                break;
-            default:
-                throw new StateTransitionException("Estado deseado inválido");
-        }
-    }
 }

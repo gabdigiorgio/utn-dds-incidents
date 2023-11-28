@@ -8,6 +8,7 @@ import org.utn.application.IncidentManager;
 import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
 import org.utn.infrastructure.OkInventoryService;
+import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.AccessibilityFeatureDTO;
 
 import javax.persistence.EntityNotFoundException;
@@ -19,12 +20,8 @@ import java.util.Objects;
 import static org.utn.presentation.api.controllers.IncidentsController.parseErrorResponse;
 
 public class UIController {
-    private IncidentManager incidentManager;
-    private JobManager jobManager;
 
-    public UIController(IncidentManager incidentManager, JobManager jobManager) {
-        this.incidentManager = incidentManager;
-        this.jobManager = jobManager;
+    public UIController() {
     }
 
     public Handler getLogin = ctx -> {
@@ -35,33 +32,40 @@ public class UIController {
             ctx.json(parseErrorResponse(500, error.getMessage()));
             ctx.status(500);
             ctx.render("error.hbs");
-
         }
     };
 
     public Handler getIncidents = ctx -> {
         try {
+            var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
-            // get incidents
-            List<Incident> incidents = incidentManager.getIncidents(10, "createdAt", null, null);
-            model.put("incidents", incidents);
-            ctx.render("incidents.hbs", model);
 
+            Integer pageSize = 10;
+
+            int totalIncidents = incidentManager.getTotalIncidentsCount();
+            int totalPages = (int) Math.ceil((double) totalIncidents / pageSize);
+
+            model.put("pageSize", pageSize);
+            model.put("totalPages", totalPages);
+
+            ctx.render("incidents.hbs", model);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(500, error.getMessage()));
             ctx.status(500);
             ctx.render("error.hbs");
-
         }
     };
 
+
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
         try {
+            var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
             String inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(10, null, null);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            List<AccessibilityFeatureDTO> featuresList = objectMapper.readValue(inaccessibleAccessibilityFeatures, new TypeReference<>() {});
+            List<AccessibilityFeatureDTO> featuresList = objectMapper.readValue(inaccessibleAccessibilityFeatures, new TypeReference<>() {
+            });
 
             model.put("inaccessibleAccessibilityFeatures", featuresList);
             ctx.render("inaccessible_accessibility_features.hbs", model);
@@ -73,6 +77,7 @@ public class UIController {
 
     public Handler getIncident = ctx -> {
         try {
+            var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
@@ -92,6 +97,7 @@ public class UIController {
 
     public Handler createIncident = ctx -> {
         try {
+            var incidentManager = ManagerFactory.createIncidentManager();
             String inventoryServiceUrl = System.getenv("INVENTORY_SERVICE_URL");
             if (inventoryServiceUrl == null || inventoryServiceUrl.isEmpty()) {
                 inventoryServiceUrl = "http://localhost:8081/api/accessibilityFeatures/";
@@ -109,13 +115,14 @@ public class UIController {
 
     public Handler editIncident = ctx -> {
         try {
+            var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
             Incident incident = incidentManager.getIncident(id);
             model.put("incident", incident);
             ctx.render("edit_incident.hbs", model);
-        }  catch (NotFoundException notFoundError) {
+        } catch (NotFoundException notFoundError) {
             ctx.status(404);
             ctx.result("Incidencia no encontrada");
         } catch (Exception error) {
@@ -126,12 +133,13 @@ public class UIController {
 
     public Handler updateIncidentState = ctx -> {
         try {
+            var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
             Incident incident = incidentManager.getIncident(id);
             model.put("incident", incident);
             ctx.render("edit_incident_state.hbs", model);
-        }  catch (NotFoundException notFoundError) {
+        } catch (NotFoundException notFoundError) {
             ctx.status(404);
             ctx.result("Incidencia no encontrada");
         } catch (Exception error) {

@@ -1,29 +1,85 @@
 package org.utn.domain.incident;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.utn.utils.ExceptionConstants;
 
-public interface State {
-    @JsonValue
-    String getStateName();
-    default void assignEmployee(Incident incident) throws StateTransitionException {
-        String msgException = String.format(ExceptionConstants.ERROR_ASSIGN_EMPLOYEE_TRANSITION, incident.getState().getStateName());
-        throw new StateTransitionException(msgException);
+public enum State implements Transitionable {
+    REPORTED {
+        @Override
+        public void verifyCanTransition(State targetState) throws StateTransitionException {
+            if (!targetState.equals(ASSIGNED)) {
+                throwTransitionException(targetState);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Reportado";
+        }
+    },
+    ASSIGNED {
+        @Override
+        public void verifyCanTransition(State targetState) throws StateTransitionException {
+            if (!targetState.equals(CONFIRMED) && !targetState.equals(DISMISSED)) {
+                throwTransitionException(targetState);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Asignado";
+        }
+    },
+    CONFIRMED {
+        @Override
+        public void verifyCanTransition(State targetState) throws StateTransitionException {
+            if (!targetState.equals(IN_PROGRESS)) {
+                throwTransitionException(targetState);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Confirmado";
+        }
+    },
+    DISMISSED {
+        @Override
+        public void verifyCanTransition(State targetState) throws StateTransitionException {
+            throwTransitionException(targetState);
+        }
+
+        @Override
+        public String toString() {
+            return "Desestimado";
+        }
+    },
+    IN_PROGRESS {
+        @Override
+        public void verifyCanTransition(State targetState) throws StateTransitionException {
+            if(!targetState.equals(RESOLVED)) {
+                throwTransitionException(targetState);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "En progreso";
+        }
+    },
+    RESOLVED {
+        @Override
+        public void verifyCanTransition(State targetState) throws StateTransitionException {
+            throwTransitionException(targetState);
+        }
+
+        @Override
+        public String toString() {
+            return "Solucionado";
+        }
+    };
+
+    void throwTransitionException(State targetState) throws StateTransitionException {
+        throw new StateTransitionException("Cannot transition from state " +
+                this + " to state: " + targetState);
     }
-    default void confirmIncident(Incident incident) throws StateTransitionException {
-        String msgException = String.format(ExceptionConstants.ERROR_CONFIRM_INCIDENT_TRANSITION, incident.getState().getStateName());
-        throw new StateTransitionException(msgException);
-    }
-    default void dismissIncident(Incident incident) throws StateTransitionException {
-        String msgException = String.format(ExceptionConstants.ERROR_DISMISS_INCIDENT_TRANSITION, incident.getState().getStateName());
-        throw new StateTransitionException(msgException);
-    }
-    default void startProgress(Incident incident) throws StateTransitionException {
-        String msgException = String.format(ExceptionConstants.ERROR_START_PROGRESS_TRANSITION, incident.getState().getStateName());
-        throw new StateTransitionException(msgException);
-    }
-    default void resolveIncident(Incident incident) throws StateTransitionException{
-        String msgException = String.format(ExceptionConstants.ERROR_RESOLVE_INCIDENT_TRANSITION, incident.getState().getStateName());
-        throw new StateTransitionException(msgException);
-    }
+
 }

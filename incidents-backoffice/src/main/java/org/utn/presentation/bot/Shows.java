@@ -213,7 +213,7 @@ public class Shows {
         msg.append("Codigo de catalogo: ").append(incidencia.getCatalogCode()).append("\n")
             .append("Fecha de reporte: ").append(incidencia.getReportDate()).append("\n")
             .append("Descripcion: ").append(incidencia.getDescription()).append("\n")
-            .append("Estado: ").append(incidencia.getState().getStateName()).append("\n")
+            .append("Estado: ").append(incidencia.getState().toString()).append("\n")
             .append("Operador: ").append(incidencia.getOperator()).append("\n")
             .append("Persona que lo reporto: ").append(incidencia.getReportedBy()).append("\n")
             .append("Fecha cierre: ").append(incidencia.getClosingDate()).append("\n")

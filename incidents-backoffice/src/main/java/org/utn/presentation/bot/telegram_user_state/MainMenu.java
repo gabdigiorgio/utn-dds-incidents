@@ -66,7 +66,7 @@ public class MainMenu extends UserBotState {
                 telegramUserBot.execute(messageText, bot);
             }
             case "4" -> {
-                telegramUserBot.setState(new GetIncidentsByPlace(incidentManager));
+                telegramUserBot.setState(new GetIncidentsByCatalogCode(incidentManager));
                 telegramUserBot.execute(messageText, bot);
             }
             case "5" -> {

@@ -17,7 +17,7 @@ public class GetIncidentsByState extends UserBotState {
 
     @Override
     public String getStateName() {
-        return "GetIncidentsFirstReport";
+        return "GetIncidentsByState";
     }
 
     private IncidentManager incidentManager;

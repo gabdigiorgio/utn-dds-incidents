@@ -9,7 +9,7 @@ public interface IncidentsRepository {
 
     void update(Incident incident);
 
-    void remove(Integer id);
+    void remove(Incident incident);
 
     Incident getById(Integer id);
 

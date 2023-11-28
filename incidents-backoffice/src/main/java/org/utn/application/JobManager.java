@@ -40,16 +40,6 @@ public class JobManager {
         }
     }
 
-    public ProcessState getJobState(Integer id) {
-        Job job = getJob(id);
-        return job.getState();
-    }
-
-    public String getJobErrorMessage(Integer id) {
-        Job job = getJob(id);
-        return job.getErrorMessage();
-    }
-
     public void updateJobProcessingState(Integer id, ProcessState state) {
         Job job = getJob(id);
         job.setState(state);

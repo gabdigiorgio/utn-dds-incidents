@@ -2,19 +2,11 @@ package org.utn.presentation.api.url_mappings;
 
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
-import org.utn.application.IncidentManager;
-import org.utn.application.JobManager;
 import org.utn.presentation.api.controllers.UIController;
 
 public class UIResource implements EndpointGroup {
 
-    IncidentManager incidentManager;
-    JobManager jobManager;
-
-    public UIResource(IncidentManager incidentManager, JobManager jobManager) {
-
-        this.incidentManager = incidentManager;
-        this.jobManager = jobManager;
+    public UIResource() {
     }
 
     @Override
@@ -52,7 +44,7 @@ public class UIResource implements EndpointGroup {
         });
 
 
-        UIController UIController = new UIController(incidentManager, jobManager);
+        UIController UIController = new UIController();
         ApiBuilder.path("/ui/incidents", () -> {
             ApiBuilder.get("/login", UIController.getLogin);
             ApiBuilder.get("/", UIController.getIncidents);

@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.utn.domain.IncidentBuilderForTest;
-import org.utn.domain.incident.StateEnum;
+import org.utn.domain.incident.State;
 import org.utn.domain.incident.Incident;
 import org.utn.infrastructure.OkInventoryService;
 import org.utn.persistence.incident.IncidentsRepository;
@@ -36,7 +36,7 @@ public class IncidentManagerTest {
     @Test
     public void shouldCreateCorrectReportedIncident() throws IOException {
 
-        givenExpectedIncident(new IncidentBuilderForTest().withState(StateEnum.REPORTED).build());
+        givenExpectedIncident(new IncidentBuilderForTest().withState(State.REPORTED).build());
 
         whenCreateIncident();
 
@@ -46,7 +46,7 @@ public class IncidentManagerTest {
     @Test
     public void shouldCreateCorrectAssignedIncident() throws IOException {
 
-        givenExpectedIncident(new IncidentBuilderForTest().withState(StateEnum.ASSIGNED).build());
+        givenExpectedIncident(new IncidentBuilderForTest().withState(State.ASSIGNED).build());
 
         whenCreateIncident();
 
@@ -56,7 +56,7 @@ public class IncidentManagerTest {
     @Test
     public void shouldCreateCorrectConfirmedIncident() throws IOException {
 
-        givenExpectedIncident(new IncidentBuilderForTest().withState(StateEnum.CONFIRMED).build());
+        givenExpectedIncident(new IncidentBuilderForTest().withState(State.CONFIRMED).build());
 
         whenCreateIncident();
 
@@ -67,7 +67,7 @@ public class IncidentManagerTest {
     public void shouldCreateCorrectDismissedIncident() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest()
-                .withState(StateEnum.DISMISSED)
+                .withState(State.DISMISSED)
                 .withClosingDate(LocalDate.of(2023, 5, 28))
                 .withRejectedReason("Motivo rechazo de prueba")
                 .build());
@@ -80,7 +80,7 @@ public class IncidentManagerTest {
     @Test
     public void shouldCreateCorrectInProgressIncident() throws IOException {
 
-        givenExpectedIncident(new IncidentBuilderForTest().withState(StateEnum.IN_PROGRESS).build());
+        givenExpectedIncident(new IncidentBuilderForTest().withState(State.IN_PROGRESS).build());
 
         whenCreateIncident();
 
@@ -91,7 +91,7 @@ public class IncidentManagerTest {
     public void shouldCreateCorrectResolvedIncident() throws IOException {
 
         givenExpectedIncident(new IncidentBuilderForTest()
-                .withState(StateEnum.RESOLVED)
+                .withState(State.RESOLVED)
                 .withClosingDate(LocalDate.of(2023, 5, 28))
                 .build());
 
@@ -108,7 +108,7 @@ public class IncidentManagerTest {
         manager.createIncident(expectedIncident.getCatalogCode(),
                 expectedIncident.getReportDate(),
                 expectedIncident.getDescription(),
-                expectedIncident.getState().getStateName(),
+                expectedIncident.getState().toString(),
                 expectedIncident.getOperator(),
                 expectedIncident.getReportedBy(),
                 expectedIncident.getClosingDate(),
@@ -127,7 +127,7 @@ public class IncidentManagerTest {
         Assert.assertEquals(expectedIncident.getReportedBy(), currentIncident.getReportedBy());
         Assert.assertEquals(expectedIncident.getClosingDate(), currentIncident.getClosingDate());
         Assert.assertEquals(expectedIncident.getRejectedReason(), currentIncident.getRejectedReason());
-        Assert.assertEquals(expectedIncident.getStateName(), currentIncident.getStateName());
+        Assert.assertEquals(expectedIncident.getState().toString(), currentIncident.getState().toString());
     }
 
     private void shouldSaveInRepo() {
