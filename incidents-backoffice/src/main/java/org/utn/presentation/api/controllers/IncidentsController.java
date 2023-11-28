@@ -73,14 +73,14 @@ public class IncidentsController {
     public Handler createIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
+        CreateIncident request = ctx.bodyAsClass(CreateIncident.class);
 
-        Incident newIncident = incidentManager.createIncident(data.catalogCode,
-                DateUtils.parseDate(data.reportDate),
-                data.description,
+        Incident newIncident = incidentManager.createIncident(request.catalogCode,
+                DateUtils.parseDate(request.reportDate),
+                request.description,
                 State.REPORTED.toString(),
                 null,
-                data.reporterId,
+                request.reporterId,
                 null,
                 null);
 

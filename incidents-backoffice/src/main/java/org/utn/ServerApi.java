@@ -46,8 +46,8 @@ public class ServerApi {
         server.routes(new TelegramBotResource());
 
         server.routes(new IncidentsResource(createObjectMapper()));
+        server.routes(new UIResource());
         server.routes(new UsersResource(usersManager, jobManager, createObjectMapper()));
-        server.routes(new UIResource(incidentManager, jobManager));
     }
 
     private static void setupExceptions(Javalin server) {

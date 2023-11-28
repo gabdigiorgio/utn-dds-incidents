@@ -36,6 +36,10 @@ public class IncidentManager {
         return incidents;
     }
 
+    public int getTotalIncidentsCount()  {
+        return incidentsRepository.count();
+    }
+
     public List<Incident> getIncidentsWithPagination(
             Integer startIndex,
             Integer pageSize,
