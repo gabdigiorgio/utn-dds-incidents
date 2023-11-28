@@ -37,9 +37,9 @@ public class IncidentsController {
         var incidentManager = ManagerFactory.createIncidentManager();
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
-        String place = ctx.queryParamAsClass("catalog_code", String.class).getOrDefault(null);
+        String place = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
         Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
-        Integer pageSize = ctx.queryParamAsClass("page_size", Integer.class).getOrDefault(10);
+        Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(10);
 
         Integer startIndex = (page - 1) * pageSize;
 
