@@ -71,7 +71,7 @@ public class IncidentManager {
         Incident incident = incidentsRepository.getById(id);
         String formattedState = request.state.replaceAll("([a-z])([A-Z])", "$1_$2").toUpperCase();
         try {
-            StateEnum nextState = StateEnum.valueOf(formattedState);
+            State nextState = State.valueOf(formattedState);
             incident.updateState(nextState, request.employee, request.rejectedReason);
             incidentsRepository.update(incident);
             return incident;

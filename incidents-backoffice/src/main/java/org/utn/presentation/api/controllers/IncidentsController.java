@@ -2,34 +2,23 @@ package org.utn.presentation.api.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
-import javassist.NotFoundException;
-import org.utn.application.IncidentManager;
-import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
-import org.utn.domain.incident.InventoryService;
-import org.utn.domain.incident.StateEnum;
-import org.utn.domain.incident.StateTransitionException;
+import org.utn.domain.incident.State;
 import org.utn.domain.job.Job;
-import org.utn.domain.job.ProcessState;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
-import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
-import org.utn.utils.exceptions.validator.InvalidDateException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -84,14 +73,12 @@ public class IncidentsController {
     public Handler createIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-
         CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
-        // create incident
         Incident newIncident = incidentManager.createIncident(data.catalogCode,
                 DateUtils.parseDate(data.reportDate),
                 data.description,
-                StateEnum.REPORTED.getStateName(),
+                State.REPORTED.toString(),
                 null,
                 data.reporterId,
                 null,
@@ -109,7 +96,6 @@ public class IncidentsController {
         Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
         EditIncident data = ctx.bodyAsClass(EditIncident.class);
 
-        // edit incident
         Incident editedIncident = incidentManager.editIncident(id, data);
 
         String json = objectMapper.writeValueAsString(editedIncident);

@@ -50,7 +50,7 @@ public final class IncidentsInMemoryRepository implements IncidentsRepository {
     public List<Incident> findIncidents(int quantity, String state, String orderBy, String catalogCode) {
         List<Incident> list = incidents;
         if (state != null) {
-            list = list.stream().filter(i -> i.getStateName().equals(state)).collect(Collectors.toList());
+            list = list.stream().filter(i -> i.getState().toString().equals(state)).collect(Collectors.toList());
         }
         if (catalogCode != null) {
             list = list.stream().filter(i -> i.getCatalogCode().equals(catalogCode)).collect(Collectors.toList());;
