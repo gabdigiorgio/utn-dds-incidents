@@ -20,7 +20,7 @@ public class IncidentsResource implements EndpointGroup {
 
     @Override
     public void addEndpoints() {
-        IncidentsController incidentsController = new IncidentsController(manager, jobManager,objectMapper);
+        IncidentsController incidentsController = new IncidentsController(jobManager,objectMapper);
         ApiBuilder.path("/api/incidents", () -> {
             ApiBuilder.get("/inaccessible_accessibility_features", incidentsController.getInaccessibleAccessibilityFeatures);
             ApiBuilder.get("/", incidentsController.getIncidents);

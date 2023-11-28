@@ -15,15 +15,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class DbIncidentsRepository implements IncidentsRepository {
-    private EntityManagerFactory entityManagerFactory;
+    private EntityManager entityManager;
 
-    public DbIncidentsRepository(EntityManagerFactory entityManagerFactory) {
+    public DbIncidentsRepository(EntityManager entityManager) {
         super();
-        this.entityManagerFactory = entityManagerFactory;
+        this.entityManager = entityManager;
     }
 
     public void save(Incident incident) {
-        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(incident);
         entityManager.getTransaction().commit();
@@ -31,7 +30,6 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public void update(Incident incident) {
-        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.merge(incident);
         entityManager.getTransaction().commit();
@@ -39,7 +37,6 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public void remove(Incident incident) {
-        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.remove(incident);
         entityManager.getTransaction().commit();
@@ -47,14 +44,12 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public Incident getById(Integer id) {
-        var entityManager = createEntityManager();
         return Optional.ofNullable(entityManager.find(Incident.class, id)).orElseThrow(() -> new EntityNotFoundException("Incident not found with ID: " + id));
     }
 
     @Override
     public List<Incident> findIncidents(int quantity, String state, String orderBy, String catalogCode) {
-        var entityManager = createEntityManager();
-        var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Incident.class);
         var root = criteriaQuery.from(Incident.class);
 
@@ -83,8 +78,7 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public List<Incident> findIncidentsWithPagination(int startIndex, int pageSize, String state, String orderBy, String catalogCode) {
-        var entityManager = createEntityManager();
-        var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Incident.class);
         var root = criteriaQuery.from(Incident.class);
 
@@ -116,7 +110,6 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
     @Override
     public int count() {
-        var entityManager = createEntityManager();
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Long.class);
         criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Incident.class)));
@@ -124,11 +117,6 @@ public class DbIncidentsRepository implements IncidentsRepository {
         var count = entityManager.createQuery(criteriaQuery).getSingleResult();
 
         return count.intValue();
-    }
-
-    private EntityManager createEntityManager()
-    {
-        return this.entityManagerFactory.createEntityManager();
     }
 
 }

@@ -10,14 +10,14 @@ import org.utn.persistence.users.UsersRepository;
 public class RepositoryFactory
 {
     public static IncidentsRepository createIncidentRepository(){
-        return new DbIncidentsRepository(PersistenceUtils.createEntityManagerFactory());
+        return new DbIncidentsRepository(PersistenceUtils.createEntityManager());
     }
 
     public static UsersRepository createUserRepository(){
-        return new DbUsersRepository(PersistenceUtils.createEntityManagerFactory());
+        return new DbUsersRepository(PersistenceUtils.factory);
     }
 
     public static JobsRepository createJobRepository(){
-        return new DbJobsRepository(PersistenceUtils.createEntityManagerFactory());
+        return new DbJobsRepository(PersistenceUtils.factory);
     }
 }

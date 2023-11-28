@@ -23,6 +23,7 @@ import org.utn.domain.incident.StateEnum;
 import org.utn.domain.incident.StateTransitionException;
 import org.utn.domain.job.Job;
 import org.utn.domain.job.ProcessState;
+import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
@@ -37,20 +38,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class IncidentsController {
-    private IncidentManager incidentManager;
     private JobManager jobManager;
     private ObjectMapper objectMapper;
 
-    public IncidentsController(IncidentManager incidentManager, JobManager jobManager, ObjectMapper objectMapper) {
-        this.incidentManager = incidentManager;
+    public IncidentsController(JobManager jobManager, ObjectMapper objectMapper) {
         this.jobManager = jobManager;
         this.objectMapper = objectMapper;
     }
 
     public Handler getIncidents = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
-        String place = ctx.queryParamAsClass("place", String.class).getOrDefault(null);
+        String place = ctx.queryParamAsClass("catalog_code", String.class).getOrDefault(null);
         Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
         Integer pageSize = ctx.queryParamAsClass("page_size", Integer.class).getOrDefault(10);
 
@@ -64,6 +64,7 @@ public class IncidentsController {
     };
 
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
         Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
         String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
@@ -75,6 +76,7 @@ public class IncidentsController {
     };
 
     public Handler getIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
         Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
         Incident incident = incidentManager.getIncident(id);
@@ -85,6 +87,8 @@ public class IncidentsController {
     };
 
     public Handler createIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
 
         CreateIncident data = ctx.bodyAsClass(CreateIncident.class);
 
@@ -105,6 +109,8 @@ public class IncidentsController {
     };
 
     public Handler editIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
         Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
         EditIncident data = ctx.bodyAsClass(EditIncident.class);
 
@@ -118,6 +124,8 @@ public class IncidentsController {
     };
 
     public Handler updateIncidentState = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
         Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
         ChangeState request = ctx.bodyAsClass(ChangeState.class);
 
@@ -129,6 +137,8 @@ public class IncidentsController {
     };
 
     public Handler deleteIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
         int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
         incidentManager.deleteIncident(id);
         ctx.status(204);
@@ -210,44 +220,6 @@ public class IncidentsController {
             ctx.status(400);
         }
     };
-
-    private void handleBadRequest(Context ctx,  IllegalArgumentException e) throws JsonProcessingException {
-        String message = String.format(e.getMessage());
-        ctx.json(parseErrorResponse(400, message));
-        ctx.status(400);
-    }
-
-    private void handleBadRequest(Context ctx,  StateTransitionException e) throws JsonProcessingException {
-        String message = String.format(e.getMessage());
-        ctx.json(parseErrorResponse(400, message));
-        ctx.status(400);
-    }
-
-    private void handleBadRequest(Context ctx, UnrecognizedPropertyException e) throws JsonProcessingException {
-        String message = String.format("Campo desconocido: '%s'", e.getPropertyName());
-        ctx.json(parseErrorResponse(400, message));
-        ctx.status(400);
-    }
-
-    private void handleBadRequest(Context ctx,  InvalidDateException e) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(400, e.getMessage()));
-        ctx.status(400);
-    }
-
-    private void handleBadRequest(Context ctx,  InvalidCatalogCodeException e) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(400, e.getMessage()));
-        ctx.status(400);
-    }
-
-    private void handleNotFoundException(Context ctx, NotFoundException notFoundError) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(404, notFoundError.getMessage()));
-        ctx.status(404);
-    }
-
-    private void handleInternalError(Context ctx, Exception e) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(500, e.getMessage()));
-        ctx.status(500);
-    }
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
