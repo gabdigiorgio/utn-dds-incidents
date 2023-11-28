@@ -94,9 +94,9 @@ public class IncidentsController {
         var incidentManager = ManagerFactory.createIncidentManager();
 
         Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-        EditIncident data = ctx.bodyAsClass(EditIncident.class);
+        EditIncidentRequest request = ctx.bodyAsClass(EditIncidentRequest.class);
 
-        Incident editedIncident = incidentManager.editIncident(id, data);
+        Incident editedIncident = incidentManager.editIncident(id, request);
 
         String json = objectMapper.writeValueAsString(editedIncident);
 
@@ -178,6 +178,7 @@ public class IncidentsController {
         var incidentManager = ManagerFactory.createIncidentManager();
 
         int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+
         incidentManager.deleteIncident(id);
         ctx.status(204);
     };

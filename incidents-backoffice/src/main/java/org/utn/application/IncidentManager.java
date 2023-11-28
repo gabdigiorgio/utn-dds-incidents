@@ -6,7 +6,7 @@ import org.utn.domain.incident.*;
 import org.utn.domain.incident.factory.IncidentFactory;
 import org.utn.persistence.incident.IncidentsRepository;
 import org.utn.presentation.api.dto.ChangeState;
-import org.utn.presentation.api.dto.EditIncident;
+import org.utn.presentation.api.dto.EditIncidentRequest;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
@@ -58,7 +58,7 @@ public class IncidentManager {
         return inventoryService.getInaccessibleAccessibilityFeatures(limit, line, station);
     }
 
-    public Incident editIncident(Integer id, EditIncident data) throws InvalidDateException {
+    public Incident editIncident(Integer id, EditIncidentRequest data) throws InvalidDateException {
         Incident incident = incidentsRepository.getById(id);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);

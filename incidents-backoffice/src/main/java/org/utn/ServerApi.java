@@ -36,7 +36,6 @@ public class ServerApi {
         var jobManager = ManagerFactory.createJobManager();
         var usersManager = ManagerFactory.createUserManager();
 
-        // TemplateEngine -Handlebars
         initTemplateEngine();
 
         Integer port = Integer.parseInt(System.getProperty("port", "8080"));
@@ -48,7 +47,6 @@ public class ServerApi {
 
         server.routes(new IncidentsResource(createObjectMapper()));
         server.routes(new UsersResource(usersManager, jobManager, createObjectMapper()));
-
         server.routes(new UIResource(incidentManager, jobManager));
     }
 

@@ -19,7 +19,7 @@ public class IncidentsResource implements EndpointGroup {
     public void addEndpoints() {
         IncidentsController incidentsController = new IncidentsController(objectMapper);
         ApiBuilder.path("/api/incidents", () -> {
-            ApiBuilder.get("/inaccessible_accessibility_features", incidentsController.getInaccessibleAccessibilityFeatures);
+            ApiBuilder.get("/inaccessible-accessibility-features", incidentsController.getInaccessibleAccessibilityFeatures);
             ApiBuilder.get("/", incidentsController.getIncidents);
             ApiBuilder.get("/{id}", incidentsController.getIncident);
             ApiBuilder.post("/", incidentsController.createIncident);
@@ -30,9 +30,8 @@ public class IncidentsResource implements EndpointGroup {
             ApiBuilder.post("/{id}/start-progress", incidentsController.startProgressIncident);
             ApiBuilder.post("/{id}/resolve", incidentsController.resolveIncident);
             ApiBuilder.post("/{id}/dismiss", incidentsController.dismissIncident);
-            ApiBuilder.put("/{id}/state", incidentsController.updateIncidentState);
-            ApiBuilder.post("/upload_csv", incidentsController.createMassiveIncident);
-            ApiBuilder.get("/processing_csv_state/{id}", incidentsController.getCsvProcessingState);
+            ApiBuilder.post("/upload-csv", incidentsController.createMassiveIncident);
+            ApiBuilder.get("/processing-csv-state/{id}", incidentsController.getCsvProcessingState);
         });
     }
 }
