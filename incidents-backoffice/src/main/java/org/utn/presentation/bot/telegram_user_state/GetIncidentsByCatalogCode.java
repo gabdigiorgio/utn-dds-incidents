@@ -13,15 +13,15 @@ import java.util.List;
 import static org.utn.presentation.bot.Shows.invalidMessage;
 import static org.utn.presentation.bot.Shows.showIncidents;
 
-public class GetIncidentsByPlace extends UserBotState {
+public class GetIncidentsByCatalogCode extends UserBotState {
     private IncidentManager incidentManager;
-    public GetIncidentsByPlace(IncidentManager incidentManager) {
+    public GetIncidentsByCatalogCode(IncidentManager incidentManager) {
         this.incidentManager = incidentManager;
     }
 
     @Override
     public String getStateName() {
-        return "GetIncidentsFirstReport";
+        return "GetIncidentsByCatalogCode";
     }
 
     @Override

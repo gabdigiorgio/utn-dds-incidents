@@ -147,25 +147,4 @@ public class Incident {
         this.rejectedReason = rejectedReason;
     }
 
-    public void updateState(State nextState, String employee, String rejectedReason) throws StateTransitionException {
-        switch (nextState) {
-            case ASSIGNED:
-                this.assignEmployee(employee);
-                break;
-            case CONFIRMED:
-                this.confirm();
-                break;
-            case DISMISSED:
-                this.dismiss(rejectedReason);
-                break;
-            case IN_PROGRESS:
-                this.startProgress();
-                break;
-            case RESOLVED:
-                this.resolveIncident();
-                break;
-            default:
-                throw new StateTransitionException("Estado deseado inválido");
-        }
-    }
 }

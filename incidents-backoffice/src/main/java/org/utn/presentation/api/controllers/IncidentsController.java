@@ -103,18 +103,6 @@ public class IncidentsController {
         ctx.json(json);
     };
 
-    public Handler updateIncidentState = ctx -> {
-        var incidentManager = ManagerFactory.createIncidentManager();
-
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-        ChangeState request = ctx.bodyAsClass(ChangeState.class);
-
-        Incident editedIncident = incidentManager.updateIncidentState(id, request);
-
-        String json = objectMapper.writeValueAsString(editedIncident);
-        ctx.result(json);
-    };
-
     public Handler assignEmployeeIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
