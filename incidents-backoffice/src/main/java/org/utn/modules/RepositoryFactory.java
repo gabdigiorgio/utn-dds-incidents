@@ -18,6 +18,6 @@ public class RepositoryFactory
     }
 
     public static JobsRepository createJobRepository(){
-        return new DbJobsRepository(PersistenceUtils.factory);
+        return new DbJobsRepository(PersistenceUtils.createEntityManager());
     }
 }

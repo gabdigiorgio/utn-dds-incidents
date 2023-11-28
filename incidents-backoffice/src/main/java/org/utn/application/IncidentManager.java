@@ -58,7 +58,7 @@ public class IncidentManager {
         return inventoryService.getInaccessibleAccessibilityFeatures(limit, line, station);
     }
 
-    public Incident editIncident(Integer id, EditIncident data) throws NotFoundException, InvalidDateException {
+    public Incident editIncident(Integer id, EditIncident data) throws InvalidDateException {
         Incident incident = incidentsRepository.getById(id);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);

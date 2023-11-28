@@ -38,11 +38,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class IncidentsController {
-    private JobManager jobManager;
     private ObjectMapper objectMapper;
 
-    public IncidentsController(JobManager jobManager, ObjectMapper objectMapper) {
-        this.jobManager = jobManager;
+    public IncidentsController(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -55,7 +53,7 @@ public class IncidentsController {
         Integer pageSize = ctx.queryParamAsClass("page_size", Integer.class).getOrDefault(10);
 
         Integer startIndex = (page - 1) * pageSize;
-        
+
         List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, status, place);
 
         String json = objectMapper.writeValueAsString(incidents);
@@ -186,7 +184,7 @@ public class IncidentsController {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 if (areCsvHeadersValid(text)) {
-                    Job job = jobManager.createJob(text); //TODO: pasar a capa aplicación
+                    Job job = ManagerFactory.createJobManager().createJob(text); //TODO: pasar a capa aplicación
                     sendToWorker(job.getId().toString());
                     ctx.json(Map.of("jobId", job.getId().toString()));
                     ctx.status(200);
@@ -205,20 +203,13 @@ public class IncidentsController {
     };
 
     public Handler getCsvProcessingState = ctx -> {
-        try {
-            Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        var jobManager = ManagerFactory.createJobManager();
+        var job = jobManager.getJob(id);
+        CsvProcessingStateResponse response = new CsvProcessingStateResponse(job.getState(), job.getErrorMessage());
+        String jsonResponse = objectMapper.writeValueAsString(response);
+        ctx.status(200).json(jsonResponse);
 
-            ProcessState jobState = jobManager.getJobState(id);
-            String jobErrorMessage = jobManager.getJobErrorMessage(id);
-
-            CsvProcessingStateResponse response = new CsvProcessingStateResponse(jobState, jobErrorMessage);
-            String jsonResponse = objectMapper.writeValueAsString(response);
-
-            ctx.status(200).json(jsonResponse);
-        } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
-        }
     };
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {
