@@ -7,17 +7,15 @@ import org.utn.application.AccessibilityFeatureManager;
 import org.utn.presentation.api.controllers.AccessibilityController;
 
 public class AccessibilityResource implements EndpointGroup {
-    AccessibilityFeatureManager accessibilityFeatureManager;
     ObjectMapper objectMapper;
 
-    public AccessibilityResource(AccessibilityFeatureManager accessibilityFeatureManager, ObjectMapper objectMapper) {
-        this.accessibilityFeatureManager = accessibilityFeatureManager;
+    public AccessibilityResource(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     @Override
     public void addEndpoints() {
-        AccessibilityController accessibilityController = new AccessibilityController(accessibilityFeatureManager, objectMapper);
+        AccessibilityController accessibilityController = new AccessibilityController(objectMapper);
         ApiBuilder.path("/api/accessibilityFeatures", () -> {
             ApiBuilder.get("/", accessibilityController.getAccessibilityFeatures);
             ApiBuilder.put("/{catalogCode}", accessibilityController.updateAccessibilityFeature);

@@ -10,17 +10,15 @@ import org.utn.presentation.api.controllers.AccessibilityController;
 import org.utn.presentation.api.controllers.LineController;
 
 public class LineResource implements EndpointGroup {
-    LineManager lineManager;
     ObjectMapper objectMapper;
 
-    public LineResource(LineManager lineManager, ObjectMapper objectMapper) {
-        this.lineManager = lineManager;
+    public LineResource(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     @Override
     public void addEndpoints() {
-        LineController lineController = new LineController(lineManager, objectMapper);
+        LineController lineController = new LineController(objectMapper);
         ApiBuilder.path("/api/lines", () -> {
             ApiBuilder.get("/", lineController.getLines);
             ApiBuilder.get("/{id}", lineController.getLine);

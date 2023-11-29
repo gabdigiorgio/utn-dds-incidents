@@ -11,6 +11,7 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.utn.application.AccessibilityFeatureManager;
 import org.utn.domain.AccessibilityFeature;
+import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.ErrorResponse;
 import org.utn.presentation.api.dto.StatusRequest;
 
@@ -19,16 +20,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class AccessibilityController {
-    private AccessibilityFeatureManager accessibilityFeatureManager;
     private ObjectMapper objectMapper;
 
-    public AccessibilityController(AccessibilityFeatureManager accessibilityFeatureManager, ObjectMapper objectMapper) {
-        this.accessibilityFeatureManager = accessibilityFeatureManager;
+    public AccessibilityController(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     public Handler getAccessibilityFeatures = ctx -> {
         try {
+            var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
+
             Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
             String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
             String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
@@ -60,6 +61,8 @@ public class AccessibilityController {
 
     public Handler getAccessibilityFeature = ctx -> {
         try {
+            var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
+
             String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
 
             AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.getAccessibilityFeature(catalogCode);
@@ -78,6 +81,8 @@ public class AccessibilityController {
 
     public Handler updateAccessibilityFeature = ctx -> {
         try {
+            var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
+
             String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
             var statusRequest = ctx.bodyAsClass(StatusRequest.class);
             var statusStr = statusRequest.getStatus();

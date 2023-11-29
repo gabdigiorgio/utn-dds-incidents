@@ -4,21 +4,22 @@ import org.utn.domain.AccessibilityFeature;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRepository {
-    private final EntityManagerFactory entityManagerFactory;
+    private EntityManager entityManager;
 
-    public DbAccessibilityFeatureRepository(EntityManagerFactory entityManagerFactory) {
+    public DbAccessibilityFeatureRepository(EntityManager entityManager) {
         super();
-        this.entityManagerFactory = entityManagerFactory;
+        this.entityManager = entityManager;
     }
 
     @Override
     public void save(AccessibilityFeature accessibilityFeature) {
-        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(accessibilityFeature);
         entityManager.getTransaction().commit();
@@ -26,7 +27,6 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
 
     @Override
     public void update(AccessibilityFeature accessibilityFeature) {
-        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.merge(accessibilityFeature);
         entityManager.getTransaction().commit();
@@ -34,15 +34,14 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
 
     @Override
     public AccessibilityFeature getByCatalogCode(String catalogCode) {
-        var entityManager = createEntityManager();
-        return entityManager.find(AccessibilityFeature.class, catalogCode);
+        return Optional.ofNullable(entityManager.find(AccessibilityFeature.class, catalogCode)).orElseThrow(()
+                -> new EntityNotFoundException("Accessibility feature not found with ID: " + catalogCode));
     }
 
     @Override
     public List<AccessibilityFeature> findAccessibilityFeatures(int quantity, String catalogCode, String line, String stationName,
                                                                 AccessibilityFeature.Status status, AccessibilityFeature.Type type) {
-        var entityManager = createEntityManager();
-        var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(AccessibilityFeature.class);
         var root = criteriaQuery.from(AccessibilityFeature.class);
 
@@ -73,10 +72,5 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
         var results = entityManager.createQuery(criteriaQuery).setMaxResults(quantity).getResultList();
 
         return results;
-    }
-
-
-    private EntityManager createEntityManager() {
-        return this.entityManagerFactory.createEntityManager();
     }
 }

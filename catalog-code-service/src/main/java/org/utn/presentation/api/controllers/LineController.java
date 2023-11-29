@@ -2,20 +2,20 @@ package org.utn.presentation.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Handler;
-import org.utn.application.LineManager;
+import org.utn.modules.ManagerFactory;
 
 import java.util.Objects;
 
 public class LineController {
-    private LineManager lineManager;
     private ObjectMapper objectMapper;
 
-    public LineController(LineManager lineManager, ObjectMapper objectMapper) {
-        this.lineManager = lineManager;
+    public LineController(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     public Handler getLines = ctx -> {
+        var lineManager = ManagerFactory.createLineManager();
+
         var lines = lineManager.getLines();
 
         var json = objectMapper.writeValueAsString(lines);
@@ -25,6 +25,8 @@ public class LineController {
     };
 
     public Handler getLine = ctx -> {
+        var lineManager = ManagerFactory.createLineManager();
+
         var id = Objects.requireNonNull(ctx.pathParam("id"));
 
         var line = lineManager.getLine(id);

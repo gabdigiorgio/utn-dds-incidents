@@ -15,9 +15,6 @@ import org.utn.presentation.url_mappings.LineResource;
 public class ServerApi {
     public static void main(String[] args) {
 
-        var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
-        var lineManager = ManagerFactory.createLineManager();
-
         Integer port = Integer.parseInt(System.getProperty("port", "8080")); //para correr en local puerto: 8081
         Javalin server = Javalin.create(config -> {
             config.plugins.enableCors(cors -> {
@@ -27,8 +24,8 @@ public class ServerApi {
             });
         }).start(port);
 
-        server.routes(new AccessibilityResource(accessibilityFeatureManager, createObjectMapper()));
-        server.routes(new LineResource(lineManager, createObjectMapper()));
+        server.routes(new AccessibilityResource(createObjectMapper()));
+        server.routes(new LineResource(createObjectMapper()));
     }
 
     private static ObjectMapper createObjectMapper() {
