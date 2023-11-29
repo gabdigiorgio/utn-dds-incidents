@@ -23,6 +23,7 @@ public class LineResource implements EndpointGroup {
         LineController lineController = new LineController(lineManager, objectMapper);
         ApiBuilder.path("/api/lines", () -> {
             ApiBuilder.get("/", lineController.getLines);
+            ApiBuilder.get("/{id}", lineController.getLine);
         });
     }
 }
