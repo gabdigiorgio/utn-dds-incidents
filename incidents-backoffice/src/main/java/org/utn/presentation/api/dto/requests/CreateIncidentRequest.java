@@ -1,6 +1,6 @@
-package org.utn.presentation.api.dto;
+package org.utn.presentation.api.dto.requests;
 
-public class CreateIncident {
+public class CreateIncidentRequest {
     public String catalogCode;
     public String reportDate;
     public String description;

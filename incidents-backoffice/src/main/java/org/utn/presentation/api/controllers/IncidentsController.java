@@ -9,6 +9,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import org.utn.domain.incident.Incident;
@@ -16,6 +17,10 @@ import org.utn.domain.incident.State;
 import org.utn.domain.job.Job;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.*;
+import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
+import org.utn.presentation.api.dto.requests.EditIncidentRequest;
+import org.utn.presentation.api.dto.requests.EmployeeRequest;
+import org.utn.presentation.api.dto.requests.RejectedReasonRequest;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
@@ -33,6 +38,16 @@ public class IncidentsController {
         this.objectMapper = objectMapper;
     }
 
+    public Handler getIncident = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer id = getId(ctx);
+
+        Incident incident = incidentManager.getIncident(id);
+
+        returnJson(objectMapper.writeValueAsString(incident), ctx);
+    };
+
     public Handler getIncidents = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
@@ -45,35 +60,13 @@ public class IncidentsController {
 
         List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, status, place);
 
-        String json = objectMapper.writeValueAsString(incidents);
-        ctx.json(json);
-    };
-
-    public Handler getInaccessibleAccessibilityFeatures = ctx -> {
-        var incidentManager = ManagerFactory.createIncidentManager();
-        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
-        String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
-        String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
-
-        var accessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(limit, line, station);
-
-        ctx.json(accessibilityFeatures);
-    };
-
-    public Handler getIncident = ctx -> {
-        var incidentManager = ManagerFactory.createIncidentManager();
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-
-        Incident incident = incidentManager.getIncident(id);
-
-        String json = objectMapper.writeValueAsString(incident);
-        ctx.json(json);
+        returnJson(objectMapper.writeValueAsString(incidents), ctx);
     };
 
     public Handler createIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        CreateIncident request = ctx.bodyAsClass(CreateIncident.class);
+        CreateIncidentRequest request = ctx.bodyAsClass(CreateIncidentRequest.class);
 
         Incident newIncident = incidentManager.createIncident(request.catalogCode,
                 DateUtils.parseDate(request.reportDate),
@@ -84,88 +77,100 @@ public class IncidentsController {
                 null,
                 null);
 
-        String json = objectMapper.writeValueAsString(newIncident);
-
-        ctx.json(json);
+        returnJson(objectMapper.writeValueAsString(newIncident), ctx);
         ctx.status(201);
     };
 
     public Handler editIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = getId(ctx);
+
         EditIncidentRequest request = ctx.bodyAsClass(EditIncidentRequest.class);
 
         Incident editedIncident = incidentManager.editIncident(id, request);
 
-        String json = objectMapper.writeValueAsString(editedIncident);
-
-        ctx.json(json);
+        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
     };
 
     public Handler assignEmployeeIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = getId(ctx);
 
         EmployeeRequest request = ctx.bodyAsClass(EmployeeRequest.class);
 
         Incident editedIncident = incidentManager.assignEmployeeIncident(id, request.getEmployee());
 
-        String json = objectMapper.writeValueAsString(editedIncident);
-        ctx.result(json);
+        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
     };
 
     public Handler confirmIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = getId(ctx);
 
         Incident editedIncident = incidentManager.confirmIncident(id);
 
-        String json = objectMapper.writeValueAsString(editedIncident);
-        ctx.result(json);
+        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
     };
 
     public Handler startProgressIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = getId(ctx);
 
         Incident editedIncident = incidentManager.startProgressIncident(id);
 
-        String json = objectMapper.writeValueAsString(editedIncident);
-        ctx.result(json);
+        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
     };
 
     public Handler resolveIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = getId(ctx);
 
         Incident editedIncident = incidentManager.resolveIncident(id);
 
-        String json = objectMapper.writeValueAsString(editedIncident);
-        ctx.result(json);
+        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
     };
 
     public Handler dismissIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = getId(ctx);
 
         RejectedReasonRequest request = ctx.bodyAsClass(RejectedReasonRequest.class);
 
         Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
 
-        String json = objectMapper.writeValueAsString(editedIncident);
-        ctx.result(json);
+        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
     };
+
+    public Handler getInaccessibleAccessibilityFeatures = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+
+        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
+        String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
+        String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
+
+        var accessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(limit, line, station);
+
+        ctx.json(accessibilityFeatures);
+    };
+
+    private void returnJson(String objectMapper, Context ctx) {
+        String json = objectMapper;
+        ctx.json(json);
+    }
+    private static int getId(Context ctx) {
+        return Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+    }
 
     public Handler deleteIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        int id = getId(ctx);
 
         incidentManager.deleteIncident(id);
         ctx.status(204);
@@ -232,12 +237,11 @@ public class IncidentsController {
     };
 
     public Handler getCsvProcessingState = ctx -> {
-        Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+        Integer id = getId(ctx);
         var jobManager = ManagerFactory.createJobManager();
         var job = jobManager.getJob(id);
         CsvProcessingStateResponse response = new CsvProcessingStateResponse(job.getState(), job.getErrorMessage());
-        String jsonResponse = objectMapper.writeValueAsString(response);
-        ctx.json(jsonResponse);
+        returnJson(objectMapper.writeValueAsString(response), ctx);
 
     };
 

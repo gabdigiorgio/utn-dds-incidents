@@ -1,4 +1,4 @@
-package org.utn.presentation.api.dto;
+package org.utn.presentation.api.dto.requests;
 
 public class RejectedReasonRequest {
     private String rejectedReason;

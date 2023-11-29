@@ -88,10 +88,6 @@ public class Incident {
         return state;
     }
 
-    public String getReporter(){
-        return reportedBy;
-    }
-
     public void setState(State targetState) throws StateTransitionException {
         this.state.verifyCanTransition(targetState);
         this.state = targetState;
@@ -99,7 +95,6 @@ public class Incident {
 
     public void assignEmployee(String employee) throws StateTransitionException, IllegalArgumentException {
         this.setState(State.ASSIGNED);
-        if (employee == null || employee.isEmpty()) throw new IllegalArgumentException("The 'employee' field cannot be null or empty.");
         this.setEmployee(employee);
     }
 
@@ -109,7 +104,6 @@ public class Incident {
 
     public void dismiss(String rejectedReason) throws IllegalArgumentException, StateTransitionException {
         this.setState(State.DISMISSED);
-        if (rejectedReason == null || rejectedReason.isEmpty()) throw new IllegalArgumentException("The 'rejection reason' field cannot be null or empty.");
         this.setRejectedReason(rejectedReason);
     }
 
@@ -124,6 +118,7 @@ public class Incident {
     public String getEmployee() { return employee;}
 
     public void setEmployee(String employee) {
+        if (employee == null || employee.isEmpty()) throw new IllegalArgumentException("The 'employee' field cannot be null or empty.");
         this.employee = employee;
     }
 
@@ -144,6 +139,7 @@ public class Incident {
     }
 
     public void setRejectedReason(String rejectedReason) {
+        if (rejectedReason == null || rejectedReason.isEmpty()) throw new IllegalArgumentException("The 'rejected reason' field cannot be null or empty.");
         this.rejectedReason = rejectedReason;
     }
 
