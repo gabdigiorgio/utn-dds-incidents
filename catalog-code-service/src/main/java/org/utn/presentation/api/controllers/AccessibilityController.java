@@ -4,19 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import org.utn.application.AccessibilityFeatureManager;
 import org.utn.domain.AccessibilityFeature;
 import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.dto.ErrorResponse;
-import org.utn.presentation.api.dto.StatusRequest;
+import org.utn.presentation.api.dto.responses.ErrorResponse;
+import org.utn.presentation.api.dto.requests.StatusRequest;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 public class AccessibilityController {
