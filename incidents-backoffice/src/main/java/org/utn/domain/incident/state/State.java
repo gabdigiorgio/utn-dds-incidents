@@ -1,4 +1,4 @@
-package org.utn.domain.incident;
+package org.utn.domain.incident.state;
 
 
 public enum State implements Transitionable {

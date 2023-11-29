@@ -1,11 +1,13 @@
 package org.utn.modules;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PersistenceUtils {
+    public static final EntityManagerFactory factory = createEntityManagerFactory();
 
     public static EntityManagerFactory createEntityManagerFactory() {
         // https://stackoverflow.com/questions/8836834/read-environment-variables-in-persistence-xml-file
@@ -22,5 +24,9 @@ public class PersistenceUtils {
         }
 
         return Persistence.createEntityManagerFactory("db", configOverrides);
+    }
+
+    public static EntityManager createEntityManager(){
+        return factory.createEntityManager();
     }
 }

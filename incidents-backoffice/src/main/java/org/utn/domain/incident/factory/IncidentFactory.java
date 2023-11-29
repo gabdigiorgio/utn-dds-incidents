@@ -1,7 +1,7 @@
 package org.utn.domain.incident.factory;
 
 import org.utn.domain.incident.Incident;
-import org.utn.domain.incident.State;
+import org.utn.domain.incident.state.State;
 
 import java.time.LocalDate;
 

@@ -1,9 +1,6 @@
 package org.utn.infrastructure;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import org.utn.domain.incident.InventoryService;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
@@ -34,6 +31,8 @@ public class OkInventoryService implements InventoryService {
 
     @Override
     public String getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
+        var builder = new HttpUrl.Builder();
+        builder.host(baseUrl).addQueryParameter("limit", limit.toString()).addQueryParameter("line", line);
         var urlBuilder = new StringBuilder(baseUrl + "?limit=" + limit + "&status=inaccessible");
         if (line != null) {
             urlBuilder.append("&line=").append(line);

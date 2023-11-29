@@ -2,6 +2,8 @@ package org.utn.domain;
 
 import org.junit.Test;
 import org.utn.domain.incident.*;
+import org.utn.domain.incident.state.State;
+import org.utn.domain.incident.state.StateTransitionException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -52,7 +54,7 @@ public class IncidentsTest {
     // Tests de transicion de estado: Reportado
 
     @Test(expected = Exception.class)
-    public void shouldThrowExceptionWhenConfirmingReportedIncident() throws StateTransitionException{
+    public void shouldThrowExceptionWhenConfirmingReportedIncident() throws StateTransitionException {
 
         givenIncidentWithState(State.REPORTED);
 

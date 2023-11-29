@@ -10,11 +10,10 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.url_mappings.AccessibilityResource;
+import org.utn.presentation.url_mappings.LineResource;
 
 public class ServerApi {
     public static void main(String[] args) {
-
-        var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
 
         Integer port = Integer.parseInt(System.getProperty("port", "8080")); //para correr en local puerto: 8081
         Javalin server = Javalin.create(config -> {
@@ -25,7 +24,8 @@ public class ServerApi {
             });
         }).start(port);
 
-        server.routes(new AccessibilityResource(accessibilityFeatureManager, createObjectMapper()));
+        server.routes(new AccessibilityResource(createObjectMapper()));
+        server.routes(new LineResource(createObjectMapper()));
     }
 
     private static ObjectMapper createObjectMapper() {

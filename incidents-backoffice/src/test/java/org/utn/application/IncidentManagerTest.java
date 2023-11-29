@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.utn.domain.IncidentBuilderForTest;
-import org.utn.domain.incident.State;
+import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.Incident;
 import org.utn.infrastructure.OkInventoryService;
 import org.utn.persistence.incident.IncidentsRepository;

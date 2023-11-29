@@ -97,7 +97,6 @@ public class UIController {
 
     public Handler createIncident = ctx -> {
         try {
-            var incidentManager = ManagerFactory.createIncidentManager();
             String inventoryServiceUrl = System.getenv("INVENTORY_SERVICE_URL");
             if (inventoryServiceUrl == null || inventoryServiceUrl.isEmpty()) {
                 inventoryServiceUrl = "http://localhost:8081/api/accessibilityFeatures/";
