@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.utn.domain.IncidentBuilderForTest;
-import org.utn.domain.incident.State;
+import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.Incident;
 import org.utn.persistence.incident.IncidentsInMemoryRepository;
 

@@ -1,6 +1,9 @@
 package org.utn.domain.incident;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.utn.domain.incident.state.State;
+import org.utn.domain.incident.state.StateConverter;
+import org.utn.domain.incident.state.StateTransitionException;
 
 import javax.persistence.*;
 import java.time.LocalDate;

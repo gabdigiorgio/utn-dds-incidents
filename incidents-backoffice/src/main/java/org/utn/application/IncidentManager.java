@@ -4,6 +4,7 @@ import javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.incident.*;
 import org.utn.domain.incident.factory.IncidentFactory;
+import org.utn.domain.incident.state.StateTransitionException;
 import org.utn.persistence.incident.IncidentsRepository;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.utils.DateUtils;

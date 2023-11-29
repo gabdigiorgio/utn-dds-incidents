@@ -13,7 +13,7 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import org.utn.domain.incident.Incident;
-import org.utn.domain.incident.State;
+import org.utn.domain.incident.state.State;
 import org.utn.domain.job.Job;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.*;
