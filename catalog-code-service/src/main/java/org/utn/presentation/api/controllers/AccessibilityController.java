@@ -46,9 +46,9 @@ public class AccessibilityController {
                 type = AccessibilityFeature.Type.valueOf(typeParam.toUpperCase());
             }
 
-            var incidents = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, station, status, type);
+            var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, station, status, type);
 
-            String json = objectMapper.writeValueAsString(incidents);
+            String json = objectMapper.writeValueAsString(accessibilityFeatures);
             ctx.json(json);
             ctx.status(200);
         } catch (IllegalArgumentException e) {
