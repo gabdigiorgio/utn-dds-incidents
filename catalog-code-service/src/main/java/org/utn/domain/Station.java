@@ -8,9 +8,9 @@ public class Station {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String name;
-    private String line;
+    @ManyToOne
+    private Line line;
 
     @ManyToMany
     @JoinTable(
@@ -28,7 +28,7 @@ public class Station {
         return name;
     }
 
-    public String getLine() {
+    public Line getLine() {
         return line;
     }
 

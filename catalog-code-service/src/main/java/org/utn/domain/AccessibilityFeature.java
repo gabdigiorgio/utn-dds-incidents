@@ -3,6 +3,7 @@ package org.utn.domain;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "accessibility_feature")
 public class AccessibilityFeature {
     @Id
     @Column(name = "catalog_code")
