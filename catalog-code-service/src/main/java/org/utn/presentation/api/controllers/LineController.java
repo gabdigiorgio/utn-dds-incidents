@@ -35,4 +35,16 @@ public class LineController {
         ctx.json(json);
         ctx.status(200);
     };
+
+    public Handler getStations = ctx -> {
+        var stationManager = ManagerFactory.createStationManager();
+
+        var id = Objects.requireNonNull(ctx.pathParam("id"));
+
+        var line = stationManager.getStationFromLine(id);
+        var json = objectMapper.writeValueAsString(line);
+
+        ctx.json(json);
+        ctx.status(200);
+    };
 }

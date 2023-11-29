@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRepository {
     private EntityManager entityManager;
-
     public DbAccessibilityFeatureRepository(EntityManager entityManager) {
         super();
         this.entityManager = entityManager;
