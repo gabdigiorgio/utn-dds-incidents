@@ -1,6 +1,5 @@
 package org.utn.presentation.api.dto.responses;
 
-
 import org.utn.domain.Station;
 
 public class StationResponse {
