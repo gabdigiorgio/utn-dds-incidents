@@ -1,6 +1,6 @@
 package org.utn.modules;
 
-import org.utn.persistence.DbAccessibilityFeatureRepository;
+import org.utn.persistence.accessibility.DbAccessibilityFeatureRepository;
 
 public class RepositoryFactory {
 
