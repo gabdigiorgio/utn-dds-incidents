@@ -11,8 +11,9 @@ import io.javalin.http.Handler;
 import javassist.NotFoundException;
 import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.dto.*;
 import org.utn.presentation.api.dto.requests.RegisterUserRequest;
+import org.utn.presentation.api.dto.responses.ErrorResponse;
+import org.utn.presentation.api.dto.responses.LoginResponse;
 
 import java.util.Collections;
 
@@ -26,8 +27,11 @@ public class UsersController {
     public Handler login = ctx -> {
         var manager = ManagerFactory.createUserManager();
         RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
+        var token = manager.login(data.getEmail(), data.getPassword());
 
-        manager.login(data.getEmail(), data.getPassword());
+        String json = objectMapper.writeValueAsString(new LoginResponse(token));
+
+        ctx.json(json);
     };
 
     public Handler register = ctx -> {

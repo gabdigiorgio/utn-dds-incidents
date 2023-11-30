@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
 import org.utn.presentation.api.controllers.IncidentsController;
-import org.utn.domain.users.Role;
 
 public class IncidentsResource implements EndpointGroup {
     ObjectMapper objectMapper;

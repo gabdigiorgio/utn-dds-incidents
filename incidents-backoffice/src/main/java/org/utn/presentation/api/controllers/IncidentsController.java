@@ -21,6 +21,7 @@ import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.presentation.api.dto.requests.EmployeeRequest;
 import org.utn.presentation.api.dto.requests.RejectedReasonRequest;
+import org.utn.presentation.api.dto.responses.ErrorResponse;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;

@@ -14,7 +14,6 @@ import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
 import org.utn.domain.incident.state.StateTransitionException;
-import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.controllers.IncidentsController;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
@@ -22,7 +21,6 @@ import org.utn.presentation.api.url_mappings.UIResource;
 import org.utn.presentation.api.url_mappings.UsersResource;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
-
 import javax.naming.OperationNotSupportedException;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
