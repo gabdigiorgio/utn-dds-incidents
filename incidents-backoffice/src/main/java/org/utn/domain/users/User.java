@@ -8,13 +8,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    public String email;
-    public String password;
-    public User(
-        String email,
-        String password
-    ) {
-        this.email = email;
+    private String name;
+    private String password;
+    public User(String name, String password) {
+        this.name = name;
         this.password = password;
     }
 
@@ -28,5 +25,13 @@ public class User {
 
     public Integer getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

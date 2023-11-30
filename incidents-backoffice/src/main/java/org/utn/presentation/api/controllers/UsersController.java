@@ -9,7 +9,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import javassist.NotFoundException;
-import org.utn.application.UserManager;
 import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.*;
@@ -29,9 +28,9 @@ public class UsersController {
 
             RegisterUser data = ctx.bodyAsClass(RegisterUser.class);
 
-            User user = manager.findByEmail(data.email);
+            User user = manager.findByEmail(data.getName());
 
-            if (user.password != data.password) {
+            if (user.getPassword() != data.getPassword()) {
                 ctx.status(400);
                 ctx.json(parseErrorResponse(400, "Invalid credentials"));
             }
@@ -56,7 +55,7 @@ public class UsersController {
             RegisterUser data = ctx.bodyAsClass(RegisterUser.class);
 
             // Create User
-            User newUser = manager.registerUser(data.email, data.password);
+            User newUser = manager.registerUser(data.getName(), data.getPassword());
             String json = objectMapper.writeValueAsString(newUser);
 
             ctx.json(json);
