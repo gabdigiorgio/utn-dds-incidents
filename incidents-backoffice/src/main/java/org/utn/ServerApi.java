@@ -23,6 +23,7 @@ import org.utn.presentation.api.url_mappings.UsersResource;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
 
+import javax.naming.OperationNotSupportedException;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -55,6 +56,7 @@ public class ServerApi {
         setupExceptionHandling(server, UnrecognizedPropertyException.class, 400);
         setupExceptionHandling(server, InvalidDateException.class, 400);
         setupExceptionHandling(server, InvalidCatalogCodeException.class, 400);
+        setupExceptionHandling(server, OperationNotSupportedException.class, 400);
         setupExceptionHandling(server, Exception.class, 500);
     }
 

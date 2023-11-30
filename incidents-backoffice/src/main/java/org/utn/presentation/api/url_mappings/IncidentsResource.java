@@ -3,12 +3,9 @@ package org.utn.presentation.api.url_mappings;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
-import org.utn.application.IncidentManager;
-import org.utn.application.JobManager;
 import org.utn.presentation.api.controllers.IncidentsController;
 
 public class IncidentsResource implements EndpointGroup {
-    JobManager jobManager;
     ObjectMapper objectMapper;
 
     public IncidentsResource(ObjectMapper objectMapper) {

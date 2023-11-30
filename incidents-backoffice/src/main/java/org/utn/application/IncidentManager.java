@@ -10,6 +10,8 @@ import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
+
+import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -84,7 +86,7 @@ public class IncidentManager {
         return newIncident;
     }
 
-    public Incident editIncident(Integer id, EditIncidentRequest data) throws InvalidDateException {
+    public Incident editIncident(Integer id, EditIncidentRequest data) throws InvalidDateException, OperationNotSupportedException {
         Incident incident = incidentsRepository.getById(id);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
