@@ -22,94 +22,59 @@ public class AccessibilityController {
         this.objectMapper = objectMapper;
     }
 
-    public Handler getAccessibilityFeatures = ctx -> {
-        try {
-            var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
+    public Handler getAccessibilityFeature = ctx -> {
+        var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
 
-            Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
-            String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
-            String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
-            String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
+        String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
 
-            AccessibilityFeature.Status status = null;
-            String statusParam = ctx.queryParam("status");
-            if (statusParam != null) {
-                status = AccessibilityFeature.Status.valueOf(statusParam.toUpperCase());
-            }
+        AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.getAccessibilityFeature(catalogCode);
 
-            AccessibilityFeature.Type type = null;
-            String typeParam = ctx.queryParam("type");
-            if (typeParam != null) {
-                type = AccessibilityFeature.Type.valueOf(typeParam.toUpperCase());
-            }
-
-            var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, station, status, type);
-
-            String json = objectMapper.writeValueAsString(accessibilityFeatures);
-            ctx.json(json);
-            ctx.status(200);
-        } catch (IllegalArgumentException e) {
-            handleBadRequest(ctx, e);
-        } catch (Exception e) {
-            handleInternalError(ctx, e);
-        }
+        returnJson(objectMapper.writeValueAsString(accessibilityFeature), ctx);
     };
 
-    public Handler getAccessibilityFeature = ctx -> {
-        try {
-            var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
+    public Handler getAccessibilityFeatures = ctx -> {
+        var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
 
-            String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
+        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
+        String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
+        String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
+        String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
 
-            AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.getAccessibilityFeature(catalogCode);
-
-            if (accessibilityFeature != null) {
-                String json = objectMapper.writeValueAsString(accessibilityFeature);
-                ctx.json(json);
-                ctx.status(200);
-            } else {
-                ctx.status(404).result("Accessibility Feature not found");
-            }
-        } catch (Exception e) {
-            handleInternalError(ctx, e);
+        AccessibilityFeature.Status status = null;
+        String statusParam = ctx.queryParam("status");
+        if (statusParam != null) {
+            status = AccessibilityFeature.Status.valueOf(statusParam.toUpperCase());
         }
+
+        AccessibilityFeature.Type type = null;
+        String typeParam = ctx.queryParam("type");
+        if (typeParam != null) {
+            type = AccessibilityFeature.Type.valueOf(typeParam.toUpperCase());
+        }
+
+        var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, station, status, type);
+
+        returnJson(objectMapper.writeValueAsString(accessibilityFeatures), ctx);
     };
 
     public Handler updateAccessibilityFeature = ctx -> {
-        try {
-            var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
+        var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
 
-            String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
-            var statusRequest = ctx.bodyAsClass(StatusRequest.class);
-            var statusStr = statusRequest.getStatus();
-            var upperCaseStatus = statusStr.toUpperCase();
+        String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
+        var statusRequest = ctx.bodyAsClass(StatusRequest.class);
+        var statusStr = statusRequest.getStatus();
+        var upperCaseStatus = statusStr.toUpperCase();
 
-            AccessibilityFeature.Status status = AccessibilityFeature.Status.valueOf(upperCaseStatus);
+        AccessibilityFeature.Status status = AccessibilityFeature.Status.valueOf(upperCaseStatus);
 
-            AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.updateAccessibilityFeatureStatus(catalogCode, status);
+        AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.updateAccessibilityFeatureStatus(catalogCode, status);
 
-            if (accessibilityFeature != null) {
-                String json = objectMapper.writeValueAsString(accessibilityFeature);
-                ctx.json(json);
-                ctx.status(200);
-            } else {
-                ctx.status(404).result("Accessibility Feature not found");
-            }
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result("Invalid status value");
-        } catch (Exception e) {
-            handleInternalError(ctx, e);
-        }
+        returnJson(objectMapper.writeValueAsString(accessibilityFeature), ctx);
     };
 
-    private void handleBadRequest(Context ctx, IllegalArgumentException e) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(400, e.getMessage()));
-        ctx.status(400);
-    }
-
-    private void handleInternalError(Context ctx, Exception e) throws JsonProcessingException {
-        ctx.json(parseErrorResponse(500, e.getMessage()));
-        ctx.status(500);
+    private void returnJson(String objectMapper, Context ctx) {
+        String json = objectMapper;
+        ctx.json(json);
     }
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {

@@ -1,4 +1,4 @@
-package org.utn.persistence.accessibility;
+package org.utn.persistence;
 
 import org.utn.domain.AccessibilityFeature;
 import org.utn.domain.AccessibilityFeatureRepository;

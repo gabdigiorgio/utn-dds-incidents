@@ -1,4 +1,4 @@
-package org.utn.persistence.line;
+package org.utn.persistence;
 
 import org.utn.domain.Line;
 import org.utn.domain.LineRepository;
