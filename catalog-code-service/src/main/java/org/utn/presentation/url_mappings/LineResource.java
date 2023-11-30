@@ -18,7 +18,7 @@ public class LineResource implements EndpointGroup {
         ApiBuilder.path("/api/lines", () -> {
             ApiBuilder.get("/", lineController.getLines);
             ApiBuilder.get("/{id}", lineController.getLine);
-            ApiBuilder.get("/{id}/stations", lineController.getStations);
+            ApiBuilder.get("/{id}/stations", lineController.getStationsFromLine);
         });
     }
 }

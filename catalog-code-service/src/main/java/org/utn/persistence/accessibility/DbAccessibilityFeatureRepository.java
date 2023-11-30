@@ -34,7 +34,7 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
     @Override
     public AccessibilityFeature getByCatalogCode(String catalogCode) {
         return Optional.ofNullable(entityManager.find(AccessibilityFeature.class, catalogCode)).orElseThrow(()
-                -> new EntityNotFoundException("Accessibility feature not found with ID: " + catalogCode));
+                -> new EntityNotFoundException("Accessibility feature not found with catalog code: " + catalogCode));
     }
 
     @Override

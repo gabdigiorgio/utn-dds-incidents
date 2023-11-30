@@ -31,7 +31,6 @@ public class ServerApi {
 
     public static void main(String[] args) {
 
-        var incidentManager = ManagerFactory.createIncidentManager();
         var jobManager = ManagerFactory.createJobManager();
         var usersManager = ManagerFactory.createUserManager();
 

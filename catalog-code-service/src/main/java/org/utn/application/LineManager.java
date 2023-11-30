@@ -1,6 +1,7 @@
 package org.utn.application;
 
 import org.utn.domain.Line;
+import org.utn.domain.Station;
 import org.utn.persistence.line.LineRepository;
 
 import java.util.List;
@@ -19,5 +20,9 @@ public class LineManager {
     public List<Line> getLines() {
         var lines = lineRepository.all();
         return lines;
+    }
+
+    public List<Station> getStationsByLineId(String id) {
+        return lineRepository.getById(id).getStations();
     }
 }
