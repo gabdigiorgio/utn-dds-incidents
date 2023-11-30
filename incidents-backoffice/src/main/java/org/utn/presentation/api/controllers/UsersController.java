@@ -11,24 +11,24 @@ import io.javalin.http.Handler;
 import javassist.NotFoundException;
 import org.utn.application.UserManager;
 import org.utn.domain.users.User;
+import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.*;
 
 import java.util.Collections;
 
 public class UsersController {
-    private UserManager manager;
     private ObjectMapper objectMapper;
 
-    public UsersController(UserManager manager, ObjectMapper objectMapper) {
-        this.manager = manager;
+    public UsersController(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     public Handler login = ctx -> {
         try {
+            var manager = ManagerFactory.createUserManager();
+
             RegisterUser data = ctx.bodyAsClass(RegisterUser.class);
 
-            // get User
             User user = manager.findByEmail(data.email);
 
             if (user.password != data.password) {
@@ -51,6 +51,8 @@ public class UsersController {
 
     public Handler register = ctx -> {
         try {
+            var manager = ManagerFactory.createUserManager();
+
             RegisterUser data = ctx.bodyAsClass(RegisterUser.class);
 
             // Create User

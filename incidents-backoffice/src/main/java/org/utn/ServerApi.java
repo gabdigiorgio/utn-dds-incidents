@@ -32,9 +32,6 @@ public class ServerApi {
 
     public static void main(String[] args) {
 
-        var jobManager = ManagerFactory.createJobManager();
-        var usersManager = ManagerFactory.createUserManager();
-
         initTemplateEngine();
 
         Integer port = Integer.parseInt(System.getProperty("port", "8080"));
@@ -46,7 +43,7 @@ public class ServerApi {
 
         server.routes(new IncidentsResource(createObjectMapper()));
         server.routes(new UIResource());
-        server.routes(new UsersResource(usersManager, jobManager, createObjectMapper()));
+        server.routes(new UsersResource(createObjectMapper()));
     }
 
     private static void setupExceptions(Javalin server) {

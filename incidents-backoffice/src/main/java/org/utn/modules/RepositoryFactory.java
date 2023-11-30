@@ -14,7 +14,7 @@ public class RepositoryFactory
     }
 
     public static UsersRepository createUserRepository(){
-        return new DbUsersRepository(PersistenceUtils.factory);
+        return new DbUsersRepository(PersistenceUtils.createEntityManager());
     }
 
     public static JobsRepository createJobRepository(){

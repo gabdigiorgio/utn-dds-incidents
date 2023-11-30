@@ -10,15 +10,15 @@ import javax.persistence.criteria.Predicate;
 import javax.ws.rs.NotFoundException;
 
 public class DbUsersRepository implements UsersRepository {
-    private EntityManagerFactory entityManagerFactory;
 
-    public DbUsersRepository(EntityManagerFactory entityManagerFactory) {
+    private EntityManager entityManager;
+
+    public DbUsersRepository(EntityManager entityManager) {
         super();
-        this.entityManagerFactory = entityManagerFactory;
+        this.entityManager = entityManager;
     }
 
     public void save(User user) {
-        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(user);
         entityManager.getTransaction().commit();
@@ -27,8 +27,7 @@ public class DbUsersRepository implements UsersRepository {
     @Override
     public User getByEmail(String email) {
         try {
-            var entityManager = createEntityManager();
-            var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
+            var criteriaBuilder = entityManager.getCriteriaBuilder();
             var criteriaQuery = criteriaBuilder.createQuery(User.class);
             var root = criteriaQuery.from(User.class);
 
@@ -41,10 +40,6 @@ public class DbUsersRepository implements UsersRepository {
         } catch (EntityNotFoundException e) {
             throw new NotFoundException();
         }
-    }
-
-    private EntityManager createEntityManager() {
-        return this.entityManagerFactory.createEntityManager();
     }
 
 }
