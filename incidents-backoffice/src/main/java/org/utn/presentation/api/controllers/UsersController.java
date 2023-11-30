@@ -12,6 +12,7 @@ import javassist.NotFoundException;
 import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.*;
+import org.utn.presentation.api.dto.requests.RegisterUserRequest;
 
 import java.util.Collections;
 
@@ -26,7 +27,7 @@ public class UsersController {
         try {
             var manager = ManagerFactory.createUserManager();
 
-            RegisterUser data = ctx.bodyAsClass(RegisterUser.class);
+            RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
 
             User user = manager.findByEmail(data.getName());
 
@@ -52,7 +53,7 @@ public class UsersController {
         try {
             var manager = ManagerFactory.createUserManager();
 
-            RegisterUser data = ctx.bodyAsClass(RegisterUser.class);
+            RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
 
             // Create User
             User newUser = manager.registerUser(data.getName(), data.getPassword());

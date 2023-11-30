@@ -9,10 +9,12 @@ public class UserManager {
     public UserManager(UsersRepository usersRepository) {
         this.UsersRepository = usersRepository;
     }
+
     public User registerUser(String email, String password) {
         User newUser = new User(email, password);
         return newUser;
     }
+
     public User findByEmail(String email)  throws NotFoundException {
         User user = UsersRepository.getByEmail(email);
         return user;

@@ -1,6 +1,6 @@
-package org.utn.presentation.api.dto;
+package org.utn.presentation.api.dto.requests;
 
-public class RegisterUser {
+public class RegisterUserRequest {
     private String name;
     private String password;
 
