@@ -11,8 +11,11 @@ public class UserManager {
     }
 
     public User registerUser(String email, String password) {
-        User newUser = new User(email, password);
-        return newUser;
+        return User.newUser(email, password);
+    }
+
+    public User registerOperator(String email, String password) {
+        return User.newOperator(email, password);
     }
 
     public User findByEmail(String email)  throws NotFoundException {
