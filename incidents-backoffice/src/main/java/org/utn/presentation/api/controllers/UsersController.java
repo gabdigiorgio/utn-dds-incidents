@@ -24,29 +24,10 @@ public class UsersController {
     }
 
     public Handler login = ctx -> {
-        try {
-            var manager = ManagerFactory.createUserManager();
+        var manager = ManagerFactory.createUserManager();
+        RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
 
-            RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
-
-            User user = manager.findByEmail(data.getName());
-
-            if (user.getPassword() != data.getPassword()) {
-                ctx.status(400);
-                ctx.json(parseErrorResponse(400, "Invalid credentials"));
-            }
-            String json = objectMapper.writeValueAsString(user.getId());
-
-            ctx.json(json);
-            ctx.status(201);
-
-        } catch (NotFoundException notFoundError) {
-            handleNotFoundException(ctx, notFoundError);
-        } catch (UnrecognizedPropertyException e) {
-            handleBadRequest(ctx, e);
-        } catch (Exception e) {
-            handleInternalError(ctx, e);
-        }
+        manager.login(data.getEmail(), data.getPassword());
     };
 
     public Handler register = ctx -> {
@@ -56,7 +37,7 @@ public class UsersController {
             RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
 
             // Create User
-            User newUser = manager.registerUser(data.getName(), data.getPassword());
+            User newUser = manager.registerUser(data.getEmail(), data.getPassword());
             String json = objectMapper.writeValueAsString(newUser);
 
             ctx.json(json);

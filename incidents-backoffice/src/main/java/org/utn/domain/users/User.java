@@ -8,13 +8,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
+    private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String token;
 
-    public User(String name, String password, Role role) {
-        this.name = name;
+    public User(String email, String password, Role role) {
+        this.email = email;
         this.password = password;
         this.role = role;
     }
@@ -39,8 +40,8 @@ public class User {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {
@@ -53,5 +54,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

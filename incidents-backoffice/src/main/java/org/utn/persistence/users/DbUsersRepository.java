@@ -25,21 +25,23 @@ public class DbUsersRepository implements UsersRepository {
     }
 
     @Override
+    public void update(User user) {
+        entityManager.getTransaction().begin();
+        entityManager.merge(user);
+        entityManager.getTransaction().commit();
+    }
+
+    @Override
     public User getByEmail(String email) {
-        try {
-            var criteriaBuilder = entityManager.getCriteriaBuilder();
-            var criteriaQuery = criteriaBuilder.createQuery(User.class);
-            var root = criteriaQuery.from(User.class);
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(User.class);
+        var root = criteriaQuery.from(User.class);
 
-            Predicate emailFilter = criteriaBuilder.equal(root.get("email"), email);
-            criteriaQuery.where(emailFilter);
+        Predicate emailFilter = criteriaBuilder.equal(root.get("email"), email);
+        criteriaQuery.where(emailFilter);
 
-            // TODO: este get rompe
-            var user = entityManager.createQuery(criteriaQuery).getSingleResult();
-            return user;
-        } catch (EntityNotFoundException e) {
-            throw new NotFoundException();
-        }
+        var user = entityManager.createQuery(criteriaQuery).getSingleResult();
+        return user;
     }
 
 }
