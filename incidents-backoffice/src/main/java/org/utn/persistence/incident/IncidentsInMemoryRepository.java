@@ -1,11 +1,10 @@
 package org.utn.persistence.incident;
 
 import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.IncidentsRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public final class IncidentsInMemoryRepository implements IncidentsRepository {
     public static List<Incident> incidents;

@@ -1,6 +1,7 @@
 package org.utn.persistence.users;
 
 import org.utn.domain.users.User;
+import org.utn.domain.users.UsersRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

@@ -1,8 +1,9 @@
 package org.utn.persistence.job;
 
 import org.utn.domain.job.Job;
+import org.utn.domain.job.JobsRepository;
+
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.NotFoundException;
 

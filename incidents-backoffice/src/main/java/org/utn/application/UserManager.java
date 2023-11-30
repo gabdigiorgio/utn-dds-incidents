@@ -2,7 +2,7 @@ package org.utn.application;
 
 import javassist.NotFoundException;
 import org.utn.domain.users.User;
-import org.utn.persistence.users.UsersRepository;
+import org.utn.domain.users.UsersRepository;
 
 public class UserManager {
     private final UsersRepository UsersRepository;

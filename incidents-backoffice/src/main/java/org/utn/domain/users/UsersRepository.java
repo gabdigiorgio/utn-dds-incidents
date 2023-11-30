@@ -1,4 +1,4 @@
-package org.utn.persistence.users;
+package org.utn.domain.users;
 
 import org.utn.domain.users.User;
 

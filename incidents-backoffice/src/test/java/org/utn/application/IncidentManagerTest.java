@@ -8,7 +8,7 @@ import org.utn.domain.IncidentBuilderForTest;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.Incident;
 import org.utn.infrastructure.OkInventoryService;
-import org.utn.persistence.incident.IncidentsRepository;
+import org.utn.domain.incident.IncidentsRepository;
 
 import java.io.IOException;
 import java.time.LocalDate;
