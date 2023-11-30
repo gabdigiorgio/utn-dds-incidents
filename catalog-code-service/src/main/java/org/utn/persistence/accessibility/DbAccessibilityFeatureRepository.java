@@ -1,9 +1,9 @@
 package org.utn.persistence.accessibility;
 
 import org.utn.domain.AccessibilityFeature;
+import org.utn.domain.AccessibilityFeatureRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;

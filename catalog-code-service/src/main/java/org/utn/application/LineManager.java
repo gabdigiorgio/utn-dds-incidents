@@ -2,7 +2,7 @@ package org.utn.application;
 
 import org.utn.domain.Line;
 import org.utn.domain.Station;
-import org.utn.persistence.line.LineRepository;
+import org.utn.domain.LineRepository;
 
 import java.util.List;
 

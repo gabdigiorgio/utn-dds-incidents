@@ -1,7 +1,7 @@
 package org.utn.persistence.line;
 
-import org.utn.domain.AccessibilityFeature;
 import org.utn.domain.Line;
+import org.utn.domain.LineRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
