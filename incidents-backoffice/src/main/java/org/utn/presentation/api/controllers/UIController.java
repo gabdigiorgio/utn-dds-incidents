@@ -29,6 +29,26 @@ public class UIController {
         }
     };
 
+    public Handler getRegisterUser = ctx -> {
+        try {
+            ctx.render("register_user.hbs");
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
+        }
+    };
+
+    public Handler getRegisterOperator = ctx -> {
+        try {
+            ctx.render("register_operator.hbs");
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
+        }
+    };
+
     public Handler getIncidents = ctx -> {
         try {
             var incidentManager = ManagerFactory.createIncidentManager();

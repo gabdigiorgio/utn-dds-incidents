@@ -28,7 +28,10 @@ public class UsersController {
         var manager = ManagerFactory.createUserManager();
 
         RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
-        var user = manager.registerUser(data.getEmail(), data.getPassword());
+        if (data.getEmail() == null || data.getPassword() == null || data.getRole() == null)
+            throw new Exception("Missing information");
+
+        var user = manager.registerUser(data.getEmail(), data.getPassword(), data.getRole());
 
         String json = objectMapper.writeValueAsString(new RegisterResponse(user));
         ctx.json(json);

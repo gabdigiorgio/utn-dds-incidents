@@ -1,6 +1,7 @@
 package org.utn.application;
 
 import javassist.NotFoundException;
+import org.utn.domain.users.Role;
 import org.utn.domain.users.User;
 import org.utn.domain.users.UsersRepository;
 
@@ -26,17 +27,12 @@ public class UserManager {
         if (usersRepository.userExists(email)) throw new InvalidEmailException();
     }
 
-    public User registerUser(String email, String password) {
+    public User registerUser(String email, String password, String stringRole) {
         validateUserEmail(email);
-        var newUser = User.newUser(email, password, generateToken());
+        Role role = stringRole == "User" ? Role.USER : Role.OPERATOR;
+        var newUser = User.newUser(email, password, role, generateToken());
         usersRepository.save(newUser);
         return newUser;
-    }
-
-    public User registerOperator(String email, String password) {
-        var newOperator = User.newOperator(email, password, generateToken());
-        usersRepository.save(newOperator);
-        return newOperator;
     }
 
     private User findByEmail(String email) {
