@@ -4,14 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Handler;
 import javassist.NotFoundException;
-import org.utn.application.IncidentManager;
-import org.utn.application.JobManager;
 import org.utn.domain.incident.Incident;
-import org.utn.infrastructure.OkInventoryService;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.AccessibilityFeatureDTO;
-
-import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
