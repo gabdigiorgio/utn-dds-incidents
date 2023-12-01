@@ -44,4 +44,17 @@ public class DbUsersRepository implements UsersRepository {
         return user;
     }
 
+    @Override
+    public User getByToken(String token) {
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(User.class);
+        var root = criteriaQuery.from(User.class);
+
+        Predicate tokenFilter = criteriaBuilder.equal(root.get("token"), token);
+        criteriaQuery.where(tokenFilter);
+
+        var user = entityManager.createQuery(criteriaQuery).getSingleResult();
+        return user;
+    }
+
 }

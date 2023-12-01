@@ -2,6 +2,7 @@ package org.utn.presentation.api.url_mappings;
 
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
+import org.utn.domain.users.Role;
 import org.utn.presentation.api.controllers.UIController;
 
 public class UIResource implements EndpointGroup {
@@ -14,7 +15,7 @@ public class UIResource implements EndpointGroup {
 
         // con esto podríamos generar un home y otras cositas, a evaluar si corresponde o no hacer esto
 
-        ApiBuilder.path("/", () -> {
+        /*ApiBuilder.path("/", () -> {
 
             ApiBuilder.get("/", ctx -> {
                 ctx.render("index.hbs");
@@ -41,13 +42,13 @@ public class UIResource implements EndpointGroup {
                 ctx.render("inaccessible_accessibility_features.hbs");
             });
 
-        });
+        });*/
 
 
         UIController UIController = new UIController();
         ApiBuilder.path("/ui/incidents", () -> {
-            ApiBuilder.get("/login", UIController.getLogin);
-            ApiBuilder.get("/", UIController.getIncidents);
+            ApiBuilder.get("/login", UIController.getLogin, Role.ANYONE);
+            ApiBuilder.get("/", UIController.getIncidents, Role.ANYONE);
             ApiBuilder.get("/inaccessible_accessibility_features", UIController.getInaccessibleAccessibilityFeatures);
             ApiBuilder.get("/upload_csv", UIController.createMassiveIncident);
             ApiBuilder.get("/processing_csv_state/{id}", UIController.getCsvProcessingState);

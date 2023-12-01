@@ -14,6 +14,7 @@ import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
 import org.utn.domain.incident.state.StateTransitionException;
+import org.utn.presentation.api.CustomAccessManager;
 import org.utn.presentation.api.controllers.IncidentsController;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
@@ -33,7 +34,9 @@ public class ServerApi {
         initTemplateEngine();
 
         Integer port = Integer.parseInt(System.getProperty("port", "8080"));
-        Javalin server = Javalin.create().start(port);
+        Javalin server = Javalin.create(config -> {
+            config.accessManager(new CustomAccessManager());
+        }).start(port);
 
         setupExceptions(server);
 
