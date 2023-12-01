@@ -5,6 +5,7 @@ import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.state.StateConverter;
 import org.utn.domain.incident.state.StateTransitionException;
 
+import javax.naming.OperationNotSupportedException;
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -121,7 +122,9 @@ public class Incident {
     public String getEmployee() { return employee;}
 
     public void setEmployee(String employee) {
-        if (employee == null || employee.isEmpty()) throw new IllegalArgumentException("The 'employee' field cannot be null or empty.");
+        if (employee == null || employee.isEmpty()) {
+            throw new IllegalArgumentException("The 'employee' field cannot be null or empty.");
+        }
         this.employee = employee;
     }
 
@@ -129,7 +132,10 @@ public class Incident {
         this.closingDate = date;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String description) throws OperationNotSupportedException {
+        if(this.state.equals(State.RESOLVED) || this.state.equals(State.DISMISSED)) {
+            throw new OperationNotSupportedException("Cannot modify description in a final state.");
+        }
         this.description = description;
     }
 
@@ -142,7 +148,9 @@ public class Incident {
     }
 
     public void setRejectedReason(String rejectedReason) {
-        if (rejectedReason == null || rejectedReason.isEmpty()) throw new IllegalArgumentException("The 'rejected reason' field cannot be null or empty.");
+        if (rejectedReason == null || rejectedReason.isEmpty()) {
+            throw new IllegalArgumentException("The 'rejected reason' field cannot be null or empty.");
+        }
         this.rejectedReason = rejectedReason;
     }
 

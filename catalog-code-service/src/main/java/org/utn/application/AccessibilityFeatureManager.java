@@ -1,7 +1,7 @@
 package org.utn.application;
 
 import org.utn.domain.AccessibilityFeature;
-import org.utn.persistence.accessibility.AccessibilityFeatureRepository;
+import org.utn.domain.AccessibilityFeatureRepository;
 
 import java.util.List;
 

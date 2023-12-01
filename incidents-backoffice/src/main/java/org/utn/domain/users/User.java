@@ -8,14 +8,25 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    public String email;
-    public String password;
-    public User(
-        String email,
-        String password
-    ) {
+    private String email;
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    private String token;
+
+    public User(String email, String password, Role role, String token) {
         this.email = email;
         this.password = password;
+        this.role = role;
+        this.token = token;
+    }
+
+    public static User newUser(String name, String password, String token) {
+        return new User(name, password, Role.USER, token);
+    }
+
+    public static User newOperator(String name, String password, String token) {
+        return new User(name, password, Role.OPERATOR, token);
     }
 
     protected User() {
@@ -28,5 +39,29 @@ public class User {
 
     public Integer getId() {
         return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.jetbrains.annotations.NotNull;
+import org.utn.domain.Line;
 import org.utn.domain.Station;
 import org.utn.modules.ManagerFactory;
+import org.utn.presentation.api.dto.responses.LineResponse;
 import org.utn.presentation.api.dto.responses.StationResponse;
 import java.util.List;
 import java.util.Objects;
@@ -18,29 +20,33 @@ public class LineController {
         this.objectMapper = objectMapper;
     }
 
-    public Handler getLines = ctx -> {
-        var lineManager = ManagerFactory.createLineManager();
-
-        var lines = lineManager.getLines();
-
-        returnJson(objectMapper.writeValueAsString(lines), ctx);
-    };
-
     public Handler getLine = ctx -> {
         var lineManager = ManagerFactory.createLineManager();
 
         var id = getId(ctx);
         var line = lineManager.getLine(id);
 
-        returnJson(objectMapper.writeValueAsString(line), ctx);
+        LineResponse lineResponse = new LineResponse(line.getId(), line.getName());
+
+        returnJson(objectMapper.writeValueAsString(lineResponse), ctx);
     };
 
-    public Handler getStations = ctx -> {
-        var stationManager = ManagerFactory.createStationManager();
+    public Handler getLines = ctx -> {
+        var lineManager = ManagerFactory.createLineManager();
+
+        var lines = lineManager.getLines();
+
+        List<LineResponse> lineResponses = mapLinesResponses(lines);
+
+        returnJson(objectMapper.writeValueAsString(lineResponses), ctx);
+    };
+
+    public Handler getStationsFromLine = ctx -> {
+        var lineManager = ManagerFactory.createLineManager();
 
         var id = getId(ctx);
-        var stations = stationManager.getStationFromLine(id);
-        var stationResponses = mapStationResponses(stations);
+        var stations = lineManager.getStationsByLineId(id);
+        var stationResponses = mapStationsResponses(stations);
 
         returnJson(objectMapper.writeValueAsString(stationResponses), ctx);
     };
@@ -56,13 +62,19 @@ public class LineController {
     }
 
     @NotNull
-    private static List<StationResponse> mapStationResponses(List<Station> stations) {
-        var stationResponses = stations.stream()
+    private static List<StationResponse> mapStationsResponses(List<Station> stations) {
+        return stations.stream()
                 .map(station -> {
                     var response = new StationResponse(station);
                     return response;
                 })
                 .collect(Collectors.toList());
-        return stationResponses;
+    }
+
+    @NotNull
+    private static List<LineResponse> mapLinesResponses(List<Line> lines) {
+        return lines.stream()
+                .map(line -> new LineResponse(line.getId(), line.getName()))
+                .collect(Collectors.toList());
     }
 }

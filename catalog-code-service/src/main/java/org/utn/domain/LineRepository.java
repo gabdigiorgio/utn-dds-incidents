@@ -1,4 +1,4 @@
-package org.utn.persistence.line;
+package org.utn.domain;
 
 import org.utn.domain.Line;
 import java.util.List;

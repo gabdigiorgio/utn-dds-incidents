@@ -1,9 +1,9 @@
-package org.utn.persistence.accessibility;
+package org.utn.persistence;
 
 import org.utn.domain.AccessibilityFeature;
+import org.utn.domain.AccessibilityFeatureRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
     @Override
     public AccessibilityFeature getByCatalogCode(String catalogCode) {
         return Optional.ofNullable(entityManager.find(AccessibilityFeature.class, catalogCode)).orElseThrow(()
-                -> new EntityNotFoundException("Accessibility feature not found with ID: " + catalogCode));
+                -> new EntityNotFoundException("Accessibility feature not found with catalog code: " + catalogCode));
     }
 
     @Override

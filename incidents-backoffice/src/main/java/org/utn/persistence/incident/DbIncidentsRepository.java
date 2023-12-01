@@ -1,16 +1,12 @@
 package org.utn.persistence.incident;
 
 import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.IncidentsRepository;
+
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.ws.rs.NotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

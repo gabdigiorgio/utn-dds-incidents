@@ -1,6 +1,7 @@
 package org.utn.persistence.users;
 
 import org.utn.domain.users.User;
+import org.utn.domain.users.UsersRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -9,41 +10,38 @@ import javax.persistence.criteria.Predicate;
 import javax.ws.rs.NotFoundException;
 
 public class DbUsersRepository implements UsersRepository {
-    private EntityManagerFactory entityManagerFactory;
 
-    public DbUsersRepository(EntityManagerFactory entityManagerFactory) {
+    private EntityManager entityManager;
+
+    public DbUsersRepository(EntityManager entityManager) {
         super();
-        this.entityManagerFactory = entityManagerFactory;
+        this.entityManager = entityManager;
     }
 
     public void save(User user) {
-        var entityManager = createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(user);
         entityManager.getTransaction().commit();
     }
 
     @Override
-    public User getByEmail(String email) {
-        try {
-            var entityManager = createEntityManager();
-            var criteriaBuilder = entityManagerFactory.getCriteriaBuilder();
-            var criteriaQuery = criteriaBuilder.createQuery(User.class);
-            var root = criteriaQuery.from(User.class);
-
-            Predicate emailFilter = criteriaBuilder.equal(root.get("email"), email);
-            criteriaQuery.where(emailFilter);
-
-            // TODO: este get rompe
-            var user = entityManager.createQuery(criteriaQuery).getSingleResult();
-            return user;
-        } catch (EntityNotFoundException e) {
-            throw new NotFoundException();
-        }
+    public void update(User user) {
+        entityManager.getTransaction().begin();
+        entityManager.merge(user);
+        entityManager.getTransaction().commit();
     }
 
-    private EntityManager createEntityManager() {
-        return this.entityManagerFactory.createEntityManager();
+    @Override
+    public User getByEmail(String email) {
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(User.class);
+        var root = criteriaQuery.from(User.class);
+
+        Predicate emailFilter = criteriaBuilder.equal(root.get("email"), email);
+        criteriaQuery.where(emailFilter);
+
+        var user = entityManager.createQuery(criteriaQuery).getSingleResult();
+        return user;
     }
 
 }

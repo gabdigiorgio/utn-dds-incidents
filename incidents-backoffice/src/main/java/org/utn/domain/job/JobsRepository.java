@@ -1,4 +1,4 @@
-package org.utn.persistence.job;
+package org.utn.domain.job;
 
 import org.utn.domain.job.Job;
 

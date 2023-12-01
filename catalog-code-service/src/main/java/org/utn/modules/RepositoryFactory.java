@@ -1,8 +1,7 @@
 package org.utn.modules;
 
-import org.utn.persistence.accessibility.DbAccessibilityFeatureRepository;
-import org.utn.persistence.line.DbLineRepository;
-import org.utn.persistence.station.DbStationRepository;
+import org.utn.persistence.DbAccessibilityFeatureRepository;
+import org.utn.persistence.DbLineRepository;
 
 public class RepositoryFactory {
 
@@ -11,8 +10,5 @@ public class RepositoryFactory {
     }
     public static DbLineRepository createLineRepository() {
         return new DbLineRepository(PersistenceUtils.createEntityManager());
-    }
-    public static DbStationRepository createStationRepository() {
-        return new DbStationRepository(PersistenceUtils.createEntityManager());
     }
 }

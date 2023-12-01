@@ -1,12 +1,15 @@
-package org.utn.persistence.line;
+package org.utn.persistence;
 
 import org.utn.domain.Line;
+import org.utn.domain.LineRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
 public class DbLineRepository implements LineRepository {
     private EntityManager entityManager;
@@ -18,7 +21,8 @@ public class DbLineRepository implements LineRepository {
 
     @Override
     public Line getById(String id) {
-        return entityManager.find(org.utn.domain.Line.class, id);
+        return Optional.ofNullable(entityManager.find(Line.class, id)).orElseThrow(()
+                -> new EntityNotFoundException("Line not found with id: " + id));
     }
 
     @Override
