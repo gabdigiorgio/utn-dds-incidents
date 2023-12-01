@@ -21,11 +21,15 @@ public class UserManager {
     }
 
     public User registerUser(String email, String password) {
-        return User.newUser(email, password);
+        var newUser = User.newUser(email, password, generateToken());
+        usersRepository.save(newUser);
+        return newUser;
     }
 
     public User registerOperator(String email, String password) {
-        return User.newOperator(email, password);
+        var newOperator = User.newOperator(email, password, generateToken());
+        usersRepository.save(newOperator);
+        return newOperator;
     }
 
     private User findByEmail(String email) {
