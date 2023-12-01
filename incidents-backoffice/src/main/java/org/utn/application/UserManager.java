@@ -3,6 +3,8 @@ package org.utn.application;
 import javassist.NotFoundException;
 import org.utn.domain.users.User;
 import org.utn.domain.users.UsersRepository;
+
+import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,7 +14,7 @@ public class UserManager {
         this.usersRepository = usersRepository;
     }
 
-    public String login(String email, String password) throws NotFoundException {
+    public String login(String email, String password) throws EntityNotFoundException {
         var user = findByEmail(email);
         validatePassword(password, user);
         user.setToken(generateToken());
@@ -20,7 +22,12 @@ public class UserManager {
         return user.getToken();
     }
 
+    private void validateUserEmail(String email) {
+        if (usersRepository.getByEmail(email) != null) throw new InvalidEmailException();
+    }
+
     public User registerUser(String email, String password) {
+        validateUserEmail(email);
         var newUser = User.newUser(email, password, generateToken());
         usersRepository.save(newUser);
         return newUser;

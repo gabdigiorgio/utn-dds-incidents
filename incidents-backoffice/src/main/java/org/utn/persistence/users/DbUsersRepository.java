@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.Predicate;
 import javax.ws.rs.NotFoundException;
+import java.util.Optional;
 
 public class DbUsersRepository implements UsersRepository {
 
@@ -39,6 +40,20 @@ public class DbUsersRepository implements UsersRepository {
 
         Predicate emailFilter = criteriaBuilder.equal(root.get("email"), email);
         criteriaQuery.where(emailFilter);
+
+        return Optional.ofNullable(entityManager.createQuery(criteriaQuery).getSingleResult())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+    }
+
+
+    @Override
+    public User getByToken(String token) {
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(User.class);
+        var root = criteriaQuery.from(User.class);
+
+        Predicate tokenFilter = criteriaBuilder.equal(root.get("token"), token);
+        criteriaQuery.where(tokenFilter);
 
         var user = entityManager.createQuery(criteriaQuery).getSingleResult();
         return user;

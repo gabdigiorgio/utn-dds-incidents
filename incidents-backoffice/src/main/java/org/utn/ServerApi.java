@@ -13,7 +13,10 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
+import org.utn.application.InvalidEmailException;
+import org.utn.application.InvalidPasswordException;
 import org.utn.domain.incident.state.StateTransitionException;
+import org.utn.presentation.api.CustomAccessManager;
 import org.utn.presentation.api.controllers.IncidentsController;
 import org.utn.presentation.api.url_mappings.IncidentsResource;
 import org.utn.presentation.api.url_mappings.TelegramBotResource;
@@ -33,7 +36,9 @@ public class ServerApi {
         initTemplateEngine();
 
         Integer port = Integer.parseInt(System.getProperty("port", "8080"));
-        Javalin server = Javalin.create().start(port);
+        Javalin server = Javalin.create(config -> {
+            config.accessManager(new CustomAccessManager());
+        }).start(port);
 
         setupExceptions(server);
 
@@ -52,6 +57,8 @@ public class ServerApi {
         setupExceptionHandling(server, InvalidDateException.class, 400);
         setupExceptionHandling(server, InvalidCatalogCodeException.class, 400);
         setupExceptionHandling(server, OperationNotSupportedException.class, 400);
+        setupExceptionHandling(server, InvalidEmailException.class, 400);
+        setupExceptionHandling(server, InvalidPasswordException.class, 400);
         setupExceptionHandling(server, Exception.class, 500);
     }
 
