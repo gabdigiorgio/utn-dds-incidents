@@ -54,7 +54,7 @@ public class UIResource implements EndpointGroup {
             ApiBuilder.get("/processing_csv_state/{id}", UIController.getCsvProcessingState, Role.OPERATOR);
             ApiBuilder.get("/new", UIController.createIncident, Role.USER, Role.OPERATOR);
             ApiBuilder.get("/edit/{id}/state", UIController.updateIncidentState, Role.OPERATOR);
-            ApiBuilder.get("/edit/{id}", UIController.editIncident);
+            ApiBuilder.get("/edit/{id}", UIController.editIncident, Role.OPERATOR);
             ApiBuilder.get("/{id}", UIController.getIncident, Role.ANYONE);
         });
     }

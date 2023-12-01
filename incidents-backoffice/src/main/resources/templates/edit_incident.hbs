@@ -91,6 +91,8 @@
 
 
 <script>
+    if (!document.cookie.split(";").some((item) => item.trim().startsWith("auth="))) window.location.href = "/ui/incidents/login";
+
     form.onsubmit = async (e) => {
         e.preventDefault();
         const form = document.querySelector("#form");

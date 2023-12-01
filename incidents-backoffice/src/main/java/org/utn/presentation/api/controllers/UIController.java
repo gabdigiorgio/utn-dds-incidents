@@ -21,8 +21,7 @@ public class UIController {
 
     public Handler getLogin = ctx -> {
         try {
-            Map<String, Object> model = new HashMap<>();
-            ctx.render("login.hbs", model);
+            ctx.render("login.hbs");
         } catch (Exception error) {
             ctx.json(parseErrorResponse(500, error.getMessage()));
             ctx.status(500);

@@ -21,8 +21,8 @@ public class IncidentsResource implements EndpointGroup {
             ApiBuilder.get("/", incidentsController.getIncidents, Role.ANYONE);
             ApiBuilder.get("/{id}", incidentsController.getIncident, Role.ANYONE);
             ApiBuilder.post("/", incidentsController.createIncident, Role.USER, Role.OPERATOR);
-            ApiBuilder.put("/{id}", incidentsController.editIncident);
-            ApiBuilder.delete("/{id}", incidentsController.deleteIncident);
+            ApiBuilder.put("/{id}", incidentsController.editIncident, Role.OPERATOR);
+            ApiBuilder.delete("/{id}", incidentsController.deleteIncident, Role.OPERATOR);
             ApiBuilder.post("/{id}/assign-employee", incidentsController.assignEmployeeIncident, Role.OPERATOR);
             ApiBuilder.post("/{id}/confirm", incidentsController.confirmIncident, Role.OPERATOR);
             ApiBuilder.post("/{id}/start-progress", incidentsController.startProgressIncident, Role.OPERATOR);

@@ -2,7 +2,6 @@ package org.utn.presentation.api;
 
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import io.javalin.http.UnauthorizedResponse;
 import io.javalin.security.AccessManager;
 import io.javalin.security.RouteRole;
 import org.jetbrains.annotations.NotNull;
@@ -22,15 +21,17 @@ public class CustomAccessManager implements AccessManager {
 
         var usersRepository = RepositoryFactory.createUserRepository();
 
-        var token = ctx.header("token");
-
-        if (token == null || token.isEmpty()) throw new UnauthorizedResponse();
+        String token = ctx.cookie("auth");
+        if (token == null || token.isEmpty()) {
+            ctx.render("login.hbs");
+            return;
+        }
 
         var user = usersRepository.getByToken(token);
-
-        if (user == null) throw new UnauthorizedResponse();
-
-        if (!permittedRoles.contains(user.getRole())) throw new UnauthorizedResponse();
+        if (user == null || !permittedRoles.contains(user.getRole())) {
+            ctx.render("login.hbs");
+            return;
+        }
 
         handler.handle(ctx);
     }

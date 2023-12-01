@@ -72,6 +72,8 @@
 </div>
 </body>
 <script>
+    if (!document.cookie.split(";").some((item) => item.trim().startsWith("auth="))) window.location.href = "/ui/incidents/login";
+
     const selectEstado = document.querySelector('select[name="estado"]');
     const campoEmpleado = document.getElementById('campo-empleado');
     const campoMotivo = document.getElementById('campo-motivo');
