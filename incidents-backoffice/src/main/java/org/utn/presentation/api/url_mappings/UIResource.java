@@ -49,13 +49,13 @@ public class UIResource implements EndpointGroup {
         ApiBuilder.path("/ui/incidents", () -> {
             ApiBuilder.get("/login", UIController.getLogin, Role.ANYONE);
             ApiBuilder.get("/", UIController.getIncidents, Role.ANYONE);
-            ApiBuilder.get("/inaccessible_accessibility_features", UIController.getInaccessibleAccessibilityFeatures);
-            ApiBuilder.get("/upload_csv", UIController.createMassiveIncident);
-            ApiBuilder.get("/processing_csv_state/{id}", UIController.getCsvProcessingState);
-            ApiBuilder.get("/new", UIController.createIncident);
-            ApiBuilder.get("/edit/{id}/state", UIController.updateIncidentState);
+            ApiBuilder.get("/inaccessible_accessibility_features", UIController.getInaccessibleAccessibilityFeatures, Role.ANYONE);
+            ApiBuilder.get("/upload_csv", UIController.createMassiveIncident, Role.OPERATOR);
+            ApiBuilder.get("/processing_csv_state/{id}", UIController.getCsvProcessingState, Role.OPERATOR);
+            ApiBuilder.get("/new", UIController.createIncident, Role.USER, Role.OPERATOR);
+            ApiBuilder.get("/edit/{id}/state", UIController.updateIncidentState, Role.OPERATOR);
             ApiBuilder.get("/edit/{id}", UIController.editIncident);
-            ApiBuilder.get("/{id}", UIController.getIncident);
+            ApiBuilder.get("/{id}", UIController.getIncident, Role.ANYONE);
         });
     }
 }
