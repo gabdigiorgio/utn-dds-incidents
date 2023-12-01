@@ -2,13 +2,10 @@ package org.utn.persistence.users;
 
 import org.utn.domain.users.User;
 import org.utn.domain.users.UsersRepository;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.Predicate;
-import javax.ws.rs.NotFoundException;
-import java.util.Optional;
+import java.util.List;
 
 public class DbUsersRepository implements UsersRepository {
 
@@ -41,10 +38,10 @@ public class DbUsersRepository implements UsersRepository {
         Predicate emailFilter = criteriaBuilder.equal(root.get("email"), email);
         criteriaQuery.where(emailFilter);
 
-        return Optional.ofNullable(entityManager.createQuery(criteriaQuery).getSingleResult())
-                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
-    }
+        List<User> resultList = entityManager.createQuery(criteriaQuery).getResultList();
 
+        return resultList.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+    }
 
     @Override
     public User getByToken(String token) {
@@ -55,8 +52,22 @@ public class DbUsersRepository implements UsersRepository {
         Predicate tokenFilter = criteriaBuilder.equal(root.get("token"), token);
         criteriaQuery.where(tokenFilter);
 
-        var user = entityManager.createQuery(criteriaQuery).getSingleResult();
-        return user;
+        List<User> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+
+        return resultList.isEmpty() ? null : resultList.get(0);
+    }
+
+    @Override
+    public boolean userExists(String email) {
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        var root = criteriaQuery.from(User.class);
+
+        criteriaQuery.select(criteriaBuilder.count(root));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("email"), email));
+
+        Long count = entityManager.createQuery(criteriaQuery).getSingleResult();
+        return count > 0;
     }
 
 }

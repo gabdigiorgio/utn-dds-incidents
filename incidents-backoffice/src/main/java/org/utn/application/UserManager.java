@@ -23,7 +23,7 @@ public class UserManager {
     }
 
     private void validateUserEmail(String email) {
-        if (usersRepository.getByEmail(email) != null) throw new InvalidEmailException();
+        if (usersRepository.userExists(email)) throw new InvalidEmailException();
     }
 
     public User registerUser(String email, String password) {
