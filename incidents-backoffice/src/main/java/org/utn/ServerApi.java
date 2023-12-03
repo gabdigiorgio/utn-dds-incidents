@@ -13,7 +13,8 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
-import org.utn.application.InvalidEmailException;
+import org.utn.application.MissingUserFieldsException;
+import org.utn.application.UserAlreadyExistsException;
 import org.utn.application.InvalidPasswordException;
 import org.utn.domain.incident.state.StateTransitionException;
 import org.utn.presentation.api.CustomAccessManager;
@@ -57,7 +58,8 @@ public class ServerApi {
         setupExceptionHandling(server, InvalidDateException.class, 400);
         setupExceptionHandling(server, InvalidCatalogCodeException.class, 400);
         setupExceptionHandling(server, OperationNotSupportedException.class, 400);
-        setupExceptionHandling(server, InvalidEmailException.class, 400);
+        setupExceptionHandling(server, MissingUserFieldsException.class, 400);
+        setupExceptionHandling(server, UserAlreadyExistsException.class, 400);
         setupExceptionHandling(server, InvalidPasswordException.class, 400);
         setupExceptionHandling(server, Exception.class, 500);
     }
