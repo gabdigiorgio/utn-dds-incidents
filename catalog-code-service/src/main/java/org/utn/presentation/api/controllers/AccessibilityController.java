@@ -9,13 +9,10 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.AccessibilityFeature;
-import org.utn.domain.Line;
 import org.utn.modules.ManagerFactory;
+import org.utn.presentation.api.dto.requests.StatusRequest;
 import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
 import org.utn.presentation.api.dto.responses.ErrorResponse;
-import org.utn.presentation.api.dto.requests.StatusRequest;
-import org.utn.presentation.api.dto.responses.LineResponse;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -60,7 +57,6 @@ public class AccessibilityController {
         }
 
         var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, station, status, type);
-
         var accessibilityFeaturesResponse = mapAccessibilityFeatureResponses(accessibilityFeatures);
 
         returnJson(objectMapper.writeValueAsString(accessibilityFeaturesResponse), ctx);
@@ -76,9 +72,10 @@ public class AccessibilityController {
 
         AccessibilityFeature.Status status = AccessibilityFeature.Status.valueOf(upperCaseStatus);
 
-        AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.updateAccessibilityFeatureStatus(catalogCode, status);
+        var accessibilityFeature = accessibilityFeatureManager.updateAccessibilityFeatureStatus(catalogCode, status);
+        var accessibilityFeatureResponse = new AccessibilityFeatureResponse(accessibilityFeature);
 
-        returnJson(objectMapper.writeValueAsString(accessibilityFeature), ctx);
+        returnJson(objectMapper.writeValueAsString(accessibilityFeatureResponse), ctx);
     };
 
     private void returnJson(String objectMapper, Context ctx) {
