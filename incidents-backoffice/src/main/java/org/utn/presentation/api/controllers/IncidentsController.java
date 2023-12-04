@@ -16,7 +16,7 @@ import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.job.Job;
 import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.dto.*;
+import org.utn.presentation.api.dto.CsvProcessingStateResponse;
 import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.presentation.api.dto.requests.EmployeeRequest;
@@ -30,7 +30,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class IncidentsController {
     private ObjectMapper objectMapper;
@@ -151,7 +154,7 @@ public class IncidentsController {
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
-        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
+        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(null);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
         String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
 

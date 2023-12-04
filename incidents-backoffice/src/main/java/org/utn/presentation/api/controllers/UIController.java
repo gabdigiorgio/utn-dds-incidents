@@ -6,7 +6,7 @@ import io.javalin.http.Handler;
 import javassist.NotFoundException;
 import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.dto.AccessibilityFeatureDTO;
+import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,10 +74,10 @@ public class UIController {
         try {
             var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
-            String inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(10, null, null);
+            String inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(null, null, null);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            List<AccessibilityFeatureDTO> featuresList = objectMapper.readValue(inaccessibleAccessibilityFeatures, new TypeReference<>() {
+            List<AccessibilityFeatureResponse> featuresList = objectMapper.readValue(inaccessibleAccessibilityFeatures, new TypeReference<>() {
             });
 
             model.put("inaccessibleAccessibilityFeatures", featuresList);

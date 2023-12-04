@@ -1,10 +1,10 @@
-package org.utn.presentation.api.dto;
+package org.utn.presentation.api.dto.responses;
 
-public class AccessibilityFeatureDTO {
+public class AccessibilityFeatureResponse {
     private String catalogCode;
     private String type;
     private String status;
-    private StationDTO station;
+    private String station;
 
     public String getCatalogCode() {
         return catalogCode;
@@ -18,7 +18,7 @@ public class AccessibilityFeatureDTO {
         return status;
     }
 
-    public StationDTO getStation() {
+    public String getStation() {
         return station;
     }
 }

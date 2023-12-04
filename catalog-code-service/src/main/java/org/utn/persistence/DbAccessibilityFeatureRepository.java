@@ -51,7 +51,7 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
         }
 
         if (line != null) {
-            predicates.add(criteriaBuilder.equal(root.get("station").get("line"), line));
+            predicates.add(criteriaBuilder.equal(root.get("station").get("line").get("id"), line));
         }
 
         if (stationName != null) {

@@ -31,16 +31,21 @@ public class OkInventoryService implements InventoryService {
 
     @Override
     public String getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
-        var builder = new HttpUrl.Builder();
-        builder.host(baseUrl).addQueryParameter("limit", limit.toString()).addQueryParameter("line", line);
-        var urlBuilder = new StringBuilder(baseUrl + "?limit=" + limit + "&status=inaccessible");
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl)
+                .newBuilder()
+                .addQueryParameter("status", "inaccessible");
+
+        if (limit != null) {
+            urlBuilder.addQueryParameter("limit", limit.toString());
+        }
         if (line != null) {
-            urlBuilder.append("&line=").append(line);
+            urlBuilder.addQueryParameter("line", line);
         }
         if (station != null) {
-            urlBuilder.append("&station=").append(station);
+            urlBuilder.addQueryParameter("station", station);
         }
-        var url = urlBuilder.toString();
+
+        var url = urlBuilder.build().toString();
 
         var request = buildRequest(url);
 
