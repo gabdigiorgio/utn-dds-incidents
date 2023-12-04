@@ -9,6 +9,7 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.utn.domain.AccessibilityFeature;
 import org.utn.modules.ManagerFactory;
+import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
 import org.utn.presentation.api.dto.responses.ErrorResponse;
 import org.utn.presentation.api.dto.requests.StatusRequest;
 
@@ -27,9 +28,10 @@ public class AccessibilityController {
 
         String catalogCode = Objects.requireNonNull(ctx.pathParam("catalogCode"));
 
-        AccessibilityFeature accessibilityFeature = accessibilityFeatureManager.getAccessibilityFeature(catalogCode);
+        var accessibilityFeature = accessibilityFeatureManager.getAccessibilityFeature(catalogCode);
+        var accessibilityFeatureResponse = new AccessibilityFeatureResponse(accessibilityFeature);
 
-        returnJson(objectMapper.writeValueAsString(accessibilityFeature), ctx);
+        returnJson(objectMapper.writeValueAsString(accessibilityFeatureResponse), ctx);
     };
 
     public Handler getAccessibilityFeatures = ctx -> {
