@@ -7,12 +7,14 @@ public class AccessibilityFeatureResponse {
     private String status;
     private String type;
     private String station;
+    private String line;
 
     public AccessibilityFeatureResponse(AccessibilityFeature accessibilityFeature) {
         this.catalogCode = accessibilityFeature.getCatalogCode();
         this.status = accessibilityFeature.getStatus().toString();
         this.type = accessibilityFeature.getType().toString();
         this.station = accessibilityFeature.getStation().getName();
+        this.line = accessibilityFeature.getStation().getLine().getName();
     }
 
     public String getCatalogCode() {
@@ -29,5 +31,9 @@ public class AccessibilityFeatureResponse {
 
     public String getStation() {
         return station;
+    }
+
+    public String getLine() {
+        return line;
     }
 }

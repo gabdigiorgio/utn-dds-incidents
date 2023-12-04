@@ -5,6 +5,7 @@ public class AccessibilityFeatureResponse {
     private String type;
     private String status;
     private String station;
+    private String line;
 
     public String getCatalogCode() {
         return catalogCode;
@@ -20,5 +21,9 @@ public class AccessibilityFeatureResponse {
 
     public String getStation() {
         return station;
+    }
+
+    public String getLine() {
+        return line;
     }
 }

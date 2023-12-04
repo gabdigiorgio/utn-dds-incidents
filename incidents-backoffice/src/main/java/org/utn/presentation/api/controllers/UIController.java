@@ -7,10 +7,12 @@ import javassist.NotFoundException;
 import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import static org.utn.presentation.api.controllers.IncidentsController.parseErrorResponse;
 
 public class UIController {
