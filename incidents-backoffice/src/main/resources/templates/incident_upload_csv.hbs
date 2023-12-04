@@ -230,7 +230,6 @@ body {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    if (!document.cookie.split(";").some((item) => item.trim().startsWith("auth="))) window.location.href = "/ui/incidents/login";
 
     function uploadFile() {
         const formData = new FormData(document.getElementById("fileUploadForm"));
