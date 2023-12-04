@@ -7,14 +7,19 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
+import org.jetbrains.annotations.NotNull;
 import org.utn.domain.AccessibilityFeature;
+import org.utn.domain.Line;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
 import org.utn.presentation.api.dto.responses.ErrorResponse;
 import org.utn.presentation.api.dto.requests.StatusRequest;
+import org.utn.presentation.api.dto.responses.LineResponse;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class AccessibilityController {
     private ObjectMapper objectMapper;
@@ -56,7 +61,9 @@ public class AccessibilityController {
 
         var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, station, status, type);
 
-        returnJson(objectMapper.writeValueAsString(accessibilityFeatures), ctx);
+        var accessibilityFeaturesResponse = mapAccessibilityFeatureResponses(accessibilityFeatures);
+
+        returnJson(objectMapper.writeValueAsString(accessibilityFeaturesResponse), ctx);
     };
 
     public Handler updateAccessibilityFeature = ctx -> {
@@ -77,6 +84,13 @@ public class AccessibilityController {
     private void returnJson(String objectMapper, Context ctx) {
         String json = objectMapper;
         ctx.json(json);
+    }
+
+    @NotNull
+    private static List<AccessibilityFeatureResponse> mapAccessibilityFeatureResponses(List<AccessibilityFeature> accessibilityFeatures) {
+        return accessibilityFeatures.stream()
+                .map(AccessibilityFeatureResponse::new)
+                .collect(Collectors.toList());
     }
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {

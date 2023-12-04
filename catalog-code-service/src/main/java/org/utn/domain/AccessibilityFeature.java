@@ -12,7 +12,7 @@ public class AccessibilityFeature {
     private Type type;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id")
     private Station station;
 
