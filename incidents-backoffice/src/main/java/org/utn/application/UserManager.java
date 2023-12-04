@@ -28,7 +28,7 @@ public class UserManager {
 
     public User registerUser(String email, String password, String stringRole) {
         checkUserNotExists(email);
-        Role role = stringRole == "User" ? Role.USER : Role.OPERATOR;
+        Role role = Objects.equals(stringRole, "USER") ? Role.USER : Role.OPERATOR;
         var newUser = User.newUser(email, password, role, generateToken());
         usersRepository.save(newUser);
         return newUser;
