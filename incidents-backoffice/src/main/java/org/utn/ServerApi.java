@@ -12,6 +12,7 @@ import com.github.jknack.handlebars.Template;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
+import io.javalin.http.UnauthorizedResponse;
 import io.javalin.rendering.JavalinRenderer;
 import org.utn.application.MissingUserFieldsException;
 import org.utn.application.UserAlreadyExistsException;
@@ -39,6 +40,9 @@ public class ServerApi {
         Integer port = Integer.parseInt(System.getProperty("port", "8080"));
         Javalin server = Javalin.create(config -> {
             config.accessManager(new CustomAccessManager());
+            config.staticFiles.add(staticFiles -> {
+                staticFiles.directory = "/public";
+            });
         }).start(port);
 
         setupExceptions(server);

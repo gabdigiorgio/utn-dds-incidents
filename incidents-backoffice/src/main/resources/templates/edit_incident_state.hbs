@@ -151,7 +151,7 @@ form.onsubmit = async (e) => {
       alert(responseDataEstado.message);
     } else if (responseEstado.status === 200) {
       alert("Cambio de estado realizado con éxito");
-      window.location.href = `http://localhost:8080/ui/incidents/${id}`;
+      window.location.href = `/ui/incidents/${id}`;
     }
   }
 };

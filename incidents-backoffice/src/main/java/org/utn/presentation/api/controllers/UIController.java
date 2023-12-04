@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import static org.utn.presentation.api.controllers.IncidentsController.parseErrorResponse;
 
 public class UIController {
@@ -95,11 +94,9 @@ public class UIController {
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
-            // get incident by id
             Incident incident = incidentManager.getIncident(id);
             model.put("incident", incident);
             ctx.render("incident.hbs", model);
-
         } catch (NotFoundException notFoundError) {
             ctx.status(404);
             ctx.result("Incidencia no encontrada");
@@ -115,7 +112,6 @@ public class UIController {
             if (inventoryServiceUrl == null || inventoryServiceUrl.isEmpty()) {
                 inventoryServiceUrl = "http://localhost:8081/api/accessibilityFeatures/";
             }
-
             Map<String, Object> model = new HashMap<>();
             model.put("inventoryServiceUrl", inventoryServiceUrl);
 

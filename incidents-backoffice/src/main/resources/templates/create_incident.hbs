@@ -68,7 +68,6 @@
 
         <form id="form">
             <div class="form-floating mt-3 mb-3">
-                <!-- Utilizando Select2 para autocompletar la línea -->
                 <select class="form-select" id="line" name="line">
                     <option value="Linea A">Linea A</option>
                     <option value="Linea B">Linea B</option>
@@ -80,12 +79,10 @@
                 <label for="line">Línea</label>
             </div>
             <div class="form-floating mt-3 mb-3">
-                <!-- Utilizando Select2 para seleccionar la estación -->
                 <select class="form-select" id="station" name="station"></select>
                 <label for="station">Estación</label>
             </div>  
             <div class="form-floating mt-3 mb-3">
-                <!-- Utilizando Select2 para el catálogo de medidas de accesibilidad -->
                 <select class="form-select custom-height" id="catalogCode" name="catalogCode"></select>
                 <label for="catalogCode">Código de Catálogo</label>
             </div>
@@ -128,7 +125,6 @@
         "Linea H": ["Facultad de Derecho", "Las Heras", "Santa Fe", "Córdoba", "Corrientes", "Once", "Venezuela", "Humberto I", "Inclán", "Caseros", "Parque Patricios", "Hospitales"],
     };
 
-    // Inicializando Select2 para el catálogo de medidas de accesibilidad
     $('#catalogCode').select2({
         ajax: {
             url: "{{inventoryServiceUrl}}",
@@ -165,7 +161,6 @@
         },
     });
 
-    // Inicializando la selección para la línea
     const lineSelect = document.querySelector('#line');
     const initialLine = lineSelect.value;
     const initialStations = lineStations[initialLine] || [];
@@ -216,7 +211,7 @@
 
         const responseData = await response.json();
         if (responseData.status === 400) alert(responseData.message);
-        else window.location.href = "http://localhost:8080/ui/incidents";
+        else window.location.href = "/ui/incidents";
     };
 </script>
 
