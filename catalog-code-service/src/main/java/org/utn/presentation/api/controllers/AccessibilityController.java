@@ -39,7 +39,7 @@ public class AccessibilityController {
     public Handler getAccessibilityFeatures = ctx -> {
         var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
 
-        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
+        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(null);
         String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
         String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);

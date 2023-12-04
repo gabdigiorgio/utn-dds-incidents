@@ -19,7 +19,7 @@ public class OkInventoryService implements InventoryService {
     
     @Override
     public void validateCatalogCode(String catalogCode) throws IOException {
-        var url = baseUrl + catalogCode;
+        var url = baseUrl + "/accessibility-features/" + catalogCode;
         var request = buildRequest(url);
         var response = execute(request);
         var isNotSuccessful = !response.isSuccessful();
@@ -31,7 +31,7 @@ public class OkInventoryService implements InventoryService {
 
     @Override
     public String getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl)
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "/accessibility-features/")
                 .newBuilder()
                 .addQueryParameter("status", "inaccessible");
 
@@ -46,6 +46,19 @@ public class OkInventoryService implements InventoryService {
         }
 
         var url = urlBuilder.build().toString();
+
+        var request = buildRequest(url);
+
+        var response = execute(request);
+
+        try (ResponseBody responseBody = response.body()) {
+            return responseBody.string();
+        }
+    }
+
+    @Override
+    public String getLines() throws IOException {
+        var url = baseUrl + "/lines";
 
         var request = buildRequest(url);
 

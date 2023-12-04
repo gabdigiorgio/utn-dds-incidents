@@ -26,7 +26,7 @@ public class LineController {
         var id = getId(ctx);
         var line = lineManager.getLine(id);
 
-        LineResponse lineResponse = new LineResponse(line.getId(), line.getName());
+        LineResponse lineResponse = new LineResponse(line);
 
         returnJson(objectMapper.writeValueAsString(lineResponse), ctx);
     };
@@ -74,7 +74,10 @@ public class LineController {
     @NotNull
     private static List<LineResponse> mapLinesResponses(List<Line> lines) {
         return lines.stream()
-                .map(line -> new LineResponse(line.getId(), line.getName()))
+                .map(line -> {
+                    var response = new LineResponse(line);
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
 }
