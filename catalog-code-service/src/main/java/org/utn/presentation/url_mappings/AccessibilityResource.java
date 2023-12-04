@@ -3,7 +3,6 @@ package org.utn.presentation.url_mappings;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.apibuilder.EndpointGroup;
-import org.utn.application.AccessibilityFeatureManager;
 import org.utn.presentation.api.controllers.AccessibilityController;
 
 public class AccessibilityResource implements EndpointGroup {
@@ -16,7 +15,7 @@ public class AccessibilityResource implements EndpointGroup {
     @Override
     public void addEndpoints() {
         AccessibilityController accessibilityController = new AccessibilityController(objectMapper);
-        ApiBuilder.path("/api/accessibilityFeatures", () -> {
+        ApiBuilder.path("/api/accessibility-features", () -> {
             ApiBuilder.get("/", accessibilityController.getAccessibilityFeatures);
             ApiBuilder.put("/{catalogCode}", accessibilityController.updateAccessibilityFeature);
             ApiBuilder.get("/{catalogCode}", accessibilityController.getAccessibilityFeature);
