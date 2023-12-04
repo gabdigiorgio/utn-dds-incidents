@@ -20,7 +20,7 @@ public class IncidentsResource implements EndpointGroup {
             ApiBuilder.get("/inaccessible-accessibility-features", incidentsController.getInaccessibleAccessibilityFeatures, Role.ANYONE);
             ApiBuilder.get("/", incidentsController.getIncidents, Role.ANYONE);
             ApiBuilder.get("/{id}", incidentsController.getIncident, Role.ANYONE);
-            ApiBuilder.post("/", incidentsController.createIncident, Role.USER, Role.OPERATOR);
+            ApiBuilder.post("/", incidentsController.createIncident, Role.USER);
             ApiBuilder.put("/{id}", incidentsController.editIncident, Role.OPERATOR);
             ApiBuilder.delete("/{id}", incidentsController.deleteIncident, Role.OPERATOR);
             ApiBuilder.post("/{id}/assign-employee", incidentsController.assignEmployeeIncident, Role.OPERATOR);

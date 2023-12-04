@@ -17,6 +17,7 @@ import io.javalin.rendering.JavalinRenderer;
 import org.utn.application.MissingUserFieldsException;
 import org.utn.application.UserAlreadyExistsException;
 import org.utn.application.InvalidPasswordException;
+import org.utn.application.UserNotExistsException;
 import org.utn.domain.incident.state.StateTransitionException;
 import org.utn.presentation.api.CustomAccessManager;
 import org.utn.presentation.api.controllers.IncidentsController;
@@ -63,6 +64,7 @@ public class ServerApi {
         setupExceptionHandling(server, InvalidCatalogCodeException.class, 400);
         setupExceptionHandling(server, OperationNotSupportedException.class, 400);
         setupExceptionHandling(server, MissingUserFieldsException.class, 400);
+        setupExceptionHandling(server, UserNotExistsException.class, 400);
         setupExceptionHandling(server, UserAlreadyExistsException.class, 400);
         setupExceptionHandling(server, InvalidPasswordException.class, 400);
         setupExceptionHandling(server, Exception.class, 500);
