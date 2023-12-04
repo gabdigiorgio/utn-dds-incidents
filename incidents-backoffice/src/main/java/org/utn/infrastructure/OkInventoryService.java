@@ -69,6 +69,19 @@ public class OkInventoryService implements InventoryService {
         }
     }
 
+    @Override
+    public String getStationsFromLine(String lineId) throws IOException {
+        var url = baseUrl + "/lines/" + lineId + "/stations";
+
+        var request = buildRequest(url);
+
+        var response = execute(request);
+
+        try (ResponseBody responseBody = response.body()) {
+            return responseBody.string();
+        }
+    }
+
     private Response execute(Request request) throws IOException {
         return client.newCall(request).execute();
     }

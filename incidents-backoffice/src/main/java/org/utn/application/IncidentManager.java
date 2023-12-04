@@ -169,5 +169,9 @@ public class IncidentManager {
     public String getLines() throws IOException {
         return inventoryService.getLines();
     }
+
+    public String getStationsFromLine(String lineId) throws IOException {
+        return inventoryService.getStationsFromLine(lineId);
+    }
 }
 

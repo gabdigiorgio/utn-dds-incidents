@@ -8,4 +8,6 @@ public interface InventoryService {
     String getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException;
 
     String getLines() throws IOException;
+
+    String getStationsFromLine(String lineId) throws IOException;
 }

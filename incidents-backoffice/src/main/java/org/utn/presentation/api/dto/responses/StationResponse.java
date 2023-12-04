@@ -1,6 +1,6 @@
 package org.utn.presentation.api.dto.responses;
 
-public class LineResponse {
+public class StationResponse {
     private String id;
     private String name;
 
