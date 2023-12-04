@@ -21,12 +21,8 @@ public class User {
         this.token = token;
     }
 
-    public static User newUser(String name, String password, String token) {
-        return new User(name, password, Role.USER, token);
-    }
-
-    public static User newOperator(String name, String password, String token) {
-        return new User(name, password, Role.OPERATOR, token);
+    public static User newUser(String name, String password, Role role, String token) {
+        return new User(name, password, role, token);
     }
 
     protected User() {

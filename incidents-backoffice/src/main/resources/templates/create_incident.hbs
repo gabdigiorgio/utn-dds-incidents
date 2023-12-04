@@ -42,7 +42,7 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
                 <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
-                <li><a href="/ui/incidents/inaccessible_accessibility_features" class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
+                <li><a href="/ui/incidents/inaccessible-accessibility-features" class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
                 <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
                 <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
@@ -68,7 +68,6 @@
 
         <form id="form">
             <div class="form-floating mt-3 mb-3">
-                <!-- Utilizando Select2 para autocompletar la línea -->
                 <select class="form-select" id="line" name="line">
                     <option value="Linea A">Linea A</option>
                     <option value="Linea B">Linea B</option>
@@ -80,12 +79,10 @@
                 <label for="line">Línea</label>
             </div>
             <div class="form-floating mt-3 mb-3">
-                <!-- Utilizando Select2 para seleccionar la estación -->
                 <select class="form-select" id="station" name="station"></select>
                 <label for="station">Estación</label>
             </div>  
             <div class="form-floating mt-3 mb-3">
-                <!-- Utilizando Select2 para el catálogo de medidas de accesibilidad -->
                 <select class="form-select custom-height" id="catalogCode" name="catalogCode"></select>
                 <label for="catalogCode">Código de Catálogo</label>
             </div>
@@ -107,6 +104,8 @@
 </div>
 
 <script>
+    if (!document.cookie.split(";").some((item) => item.trim().startsWith("auth="))) window.location.href = "/ui/incidents/login";
+
     const form = document.querySelector("#form");
 
     // Mapa de traducción de tipos
@@ -126,7 +125,6 @@
         "Linea H": ["Facultad de Derecho", "Las Heras", "Santa Fe", "Córdoba", "Corrientes", "Once", "Venezuela", "Humberto I", "Inclán", "Caseros", "Parque Patricios", "Hospitales"],
     };
 
-    // Inicializando Select2 para el catálogo de medidas de accesibilidad
     $('#catalogCode').select2({
         ajax: {
             url: "{{inventoryServiceUrl}}",
@@ -163,7 +161,6 @@
         },
     });
 
-    // Inicializando la selección para la línea
     const lineSelect = document.querySelector('#line');
     const initialLine = lineSelect.value;
     const initialStations = lineStations[initialLine] || [];
@@ -214,7 +211,7 @@
 
         const responseData = await response.json();
         if (responseData.status === 400) alert(responseData.message);
-        else window.location.href = "http://localhost:8080/ui/incidents";
+        else window.location.href = "/ui/incidents";
     };
 </script>
 

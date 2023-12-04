@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import static org.utn.presentation.api.controllers.IncidentsController.parseErrorResponse;
 
 public class UIController {
@@ -21,8 +20,27 @@ public class UIController {
 
     public Handler getLogin = ctx -> {
         try {
-            Map<String, Object> model = new HashMap<>();
-            ctx.render("login.hbs", model);
+            ctx.render("login.hbs");
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
+        }
+    };
+
+    public Handler getRegisterUser = ctx -> {
+        try {
+            ctx.render("register_user.hbs");
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
+        }
+    };
+
+    public Handler getRegisterOperator = ctx -> {
+        try {
+            ctx.render("register_operator.hbs");
         } catch (Exception error) {
             ctx.json(parseErrorResponse(500, error.getMessage()));
             ctx.status(500);
@@ -76,11 +94,9 @@ public class UIController {
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
 
-            // get incident by id
             Incident incident = incidentManager.getIncident(id);
             model.put("incident", incident);
             ctx.render("incident.hbs", model);
-
         } catch (NotFoundException notFoundError) {
             ctx.status(404);
             ctx.result("Incidencia no encontrada");
@@ -96,7 +112,6 @@ public class UIController {
             if (inventoryServiceUrl == null || inventoryServiceUrl.isEmpty()) {
                 inventoryServiceUrl = "http://localhost:8081/api/accessibilityFeatures/";
             }
-
             Map<String, Object> model = new HashMap<>();
             model.put("inventoryServiceUrl", inventoryServiceUrl);
 

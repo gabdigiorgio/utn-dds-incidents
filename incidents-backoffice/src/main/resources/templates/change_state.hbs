@@ -161,6 +161,8 @@ campoNoSePuede.style.display = 'block';
 </script>
 
 <script>
+  if (!document.cookie.split(";").some((item) => item.trim().startsWith("auth="))) window.location.href = "/ui/incidents/login";
+
 // Mapeo de estados
 const estadoMapping = {
   Asignado: "assigned",
@@ -221,7 +223,7 @@ form.onsubmit = async (e) => {
     }
   }
 
-  window.location.href = `http://localhost:8080/ui/incidents/${id}`;
+  window.location.href = `/ui/incidents/${id}`;
 };
 </script>
 </html>
