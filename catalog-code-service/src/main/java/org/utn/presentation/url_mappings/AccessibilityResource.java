@@ -15,7 +15,7 @@ public class AccessibilityResource implements EndpointGroup {
     @Override
     public void addEndpoints() {
         AccessibilityController accessibilityController = new AccessibilityController(objectMapper);
-        ApiBuilder.path("/api/accessibilityFeatures", () -> {
+        ApiBuilder.path("/api/accessibility-features", () -> {
             ApiBuilder.get("/", accessibilityController.getAccessibilityFeatures);
             ApiBuilder.put("/{catalogCode}", accessibilityController.updateAccessibilityFeature);
             ApiBuilder.get("/{catalogCode}", accessibilityController.getAccessibilityFeature);
