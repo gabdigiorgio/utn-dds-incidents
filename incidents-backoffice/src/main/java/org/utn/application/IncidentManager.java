@@ -7,6 +7,7 @@ import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.*;
 import org.utn.domain.incident.factory.IncidentFactory;
+import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.state.StateTransitionException;
 import org.utn.domain.incident.IncidentsRepository;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
@@ -55,7 +56,7 @@ public class IncidentManager {
             Integer startIndex,
             Integer pageSize,
             String orderBy,
-            String state,
+            State state,
             String catalogCode
     ) throws InvalidCatalogCodeException {
         List<Incident> incidents;
@@ -109,7 +110,10 @@ public class IncidentManager {
         return performIncidentAction(id, incident -> incident.assignEmployee(employee));
     }
 
-    public Incident confirmIncident(Integer id) throws StateTransitionException {
+    public Incident confirmIncident(Integer id) throws StateTransitionException, IOException {
+        Incident incident = incidentsRepository.getById(id);
+        var catalogCode = incident.getCatalogCode();
+        inventoryService.setAccessibilityFeatureStatus(catalogCode, "inaccessible");
         return performIncidentAction(id, Incident::confirm);
     }
 
@@ -117,8 +121,19 @@ public class IncidentManager {
         return performIncidentAction(id, Incident::startProgress);
     }
 
-    public Incident resolveIncident(Integer id) throws StateTransitionException {
-        return performIncidentAction(id, Incident::resolveIncident);
+    public Incident resolveIncident(Integer id) throws StateTransitionException, IOException {
+        var incident = performIncidentAction(id, Incident::resolveIncident);
+        var catalogCode = incident.getCatalogCode();
+
+        if (checkAllIncidentsResolved(catalogCode)) {
+            inventoryService.setAccessibilityFeatureStatus(catalogCode, "functional");
+        }
+
+        return incident;
+    }
+
+    private boolean checkAllIncidentsResolved(String catalogCode) {
+        return incidentsRepository.allIncidentsResolved(catalogCode);
     }
 
     public Incident dismissIncident(Integer id, String rejectedReason) throws StateTransitionException {
