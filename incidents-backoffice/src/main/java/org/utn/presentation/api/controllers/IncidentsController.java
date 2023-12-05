@@ -61,14 +61,19 @@ public class IncidentsController {
     public Handler getIncidents = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
-        String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
+        String stateString = ctx.queryParamAsClass("state", String.class).getOrDefault(null);
         String place = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
         Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
         Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(10);
 
         Integer startIndex = (page - 1) * pageSize;
 
-        List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, status, place);
+        State stateEnum = null;
+        if (stateString != null) {
+            stateEnum = State.valueOf(stateString.toUpperCase());
+        }
+
+        List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, stateEnum, place);
 
         returnJson(objectMapper.writeValueAsString(incidents), ctx);
     };

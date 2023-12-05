@@ -2,6 +2,7 @@ package org.utn.persistence.incident;
 
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.IncidentsRepository;
+import org.utn.domain.incident.state.State;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,12 +63,17 @@ public final class IncidentsInMemoryRepository implements IncidentsRepository {
     }
 
     @Override
-    public List<Incident> findIncidentsWithPagination(int startIndex, int pageSize, String state, String orderBy, String catalogCode) {
+    public List<Incident> findIncidentsWithPagination(int startIndex, int pageSize, State state, String orderBy, String catalogCode) {
         return null;
     }
 
     public int count() {
         return incidents.size();
+    }
+
+    @Override
+    public boolean allIncidentsResolved(String catalogCode) {
+        return false;
     }
 
     public static List<Incident> filterByQuantity( List<Incident> list, int quantity) {

@@ -39,7 +39,7 @@ public class OkInventoryService implements InventoryService {
 
     public void setAccessibilityFeatureStatus(String catalogCode, String status) throws IOException {
         String url = baseUrl + "/accessibility-features/" + catalogCode;
-        
+
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         String jsonBody = "{\"status\": \"" + status + "\"}";
 
