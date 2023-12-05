@@ -1,6 +1,6 @@
-package org.utn.presentation.api.dto.responses;
+package org.utn.domain.accessibility_feature;
 
-public class AccessibilityFeatureResponse {
+public class AccessibilityFeature {
     private String catalogCode;
     private String type;
     private String status;

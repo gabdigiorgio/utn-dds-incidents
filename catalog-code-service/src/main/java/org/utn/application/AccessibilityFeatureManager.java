@@ -17,9 +17,9 @@ public class AccessibilityFeatureManager {
         return accessibilityFeatureRepository.getByCatalogCode(catalogCode);
     }
 
-    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String catalogCode, String line, String station,
+    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String catalogCode, String line, Integer stationId,
                                                                AccessibilityFeature.Status status, AccessibilityFeature.Type type) {
-        var accessibilityFeatures = accessibilityFeatureRepository.findAccessibilityFeatures(limit, catalogCode, line, station, status, type);
+        var accessibilityFeatures = accessibilityFeatureRepository.findAccessibilityFeatures(limit, catalogCode, line, stationId, status, type);
         return accessibilityFeatures;
     }
 

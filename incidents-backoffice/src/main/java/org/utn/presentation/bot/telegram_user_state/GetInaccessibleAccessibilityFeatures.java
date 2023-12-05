@@ -81,7 +81,7 @@ public class GetInaccessibleAccessibilityFeatures extends UserBotState {
 
             var inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(telegramUserBot.getInaccessibleAccessibilityFeaturesQuantity(),
                     telegramUserBot.getLine(), telegramUserBot.getStation());
-            Shows.showInaccessibleAccessibilityFeatures(telegramUserBot,bot, inaccessibleAccessibilityFeatures);
+            //Shows.showInaccessibleAccessibilityFeatures(telegramUserBot,bot, inaccessibleAccessibilityFeatures);
         }
     }
 

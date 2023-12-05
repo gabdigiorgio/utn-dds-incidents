@@ -38,7 +38,7 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
     }
 
     @Override
-    public List<AccessibilityFeature> findAccessibilityFeatures(Integer quantity, String catalogCode, String line, String stationName,
+    public List<AccessibilityFeature> findAccessibilityFeatures(Integer quantity, String catalogCode, String line, Integer stationId,
                                                                 AccessibilityFeature.Status status, AccessibilityFeature.Type type) {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(AccessibilityFeature.class);
@@ -54,8 +54,8 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
             predicates.add(criteriaBuilder.equal(root.get("station").get("line").get("id"), line));
         }
 
-        if (stationName != null) {
-            predicates.add(criteriaBuilder.equal(root.get("station").get("name"), stationName));
+        if (stationId != null) {
+            predicates.add(criteriaBuilder.equal(root.get("station").get("id"), stationId));
         }
 
         if (status != null) {
