@@ -225,7 +225,7 @@ public class Shows {
         String selectedLine = telegramUserBot.getLine();
         int lineIndex = telegramUserBot.getLineIndex();
 
-        if (lineIndex != -1) {
+        if (lineIndex != -1 && !stationsResponse.isEmpty()) {
             StringBuilder stationsMsg = new StringBuilder("Estaciones de la " + selectedLine + ":\n");
 
             for (int i = 0; i < stationsResponse.size(); i++) {
@@ -235,11 +235,14 @@ public class Shows {
             sendMessage.setText(stationsMsg.toString());
             telegramUserBot.setPossibleStations(stationsResponse);
         } else {
-            sendMessage.setText("Línea no encontrada.");
+            sendMessage.setText("No hay estaciones para esa linea.");
+            bot.execute(sendMessage);
+            showBackMainMenu(telegramUserBot, bot);
+            return;
         }
-
         bot.execute(sendMessage);
     }
+
 
 
     private static StationResponse mapToStationResponse(Station station) {
