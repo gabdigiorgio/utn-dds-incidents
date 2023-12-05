@@ -39,10 +39,10 @@ public class AccessibilityController {
     public Handler getAccessibilityFeatures = ctx -> {
         var accessibilityFeatureManager = ManagerFactory.createAccessibilityFeatureManager();
 
-        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(10);
+        Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(null);
         String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
-        String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
+        Integer stationId = ctx.queryParamAsClass("station", Integer.class).getOrDefault(null);
 
         AccessibilityFeature.Status status = null;
         String statusParam = ctx.queryParam("status");
@@ -56,7 +56,7 @@ public class AccessibilityController {
             type = AccessibilityFeature.Type.valueOf(typeParam.toUpperCase());
         }
 
-        var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, station, status, type);
+        var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, stationId, status, type);
         var accessibilityFeaturesResponse = mapAccessibilityFeatureResponses(accessibilityFeatures);
 
         returnJson(objectMapper.writeValueAsString(accessibilityFeaturesResponse), ctx);

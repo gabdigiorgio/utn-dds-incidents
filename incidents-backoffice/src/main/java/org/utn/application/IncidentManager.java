@@ -2,6 +2,9 @@ package org.utn.application;
 
 import javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
+import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.Line;
+import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.*;
 import org.utn.domain.incident.factory.IncidentFactory;
 import org.utn.domain.incident.state.StateTransitionException;
@@ -162,8 +165,16 @@ public class IncidentManager {
         return newIncident;
     }
 
-    public String getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
-        return inventoryService.getInaccessibleAccessibilityFeatures(limit, line, station);
+    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException {
+        return inventoryService.getAccessibilityFeatures(limit, status, line, station);
+    }
+
+    public List<Line> getLines() throws IOException {
+        return inventoryService.getLines();
+    }
+
+    public List<Station> getStationsFromLine(String lineId) throws IOException {
+        return inventoryService.getStationsFromLine(lineId);
     }
 }
 

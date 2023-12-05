@@ -12,6 +12,6 @@ public interface AccessibilityFeatureRepository {
 
     AccessibilityFeature getByCatalogCode(String catalogCode);
 
-    List<AccessibilityFeature> findAccessibilityFeatures(int quantity, String catalogCode, String line, String station,
+    List<AccessibilityFeature> findAccessibilityFeatures(Integer quantity, String catalogCode, String line, Integer station,
                                                          AccessibilityFeature.Status status, AccessibilityFeature.Type type);
 }

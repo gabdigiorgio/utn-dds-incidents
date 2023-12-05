@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Handler;
 import javassist.NotFoundException;
+import org.utn.domain.accessibility_feature.AccessibilityFeature;
 import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.dto.AccessibilityFeatureDTO;
+import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,14 +75,13 @@ public class UIController {
         try {
             var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
-            String inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(10, null, null);
+            //List<AccessibilityFeature> inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(null, null, null);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            List<AccessibilityFeatureDTO> featuresList = objectMapper.readValue(inaccessibleAccessibilityFeatures, new TypeReference<>() {
-            });
+            //List<AccessibilityFeatureResponse> featuresList = objectMapper.readValue(inaccessibleAccessibilityFeatures, new TypeReference<>() {});
 
-            model.put("inaccessibleAccessibilityFeatures", featuresList);
-            ctx.render("inaccessible_accessibility_features.hbs", model);
+            //model.put("inaccessibleAccessibilityFeatures", featuresList);
+            ctx.render("inaccessible_accessibility_features.hbs");
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
@@ -110,11 +110,10 @@ public class UIController {
         try {
             String inventoryServiceUrl = System.getenv("INVENTORY_SERVICE_URL");
             if (inventoryServiceUrl == null || inventoryServiceUrl.isEmpty()) {
-                inventoryServiceUrl = "http://localhost:8081/api/accessibilityFeatures/";
+                inventoryServiceUrl = "http://localhost:8081/api";
             }
             Map<String, Object> model = new HashMap<>();
             model.put("inventoryServiceUrl", inventoryServiceUrl);
-
             ctx.render("create_incident.hbs", model);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));

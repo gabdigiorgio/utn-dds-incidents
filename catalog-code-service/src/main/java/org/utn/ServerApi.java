@@ -8,9 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.Javalin;
-import io.javalin.http.Context;
-import io.javalin.http.Handler;
-import org.utn.modules.ManagerFactory;
+import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.utn.presentation.url_mappings.AccessibilityResource;
 import org.utn.presentation.url_mappings.LineResource;
 
@@ -21,7 +19,7 @@ import static org.utn.presentation.api.controllers.AccessibilityController.parse
 public class ServerApi {
     public static void main(String[] args) {
 
-        Integer port = Integer.parseInt(System.getProperty("port", "8080")); //para correr en local puerto: 8081
+        Integer port = Integer.parseInt(System.getProperty("port", "8081")); //para correr en local puerto: 8081
         Javalin server = Javalin.create().start(port);
         setupExceptions(server);
 
