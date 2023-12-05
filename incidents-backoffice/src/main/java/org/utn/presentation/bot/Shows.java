@@ -5,7 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
+import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.Line;
+import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
+import org.utn.modules.ManagerFactory;
+import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
+import org.utn.presentation.api.dto.responses.LineResponse;
+import org.utn.presentation.api.dto.responses.StationResponse;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 
 import java.io.IOException;
@@ -18,8 +25,9 @@ public class Shows {
         String msg = "¡Hola! \uD83D\uDE00 Bienvenido al bot de TPA SAMA - GRUPO 1";
         sendMessage.setText(msg);
         bot.execute(sendMessage);
-        showInitMessage(telegramUserBot,bot);
+        showInitMessage(telegramUserBot, bot);
     }
+
     public static void showInitMessage(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
@@ -28,7 +36,7 @@ public class Shows {
         bot.execute(sendMessage);
     }
 
-    public static void showMainMenu(TelegramUserBot user, TelegramBot bot){
+    public static void showMainMenu(TelegramUserBot user, TelegramBot bot) {
         SendMessage response = new SendMessage();
         response.setChatId(user.getId());
         response.setText("""
@@ -48,7 +56,7 @@ public class Shows {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg = "➡️ Escriba el número de incidencias que desea visualizar\n"
-                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+                + "↩️ Si desea volver al menu anterior escriba 0️⃣";
 
         sendMessage.setText(msg);
         bot.execute(sendMessage);
@@ -58,7 +66,7 @@ public class Shows {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg = "➡️ Escriba el número de medidas de accesibilidad inaccesibles que desea visualizar\n"
-                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+                + "↩️ Si desea volver al menu anterior escriba 0️⃣";
 
         sendMessage.setText(msg);
         bot.execute(sendMessage);
@@ -68,7 +76,7 @@ public class Shows {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg = "➡️ Escriba la linea de subte de las medidas de accesibilidad inaccesibles que desea visualizar\n"
-                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+                + "↩️ Si desea volver al menu anterior escriba 0️⃣";
 
         sendMessage.setText(msg);
         bot.execute(sendMessage);
@@ -78,7 +86,7 @@ public class Shows {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg = "➡️ Escriba la estación de las medidas de accesibilidad inaccesibles que desea visualizar\n"
-                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+                + "↩️ Si desea volver al menu anterior escriba 0️⃣";
 
         sendMessage.setText(msg);
         bot.execute(sendMessage);
@@ -88,7 +96,7 @@ public class Shows {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg = "➡️ Escriba el código del lugar de las incidencias que desea visualizar\n"
-                +"↩️ Si desea volver al menu anterior escriba 0️⃣";
+                + "↩️ Si desea volver al menu anterior escriba 0️⃣";
 
         sendMessage.setText(msg);
         bot.execute(sendMessage);
@@ -98,7 +106,7 @@ public class Shows {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg = "➡️ Escriba el estado de las incidencias que desea visualizar\n"
-                +"↩️ Si desea volver al menu principal escriba 0️⃣";
+                + "↩️ Si desea volver al menu principal escriba 0️⃣";
 
         sendMessage.setText(msg);
         bot.execute(sendMessage);
@@ -115,19 +123,40 @@ public class Shows {
             bot.execute(sendMessage);
         }
 
-        showBackMainMenu(telegramUserBot,bot);
+        showBackMainMenu(telegramUserBot, bot);
     }
 
     public static void showInaccessibleAccessibilityFeatures(TelegramUserBot telegramUserBot,
-                                                             TelegramBot bot, String inaccessibleAccessibilityFeature) throws TelegramApiException {
+                                                      TelegramBot bot, List<AccessibilityFeature> inaccessibleAccessibilityFeatures)
+            throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String tmp_msg = msgFromAccessibilityFeature(inaccessibleAccessibilityFeature);
+
+        var accessibilityFeaturesResponse = inaccessibleAccessibilityFeatures.stream().
+                map(Shows::mapToAccessibilityFeatureResponse).toList();
+
+        String tmp_msg = msgFromAccessibilityFeature(accessibilityFeaturesResponse);
         sendMessage.setText(tmp_msg);
         bot.execute(sendMessage);
         showBackMainMenu(telegramUserBot, bot);
     }
 
+    private static AccessibilityFeatureResponse mapToAccessibilityFeatureResponse(AccessibilityFeature feature) {
+        AccessibilityFeatureResponse response = new AccessibilityFeatureResponse();
+        response.setCatalogCode(feature.getCatalogCode());
+        response.setType(feature.getType());
+        response.setStatus(feature.getStatus());
+        response.setStation(feature.getStation());
+        response.setLine(feature.getLine());
+        return response;
+    }
+
+    private static LineResponse mapToLineResponse(Line line) {
+        LineResponse response = new LineResponse();
+        response.setId(line.getId());
+        response.setName(line.getName());
+        return response;
+    }
 
     public static void invalidMessage(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
@@ -136,6 +165,7 @@ public class Shows {
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
+
     public static void invalidFormatCode(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
@@ -143,6 +173,7 @@ public class Shows {
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
+
     public static void showBackMainMenu(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
@@ -150,95 +181,102 @@ public class Shows {
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
+
     public static void showPossibleStates(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
         String msg = "Los estados posibles de una incidencia son los siguientes:\n"
-                +"▪️Asignado\n"
-                +"▪️Confirmado\n"
-                +"▪️Desestimado\n"
-                +"▪️En progreso\n"
-                +"▪️Reportado\n"
-                +"▪️Solucionado\n";
+                + "▪️Asignado\n"
+                + "▪️Confirmado\n"
+                + "▪️Desestimado\n"
+                + "▪️En progreso\n"
+                + "▪️Reportado\n"
+                + "▪️Solucionado\n";
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
 
-    public static void showPossibleLines(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
+    public static void showPossibleLines(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException, IOException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg = "Elija la linea de subte:\n"
-                + "1️⃣ ☞ 🔵 Linea A\n"
-                + "2️⃣ ☞ 🔴 Linea B\n"
-                + "3️⃣ ☞ 🔵 Linea C\n"
-                + "4️⃣ ☞ 🟢 Linea D\n"
-                + "5️⃣ ☞ 🟣 Linea E\n"
-                + "6️⃣ ☞ 🟡 Linea H\n";
+        var incidentManager = ManagerFactory.createIncidentManager();
+        var lines = incidentManager.getLines();
+        var linesResponse = lines.stream().map(Shows::mapToLineResponse).toList();
+
+        StringBuilder msgBuilder = new StringBuilder("Elija la linea de subte:\n");
+        for (int i = 0; i < linesResponse.size(); i++) {
+            msgBuilder.append(i + 1).append("️⃣ ☞ ").append(linesResponse.get(i).getName()).append("\n");
+        }
+        String msg = msgBuilder.toString();
+        telegramUserBot.setPossibleLines(linesResponse);
+
         sendMessage.setText(msg);
         bot.execute(sendMessage);
     }
 
-    public static void showPossibleStations(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
-
+    public static void showPossibleStations(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException, IOException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
 
-        String[][] stationsPerLine = {
-                {"Plaza de Mayo", "Perú", "Piedras", "Lima", "Sáenz Peña", "Congreso", "Pasco", "Alberti", "Plaza Miserere", "Loria", "Castro Barros", "Río de Janeiro", "Acoyte", "Primera Junta"},
-                {"Leandro N. Alem", "Florida", "Carlos Pellegrini", "Uruguay", "Callao", "Pasteur", "Pueyrredón", "Carlos Gardel", "Medrano", "Ángel Gallardo", "Malabia", "Dorrego", "Federico Lacroze"},
-                {"Retiro", "General San Martín", "Lavalle", "Diagonal Norte", "Avenida de Mayo", "Moreno", "Independencia", "San Juan", "Constitución"},
-                {"Catedral", "9 de Julio", "Tribunales", "Callao", "Facultad de Medicina", "Pueyrredón", "Agüero", "Bulnes", "Scalabrini Ortiz", "Plaza Italia", "Palermo"},
-                {"Bolívar", "Belgrano", "Independencia", "San José", "Entre Ríos", "Pichincha", "Jujuy", "General Urquiza", "Boedo", "Avenida La Plata"},
-                {"Facultad de Derecho", "Las Heras", "Santa Fe", "Córdoba", "Corrientes", "Once", "Venezuela", "Humberto I", "Inclán", "Caseros", "Parque Patricios", "Hospitales"}
-        };
+        var incidentManager = ManagerFactory.createIncidentManager();
+        var stations = incidentManager.getStationsFromLine(telegramUserBot.getLine());
+        var stationsResponse = stations.stream().map(Shows::mapToStationResponse).toList();
 
         String selectedLine = telegramUserBot.getLine();
         int lineIndex = telegramUserBot.getLineIndex();
+
         if (lineIndex != -1) {
             StringBuilder stationsMsg = new StringBuilder("Estaciones de la " + selectedLine + ":\n");
-            for (int i = 0; i < stationsPerLine[lineIndex].length; i++) {
-                stationsMsg.append((i + 1)).append("️⃣ ☞ ").append(stationsPerLine[lineIndex][i]).append("\n");
+
+            for (int i = 0; i < stationsResponse.size(); i++) {
+                stationsMsg.append((i + 1)).append("️⃣ ☞ ").append(stationsResponse.get(i).getName()).append("\n");
             }
+
             sendMessage.setText(stationsMsg.toString());
+            telegramUserBot.setPossibleStations(stationsResponse);
         } else {
             sendMessage.setText("Línea no encontrada.");
         }
+
         bot.execute(sendMessage);
     }
 
-    private static String msgFromIncident(Incident incidencia){
+
+    private static StationResponse mapToStationResponse(Station station) {
+        StationResponse response = new StationResponse();
+        response.setId(station.getId());
+        response.setName(station.getName());
+        return response;
+    }
+
+    private static String msgFromIncident(Incident incidencia) {
         StringBuilder msg = new StringBuilder();
 
         // Agregar encabezado de tabla
         msg.append("Codigo de catalogo: ").append(incidencia.getCatalogCode()).append("\n")
-            .append("Fecha de reporte: ").append(incidencia.getReportDate()).append("\n")
-            .append("Descripcion: ").append(incidencia.getDescription()).append("\n")
-            .append("Estado: ").append(incidencia.getState().toString()).append("\n")
-            .append("Operador: ").append(incidencia.getOperator()).append("\n")
-            .append("Persona que lo reporto: ").append(incidencia.getReportedBy()).append("\n")
-            .append("Fecha cierre: ").append(incidencia.getClosingDate()).append("\n")
-            .append("Motivo rechazo: ").append(incidencia.getRejectedReason());
+                .append("Fecha de reporte: ").append(incidencia.getReportDate()).append("\n")
+                .append("Descripcion: ").append(incidencia.getDescription()).append("\n")
+                .append("Estado: ").append(incidencia.getState().toString()).append("\n")
+                .append("Operador: ").append(incidencia.getOperator()).append("\n")
+                .append("Persona que lo reporto: ").append(incidencia.getReportedBy()).append("\n")
+                .append("Fecha cierre: ").append(incidencia.getClosingDate()).append("\n")
+                .append("Motivo rechazo: ").append(incidencia.getRejectedReason());
 
         return msg.toString();
     }
 
-    public static String msgFromAccessibilityFeature(String inaccessibleAccessibilityFeatures) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static String msgFromAccessibilityFeature(List<AccessibilityFeatureResponse> inaccessibleAccessibilityFeatures) {
+        StringBuilder formattedText = new StringBuilder("Medidas de Accesibilidad Inaccesibles:\n");
 
         try {
-            JsonNode jsonNode = objectMapper.readTree(inaccessibleAccessibilityFeatures);
+            for (AccessibilityFeatureResponse feature : inaccessibleAccessibilityFeatures) {
+                String catalogCode = feature.getCatalogCode();
+                String type = translateType(feature.getType());
+                String status = translateStatus(feature.getStatus());
+                String stationName = feature.getStation();
+                String stationLine = feature.getLine();
 
-            StringBuilder formattedJson = new StringBuilder("Medidas de Accesibilidad Inaccesibles:\n");
-
-            for (JsonNode featureNode : jsonNode) {
-                String catalogCode = featureNode.get("catalogCode").asText();
-                String type = translateType(featureNode.get("type").asText());
-                String status = translateStatus(featureNode.get("status").asText());
-                JsonNode stationNode = featureNode.get("station");
-                String stationName = stationNode.get("name").asText();
-                String stationLine = stationNode.get("line").asText();
-
-                formattedJson.append("\n🔍 Código de Catálogo: ").append(catalogCode)
+                formattedText.append("\n🔍 Código de Catálogo: ").append(catalogCode)
                         .append("\n🛠️ Tipo: ").append(type)
                         .append("\n🚦 Estado: ").append(status)
                         .append("\n🚉 Estación: ").append(stationName)
@@ -246,8 +284,8 @@ public class Shows {
                         .append("\n---------------------------");
             }
 
-            return formattedJson.toString();
-        } catch (IOException e) {
+            return formattedText.toString();
+        } catch (Exception e) {
             e.printStackTrace();
             return "Error al formatear la información de accesibilidad.";
         }
@@ -278,7 +316,6 @@ public class Shows {
                 return status;
         }
     }
-
 
 
 }
