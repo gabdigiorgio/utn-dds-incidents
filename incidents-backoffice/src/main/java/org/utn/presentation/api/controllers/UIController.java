@@ -75,18 +75,29 @@ public class UIController {
         try {
             var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
-            //List<AccessibilityFeature> inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(null, null, null);
+            var inaccessibleAccessibilityFeatures = incidentManager.getAccessibilityFeatures(null,
+                    "inaccessible", null, null);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            //List<AccessibilityFeatureResponse> featuresList = objectMapper.readValue(inaccessibleAccessibilityFeatures, new TypeReference<>() {});
+            var accessibilityFeaturesResponse = inaccessibleAccessibilityFeatures.stream().
+                    map(this::mapToAccessibilityFeatureResponse).toList();
 
-            //model.put("inaccessibleAccessibilityFeatures", featuresList);
-            ctx.render("inaccessible_accessibility_features.hbs");
+            model.put("inaccessibleAccessibilityFeatures", accessibilityFeaturesResponse);
+            ctx.render("inaccessible_accessibility_features.hbs", model);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
         }
     };
+
+    private AccessibilityFeatureResponse mapToAccessibilityFeatureResponse(AccessibilityFeature feature) {
+        AccessibilityFeatureResponse response = new AccessibilityFeatureResponse();
+        response.setCatalogCode(feature.getCatalogCode());
+        response.setType(feature.getType());
+        response.setStatus(feature.getStatus());
+        response.setStation(feature.getStation());
+        response.setLine(feature.getLine());
+        return response;
+    }
 
     public Handler getIncident = ctx -> {
         try {
