@@ -1,7 +1,11 @@
 package org.utn.presentation.bot.telegram_user;
 
 import org.utn.TelegramBot;
+import org.utn.presentation.api.dto.responses.LineResponse;
+import org.utn.presentation.api.dto.responses.StationResponse;
 import org.utn.presentation.bot.telegram_user_state.UserBotState;
+
+import java.util.List;
 
 public class TelegramUserBot {
     private final Long id;
@@ -9,6 +13,8 @@ public class TelegramUserBot {
     private int incidentsQuantity;
     private int inaccessibleAccessibilityFeaturesQuantity;
     private String line;
+    private List<LineResponse> possibleLines;
+    private List<StationResponse> possibleStations;
     private int lineIndex;
     private String station;
     private UserBotState state;
@@ -79,5 +85,21 @@ public class TelegramUserBot {
 
     public void setStation(String station) {
         this.station = station;
+    }
+
+    public List<LineResponse> getPossibleLines() {
+        return possibleLines;
+    }
+
+    public void setPossibleLines(List<LineResponse> possibleLines) {
+        this.possibleLines = possibleLines;
+    }
+
+    public List<StationResponse> getPossibleStations() {
+        return possibleStations;
+    }
+
+    public void setPossibleStations(List<StationResponse> possibleStations) {
+        this.possibleStations = possibleStations;
     }
 }
