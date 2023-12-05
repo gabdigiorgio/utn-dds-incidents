@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Crear incidencia</title>
     <meta charset="utf-8">
@@ -12,206 +13,229 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
     <style>
-    .select2-container {
-    width: 100% !important;
-    }
+        .select2-container {
+            width: 100% !important;
+        }
 
-    .select2-container .select2-selection--single {
-    height: 3em !important;
-    z-index: 9999;
-    }
+        .select2-container .select2-selection--single {
+            height: 3em !important;
+            z-index: 9999;
+        }
 
-    .custom-height {
-    margin-top: 20px; 
-    }
+        .custom-height {
+            margin-top: 20px;
+        }
 
-    label[for="catalogCode"] {
-    margin-top: 25px;
-    }
+        label[for="catalogCode"] {
+            margin-top: 25px;
+        }
     </style>
 
 </head>
+
 <body>
-<header class="p-3 bg-dark text-white fixed-top">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;"><use xlink:href="#icon"/></svg>
-            </a>
+    <header class="p-3 bg-dark text-white fixed-top">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;">
+                        <use xlink:href="#icon" />
+                    </svg>
+                </a>
 
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
-                <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
-                <li><a href="/ui/incidents/inaccessible-accessibility-features" class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
-                <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
-                <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
-                <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
-            </ul>
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
+                    <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
+                    <li><a href="/ui/incidents/inaccessible-accessibility-features"
+                            class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
+                    <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
+                    <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
+                    <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
+                    <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
+                </ul>
 
-            <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
-                <button type="button" class="btn btn-warning">Registrarse</button>
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
+                    <button type="button" class="btn btn-warning">Registrarse</button>
+                </div>
             </div>
+        </div>
+    </header>
+
+    <div class="container mt-3">
+        <div class="row justify-content-between pt-5">
+            <div class="col-10 pt-3">
+                <h2>Crear nueva incidencia</h2>
+            </div>
+            <div class="col-2 pt-3">
+                <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
+            </div>
+
+            <form id="form">
+                <div class="form-floating mt-3 mb-3">
+                    <select class="form-select" id="line" name="line"></select>
+                    <label for="line">Línea</label>
+                </div>
+                <div class="form-floating mt-3 mb-3">
+                    <select class="form-select" id="station" name="station"></select>
+                    <label for="station">Estación</label>
+                </div>
+
+                <div class="form-floating mt-3 mb-3">
+                    <select class="form-select custom-height" id="catalogCode" name="catalogCode"></select>
+                    <label for="catalogCode">Código de Catálogo</label>
+                </div>
+                <div class="form-floating mt-3 mb-3">
+                    <input type="date" class="form-control" id="reportDate" placeholder="Enter reportDate"
+                        name="reportDate">
+                    <label for="reportDate">Fecha</label>
+                </div>
+                <div class="form-floating mt-3 mb-3">
+                    <input type="text" class="form-control" id="description" placeholder="Enter description"
+                        name="description">
+                    <label for="description">Descripcion</label>
+                </div>
+                <div class="form-floating mt-3 mb-3">
+                    <input type="text" class="form-control" id="reporterId" placeholder="reporterId" name="reporterId">
+                    <label for="reporterId">Reportado por</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Finalizar</button>
+            </form>
         </div>
     </div>
-</header>
 
-<div class="container mt-3">
-    <div class="row justify-content-between pt-5">
-        <div class="col-10 pt-3">
-            <h2>Crear nueva incidencia</h2>
-        </div>
-        <div class="col-2 pt-3">
-            <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
-        </div>
+    <script>
+        const form = document.querySelector("#form");
 
-        <form id="form">
-            <div class="form-floating mt-3 mb-3">
-                <select class="form-select" id="line" name="line">
-                    <option value="Linea A">Linea A</option>
-                    <option value="Linea B">Linea B</option>
-                    <option value="Linea C">Linea C</option>
-                    <option value="Linea D">Linea D</option>
-                    <option value="Linea E">Linea E</option>
-                    <option value="Linea H">Linea H</option>
-                </select>
-                <label for="line">Línea</label>
-            </div>
-            <div class="form-floating mt-3 mb-3">
-                <select class="form-select" id="station" name="station"></select>
-                <label for="station">Estación</label>
-            </div>  
-            <div class="form-floating mt-3 mb-3">
-                <select class="form-select custom-height" id="catalogCode" name="catalogCode"></select>
-                <label for="catalogCode">Código de Catálogo</label>
-            </div>
-            <div class="form-floating mt-3 mb-3">
-                <input type="date" class="form-control" id="reportDate" placeholder="Enter reportDate" name="reportDate">
-                <label for="reportDate">Fecha</label>
-            </div>
-            <div class="form-floating mt-3 mb-3">
-                <input type="text" class="form-control" id="description" placeholder="Enter description" name="description">
-                <label for="description">Descripcion</label>
-            </div>
-            <div class="form-floating mt-3 mb-3">
-                <input type="text" class="form-control" id="reporterId" placeholder="reporterId" name="reporterId">
-                <label for="reporterId">Reportado por</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Finalizar</button>
-        </form>
-    </div>
-</div>
+        const typeTranslations = {
+            ELEVATOR: 'Ascensor',
+            RAMP: 'Rampa',
+            ESCALATOR: 'Escalera mecánica',
+            SIGNAGE: 'Señalización',
+        };
 
-<script>
-
-    const form = document.querySelector("#form");
-
-    const typeTranslations = {
-        ELEVATOR: 'Ascensor',
-        RAMP: 'Rampa',
-        ESCALATOR: 'Escalera mecánica',
-        SIGNAGE: 'Señalización',
-    };
-
-    const lineStations = {
-       "Linea A": ["Plaza de Mayo", "Perú", "Piedras", "Lima", "Sáenz Peña", "Congreso", "Pasco", "Alberti", "Plaza Miserere", "Loria", "Castro Barros", "Río de Janeiro", "Acoyte", "Primera Junta"],
-        "Linea B": ["Leandro N. Alem", "Florida", "Carlos Pellegrini", "Uruguay", "Callao", "Pasteur", "Pueyrredón", "Carlos Gardel", "Medrano", "Ángel Gallardo", "Malabia", "Dorrego", "Federico Lacroze"],
-        "Linea C": ["Retiro", "General San Martín", "Lavalle", "Diagonal Norte", "Avenida de Mayo", "Moreno", "Independencia", "San Juan", "Constitución"],
-        "Linea D": ["Catedral", "9 de Julio", "Tribunales", "Callao", "Facultad de Medicina", "Pueyrredón", "Agüero", "Bulnes", "Scalabrini Ortiz", "Plaza Italia", "Palermo"],
-        "Linea E": ["Bolívar", "Belgrano", "Independencia", "San José", "Entre Ríos", "Pichincha", "Jujuy", "General Urquiza", "Boedo", "Avenida La Plata"],
-        "Linea H": ["Facultad de Derecho", "Las Heras", "Santa Fe", "Córdoba", "Corrientes", "Once", "Venezuela", "Humberto I", "Inclán", "Caseros", "Parque Patricios", "Hospitales"],
-    };
-
-    $('#catalogCode').select2({
-        ajax: {
-            url: "{{inventoryServiceUrl}}",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                const station = form.querySelector('select[name="station"]').value;
-                const line = form.querySelector('select[name="line"]').value;
-
-                return {
-                    term: params.term,
-                    station: station,
-                    line: line,
-                    _type: 'query',
-                    q: params.term,
-                };
-            },
-            processResults: function (data) {
-                const formattedResults = data.map(item => {
-                    const typeTranslation = typeTranslations[item.type] || item.type;
-                    const displayName = `${typeTranslation} (${item.catalogCode})`;
+        $('#catalogCode').select2({
+            ajax: {
+                url: "{{inventoryServiceUrl}}/accessibility-features",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    const station = $('#station').val();
+                    const line = $('#line').val();
 
                     return {
-                        id: item.catalogCode,
-                        text: displayName,
+                        term: params.term,
+                        station: station,
+                        line: line,
+                        _type: 'query',
+                        q: params.term,
                     };
-                });
+                },
+                processResults: function (data) {
+                    const formattedResults = data.map(item => {
+                        const typeTranslation = typeTranslations[item.type] || item.type;
+                        const displayName = `${typeTranslation} (${item.catalogCode})`;
 
-                return {
-                    results: formattedResults,
-                };
+                        return {
+                            id: item.catalogCode,
+                            text: displayName,
+                        };
+                    });
+
+                    return {
+                        results: formattedResults,
+                    };
+                },
+                cache: true,
             },
-            cache: true,
-        },
-    });
-
-    const lineSelect = document.querySelector('#line');
-    const initialLine = lineSelect.value;
-    const initialStations = lineStations[initialLine] || [];
-    const stationSelect = document.querySelector('#station');
-
-    initialStations.forEach(station => {
-        const option = new Option(station, station);
-        stationSelect.add(option);
-    });
-
-    lineSelect.addEventListener('change', function () {
-        const selectedLine = this.value;
-        const stations = lineStations[selectedLine] || [];
-
-        stationSelect.innerHTML = '';
-
-        stations.forEach(station => {
-            const option = new Option(station, station);
-            stationSelect.add(option);
-        });
-    });
-
-    form.onsubmit = async (e) => {
-        e.preventDefault();
-
-        const formatDate = (inputDate) => {
-            const date = new Date(inputDate);
-            const day = date.getDate().toString().padStart(2, '0');
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}${month}${year}`;
-        };
-
-        const data = {
-            catalogCode: form.querySelector('select[name="catalogCode"]').value,
-            reportDate: formatDate(form.querySelector('input[name="reportDate"]').value),
-            description: form.querySelector('input[name="description"]').value,
-            reporterId: form.querySelector('input[name="reporterId"]').value
-        };
-
-        const response = await fetch('/api/incidents', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
         });
 
-        const responseData = await response.json();
-        if (responseData.status === 400) alert(responseData.message);
-        else window.location.href = "/ui/incidents";
-    };
-</script>
+        $('#line').select2({
+            ajax: {
+                url: "{{inventoryServiceUrl}}/lines",
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    const formattedResults = data.map(item => {
+                        return {
+                            id: item.id,
+                            text: item.name,
+                        };
+                    });
+
+                    return {
+                        results: formattedResults,
+                    };
+                },
+                cache: true,
+            },
+        });
+
+        $('#station').select2({
+            ajax: {
+                url: function (params) {
+                    const lineId = $('#line').val();
+                    return `{{inventoryServiceUrl}}/lines/${lineId}/stations`;
+                },
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        _type: 'query',
+                        q: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    const formattedResults = data.map(item => {
+                        return {
+                            id: item.id,
+                            text: item.name,
+                        };
+                    });
+
+                    return {
+                        results: formattedResults,
+                    };
+                },
+                cache: true,
+            },
+        });
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+
+            const formatDate = (inputDate) => {
+                const date = new Date(inputDate);
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}${month}${year}`;
+            };
+
+            const data = {
+                catalogCode: $('#catalogCode').val(),
+                reportDate: formatDate($('#reportDate').val()),
+                description: $('#description').val(),
+                reporterId: $('#reporterId').val()
+            };
+
+            const response = await fetch('/api/incidents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const responseData = await response.json();
+            if (responseData.status === 400) alert(responseData.message);
+            else window.location.href = "/ui/incidents";
+        };
+    </script>
+
+
 
 </body>
+
 </html>
