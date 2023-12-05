@@ -103,7 +103,10 @@
         </div>
     </div>
 
-    <script>
+    <script type="module" src="/token.js"></script>
+
+    <script type="module">
+        import { getToken } from '/token.js';
         $(document).ready(function () {
             const form = $("#form");
 
@@ -116,7 +119,7 @@
 
             $('#catalogCode').select2({
                 ajax: {
-                    url: "{{inventoryServiceUrl}}/accessibility-features",
+                    url: "/api/incidents/accessibility-features",
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
@@ -152,7 +155,7 @@
 
             $('#line').select2({
                 ajax: {
-                    url: "{{inventoryServiceUrl}}/lines",
+                    url: "/api/incidents/lines",
                     dataType: 'json',
                     delay: 250,
                     processResults: function (data) {
@@ -175,7 +178,7 @@
                 ajax: {
                     url: function (params) {
                         const lineId = $('#line').val();
-                        return `{{inventoryServiceUrl}}/lines/${lineId}/stations`;
+                        return `/api/incidents/lines/${lineId}/stations`;
                     },
                     dataType: 'json',
                     delay: 250,
@@ -224,6 +227,9 @@
                     url: '/api/incidents',
                     method: 'POST',
                     contentType: 'application/json',
+                    headers: {
+                        'token': getToken(),
+                    },
                     data: JSON.stringify(data),
                     success: function (responseData) {
                         if (responseData.status === 400) {

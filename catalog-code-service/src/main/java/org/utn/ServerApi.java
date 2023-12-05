@@ -20,11 +20,7 @@ public class ServerApi {
     public static void main(String[] args) {
 
         Integer port = Integer.parseInt(System.getProperty("port", "8081")); //para correr en local puerto: 8081
-        Javalin server = Javalin.create(config -> {
-            config.plugins.enableCors(cors -> {
-                cors.add(CorsPluginConfig::anyHost);
-            });
-        }).start(port);
+        Javalin server = Javalin.create().start(port);
         setupExceptions(server);
 
         server.routes(new AccessibilityResource(createObjectMapper()));

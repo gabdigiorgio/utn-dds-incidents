@@ -17,7 +17,7 @@ public class IncidentsResource implements EndpointGroup {
     public void addEndpoints() {
         IncidentsController incidentsController = new IncidentsController(objectMapper);
         ApiBuilder.path("/api/incidents", () -> {
-            ApiBuilder.get("/inaccessible-accessibility-features", incidentsController.getInaccessibleAccessibilityFeatures, Role.ANYONE);
+            ApiBuilder.get("/accessibility-features", incidentsController.getAccessibilityFeatures, Role.ANYONE);
             ApiBuilder.get("/lines", incidentsController.getLines, Role.ANYONE);
             ApiBuilder.get("/lines/{id}/stations", incidentsController.getStationsFromLine, Role.ANYONE);
             ApiBuilder.get("/", incidentsController.getIncidents, Role.ANYONE);

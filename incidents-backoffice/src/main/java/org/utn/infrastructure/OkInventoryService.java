@@ -38,11 +38,14 @@ public class OkInventoryService implements InventoryService {
     }
 
     @Override
-    public List<AccessibilityFeature> getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "/accessibility-features/").newBuilder().addQueryParameter("status", "inaccessible");
+    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "/accessibility-features/").newBuilder();
 
         if (limit != null) {
             urlBuilder.addQueryParameter("limit", limit.toString());
+        }
+        if (status != null) {
+            urlBuilder.addQueryParameter("status", status.toString());
         }
         if (line != null) {
             urlBuilder.addQueryParameter("line", line);

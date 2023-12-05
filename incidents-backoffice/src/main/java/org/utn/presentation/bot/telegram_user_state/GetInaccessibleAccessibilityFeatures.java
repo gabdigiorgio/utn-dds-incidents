@@ -1,6 +1,5 @@
 package org.utn.presentation.bot.telegram_user_state;
 
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
 import org.utn.application.IncidentManager;
@@ -79,8 +78,8 @@ public class GetInaccessibleAccessibilityFeatures extends UserBotState {
                 return;
             }
 
-            var inaccessibleAccessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(telegramUserBot.getInaccessibleAccessibilityFeaturesQuantity(),
-                    telegramUserBot.getLine(), telegramUserBot.getStation());
+            //var inaccessibleAccessibilityFeatures = incidentManager.getAccessibilityFeatures(telegramUserBot.getInaccessibleAccessibilityFeaturesQuantity(),
+            //        telegramUserBot.getLine(), telegramUserBot.getStation());
             //Shows.showInaccessibleAccessibilityFeatures(telegramUserBot,bot, inaccessibleAccessibilityFeatures);
         }
     }

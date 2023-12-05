@@ -10,7 +10,7 @@ import java.util.List;
 public interface InventoryService {
     void validateCatalogCode(String catalogCode) throws IOException;
 
-    List<AccessibilityFeature> getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException;
+    List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException;
 
     List<Line> getLines() throws IOException;
 

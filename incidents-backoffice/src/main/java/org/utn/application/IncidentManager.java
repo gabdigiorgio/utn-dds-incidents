@@ -165,8 +165,8 @@ public class IncidentManager {
         return newIncident;
     }
 
-    public List<AccessibilityFeature> getInaccessibleAccessibilityFeatures(Integer limit, String line, String station) throws IOException {
-        return inventoryService.getInaccessibleAccessibilityFeatures(limit, line, station);
+    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException {
+        return inventoryService.getAccessibilityFeatures(limit, status, line, station);
     }
 
     public List<Line> getLines() throws IOException {

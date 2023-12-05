@@ -40,7 +40,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class IncidentsController {
     private ObjectMapper objectMapper;
@@ -151,14 +150,15 @@ public class IncidentsController {
         returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
     };
 
-    public Handler getInaccessibleAccessibilityFeatures = ctx -> {
+    public Handler getAccessibilityFeatures = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
 
         Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(null);
+        String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
         String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
 
-        var accessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(limit, line, station);
+        var accessibilityFeatures = incidentManager.getAccessibilityFeatures(limit, status, line, station);
         var accessibilityFeaturesResponse = accessibilityFeatures.stream().map(this::mapToAccessibilityFeatureResponse).toList();
 
         ctx.json(accessibilityFeaturesResponse);
