@@ -37,6 +37,27 @@ public class OkInventoryService implements InventoryService {
         }
     }
 
+    public void setAccessibilityFeatureStatus(String catalogCode, String status) throws IOException {
+        String url = baseUrl + "/accessibility-features/" + catalogCode;
+        
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        String jsonBody = "{\"status\": \"" + status + "\"}";
+
+        RequestBody requestBody = RequestBody.create(JSON, jsonBody);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .put(requestBody)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                System.out.println("Error response: " + response.body().string());
+                throw new InvalidCatalogCodeException(catalogCode);
+            }
+        }
+    }
+
     @Override
     public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "/accessibility-features/").newBuilder();

@@ -109,7 +109,9 @@ public class IncidentManager {
         return performIncidentAction(id, incident -> incident.assignEmployee(employee));
     }
 
-    public Incident confirmIncident(Integer id) throws StateTransitionException {
+    public Incident confirmIncident(Integer id) throws StateTransitionException, IOException {
+        Incident incident = incidentsRepository.getById(id);
+        inventoryService.setAccessibilityFeatureStatus(incident.getCatalogCode(), "inaccessible");
         return performIncidentAction(id, Incident::confirm);
     }
 

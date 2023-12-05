@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.Javalin;
-import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.utn.presentation.url_mappings.AccessibilityResource;
 import org.utn.presentation.url_mappings.LineResource;
 
