@@ -80,7 +80,6 @@
                     <select class="form-select" id="station" name="station"></select>
                     <label for="station">Estación</label>
                 </div>
-
                 <div class="form-floating mt-3 mb-3">
                     <select class="form-select custom-height" id="catalogCode" name="catalogCode"></select>
                     <label for="catalogCode">Código de Catálogo</label>
@@ -105,135 +104,141 @@
     </div>
 
     <script>
-        const form = document.querySelector("#form");
+        $(document).ready(function () {
+            const form = $("#form");
 
-        const typeTranslations = {
-            ELEVATOR: 'Ascensor',
-            RAMP: 'Rampa',
-            ESCALATOR: 'Escalera mecánica',
-            SIGNAGE: 'Señalización',
-        };
-
-        $('#catalogCode').select2({
-            ajax: {
-                url: "{{inventoryServiceUrl}}/accessibility-features",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    const station = $('#station').val();
-                    const line = $('#line').val();
-
-                    return {
-                        term: params.term,
-                        station: station,
-                        line: line,
-                        _type: 'query',
-                        q: params.term,
-                    };
-                },
-                processResults: function (data) {
-                    const formattedResults = data.map(item => {
-                        const typeTranslation = typeTranslations[item.type] || item.type;
-                        const displayName = `${typeTranslation} (${item.catalogCode})`;
-
-                        return {
-                            id: item.catalogCode,
-                            text: displayName,
-                        };
-                    });
-
-                    return {
-                        results: formattedResults,
-                    };
-                },
-                cache: true,
-            },
-        });
-
-        $('#line').select2({
-            ajax: {
-                url: "{{inventoryServiceUrl}}/lines",
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) {
-                    const formattedResults = data.map(item => {
-                        return {
-                            id: item.id,
-                            text: item.name,
-                        };
-                    });
-
-                    return {
-                        results: formattedResults,
-                    };
-                },
-                cache: true,
-            },
-        });
-
-        $('#station').select2({
-            ajax: {
-                url: function (params) {
-                    const lineId = $('#line').val();
-                    return `{{inventoryServiceUrl}}/lines/${lineId}/stations`;
-                },
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        term: params.term,
-                        _type: 'query',
-                        q: params.term,
-                    };
-                },
-                processResults: function (data) {
-                    const formattedResults = data.map(item => {
-                        return {
-                            id: item.id,
-                            text: item.name,
-                        };
-                    });
-
-                    return {
-                        results: formattedResults,
-                    };
-                },
-                cache: true,
-            },
-        });
-
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-
-            const formatDate = (inputDate) => {
-                const date = new Date(inputDate);
-                const day = date.getDate().toString().padStart(2, '0');
-                const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                const year = date.getFullYear();
-                return `${day}${month}${year}`;
+            const typeTranslations = {
+                ELEVATOR: 'Ascensor',
+                RAMP: 'Rampa',
+                ESCALATOR: 'Escalera mecánica',
+                SIGNAGE: 'Señalización',
             };
 
-            const data = {
-                catalogCode: $('#catalogCode').val(),
-                reportDate: formatDate($('#reportDate').val()),
-                description: $('#description').val(),
-                reporterId: $('#reporterId').val()
-            };
+            $('#catalogCode').select2({
+                ajax: {
+                    url: "{{inventoryServiceUrl}}/accessibility-features",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        const station = $('#station').val();
+                        const line = $('#line').val();
 
-            const response = await fetch('/api/incidents', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+                        return {
+                            term: params.term,
+                            station: station,
+                            line: line,
+                            _type: 'query',
+                            q: params.term,
+                        };
+                    },
+                    processResults: function (data) {
+                        const formattedResults = data.map(item => {
+                            const typeTranslation = typeTranslations[item.type] || item.type;
+                            const displayName = `${typeTranslation} (${item.catalogCode})`;
+
+                            return {
+                                id: item.catalogCode,
+                                text: displayName,
+                            };
+                        });
+
+                        return {
+                            results: formattedResults,
+                        };
+                    },
+                    cache: true,
                 },
-                body: JSON.stringify(data),
             });
 
-            const responseData = await response.json();
-            if (responseData.status === 400) alert(responseData.message);
-            else window.location.href = "/ui/incidents";
-        };
-    </script>
+            $('#line').select2({
+                ajax: {
+                    url: "{{inventoryServiceUrl}}/lines",
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (data) {
+                        const formattedResults = data.map(item => {
+                            return {
+                                id: item.id,
+                                text: item.name,
+                            };
+                        });
 
+                        return {
+                            results: formattedResults,
+                        };
+                    },
+                    cache: true,
+                },
+            });
+
+            $('#station').select2({
+                ajax: {
+                    url: function (params) {
+                        const lineId = $('#line').val();
+                        return `{{inventoryServiceUrl}}/lines/${lineId}/stations`;
+                    },
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            term: params.term,
+                            _type: 'query',
+                            q: params.term,
+                        };
+                    },
+                    processResults: function (data) {
+                        const formattedResults = data.map(item => {
+                            return {
+                                id: item.id,
+                                text: item.name,
+                            };
+                        });
+
+                        return {
+                            results: formattedResults,
+                        };
+                    },
+                    cache: true,
+                },
+            });
+
+            form.submit(function (e) {
+                e.preventDefault();
+
+                const formatDate = (inputDate) => {
+                    const date = new Date(inputDate);
+                    const day = date.getDate().toString().padStart(2, '0');
+                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}${month}${year}`;
+                };
+
+                const data = {
+                    catalogCode: $('#catalogCode').val(),
+                    reportDate: formatDate($('#reportDate').val()),
+                    description: $('#description').val(),
+                    reporterId: $('#reporterId').val()
+                };
+
+                $.ajax({
+                    url: '/api/incidents',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (responseData) {
+                        if (responseData.status === 400) {
+                            alert(responseData.message);
+                        } else {
+                            window.location.href = "/ui/incidents";
+                        }
+                    },
+                    error: function () {
+                        alert('Error en la solicitud AJAX');
+                    }
+                });
+            });
+        });
+    </script>
 
 
 </body>
