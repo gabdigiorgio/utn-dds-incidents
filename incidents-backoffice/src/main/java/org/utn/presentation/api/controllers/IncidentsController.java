@@ -12,6 +12,9 @@ import com.opencsv.CSVReaderBuilder;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
+import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.Line;
+import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.job.Job;
@@ -21,7 +24,10 @@ import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.presentation.api.dto.requests.EmployeeRequest;
 import org.utn.presentation.api.dto.requests.RejectedReasonRequest;
+import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
 import org.utn.presentation.api.dto.responses.ErrorResponse;
+import org.utn.presentation.api.dto.responses.LineResponse;
+import org.utn.presentation.api.dto.responses.StationResponse;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
@@ -34,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class IncidentsController {
     private ObjectMapper objectMapper;
@@ -72,14 +79,7 @@ public class IncidentsController {
 
         CreateIncidentRequest request = ctx.bodyAsClass(CreateIncidentRequest.class);
 
-        Incident newIncident = incidentManager.createIncident(request.catalogCode,
-                DateUtils.parseDate(request.reportDate),
-                request.description,
-                State.REPORTED.toString(),
-                null,
-                request.reporterId,
-                null,
-                null);
+        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate), request.description, State.REPORTED.toString(), null, request.reporterId, null, null);
 
         returnJson(objectMapper.writeValueAsString(newIncident), ctx);
         ctx.status(201);
@@ -159,16 +159,63 @@ public class IncidentsController {
         String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
 
         var accessibilityFeatures = incidentManager.getInaccessibleAccessibilityFeatures(limit, line, station);
+        var accessibilityFeaturesResponse = accessibilityFeatures.stream().map(this::mapToAccessibilityFeatureResponse).toList();
 
-        ctx.json(accessibilityFeatures);
+        ctx.json(accessibilityFeaturesResponse);
     };
+
+    public Handler getLines = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+        var lines = incidentManager.getLines();
+        var linesResponse = lines.stream().map(this::mapToLineResponse).toList();
+
+        ctx.json(linesResponse);
+    };
+
+    public Handler getStationsFromLine = ctx -> {
+        var incidentManager = ManagerFactory.createIncidentManager();
+        var id = getStringId(ctx);
+        var stations = incidentManager.getStationsFromLine(id);
+        var stationResponses = stations.stream().map(this::mapToStationResponse).toList();
+
+        ctx.json(stationResponses);
+    };
+
+    private AccessibilityFeatureResponse mapToAccessibilityFeatureResponse(AccessibilityFeature feature) {
+        AccessibilityFeatureResponse response = new AccessibilityFeatureResponse();
+        response.setCatalogCode(feature.getCatalogCode());
+        response.setType(feature.getType());
+        response.setStatus(feature.getStatus());
+        response.setStation(feature.getStation());
+        response.setLine(feature.getLine());
+        return response;
+    }
+
+    private LineResponse mapToLineResponse(Line line) {
+        LineResponse response = new LineResponse();
+        response.setId(line.getId());
+        response.setName(line.getName());
+        return response;
+    }
+
+    private StationResponse mapToStationResponse(Station station) {
+        StationResponse response = new StationResponse();
+        response.setId(station.getId());
+        response.setName(station.getName());
+        return response;
+    }
 
     private void returnJson(String objectMapper, Context ctx) {
         String json = objectMapper;
         ctx.json(json);
     }
+
     private static int getId(Context ctx) {
         return Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+    }
+
+    private static String getStringId(Context ctx) {
+        return ctx.pathParam("id");
     }
 
     public Handler deleteIncident = ctx -> {
@@ -182,16 +229,9 @@ public class IncidentsController {
 
     private boolean areCsvHeadersValid(String csvText) {
         try {
-            CSVParser csvParser = new CSVParserBuilder()
-                    .withSeparator('\t')
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .withIgnoreQuotations(true)
-                    .build();
+            CSVParser csvParser = new CSVParserBuilder().withSeparator('\t').withIgnoreLeadingWhiteSpace(true).withIgnoreQuotations(true).build();
 
-            CSVReader csvReader = new CSVReaderBuilder(new StringReader(csvText))
-                    .withSkipLines(0)
-                    .withCSVParser(csvParser)
-                    .build();
+            CSVReader csvReader = new CSVReaderBuilder(new StringReader(csvText)).withSkipLines(0).withCSVParser(csvParser).build();
 
             String[] headers = csvReader.readNext();
             CsvReader.deleteCharacterBOM(headers);

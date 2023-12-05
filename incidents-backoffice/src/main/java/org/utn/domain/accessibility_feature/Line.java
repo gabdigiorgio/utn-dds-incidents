@@ -1,6 +1,6 @@
-package org.utn.presentation.api.dto.responses;
+package org.utn.domain.accessibility_feature;
 
-public class StationResponse {
+public class Line {
     private String id;
     private String name;
 

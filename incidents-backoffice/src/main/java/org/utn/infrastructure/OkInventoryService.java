@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.Line;
+import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.InventoryService;
 import org.utn.infrastructure.responses.AccessibilityFeatureInventoryResponse;
+import org.utn.infrastructure.responses.LineInventoryResponse;
+import org.utn.infrastructure.responses.StationInventoryResponse;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
-
-import java.io.Console;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,7 +79,7 @@ public class OkInventoryService implements InventoryService {
 
 
     @Override
-    public String getLines() throws IOException {
+    public List<Line> getLines() throws IOException {
         var url = baseUrl + "/lines";
 
         var request = buildRequest(url);
@@ -85,12 +87,25 @@ public class OkInventoryService implements InventoryService {
         var response = execute(request);
 
         try (ResponseBody responseBody = response.body()) {
-            return responseBody.string();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            List<LineInventoryResponse> inventoryResponseList = objectMapper.readValue(responseBody.string(), new TypeReference<>() {
+            });
+
+            return inventoryResponseList.stream().map(this::mapToLine).collect(Collectors.toList());
         }
     }
 
+    private Line mapToLine(LineInventoryResponse inventoryResponse) {
+        Line line = new Line();
+        line.setId(inventoryResponse.getId());
+        line.setName(inventoryResponse.getName());
+        return line;
+    }
+
     @Override
-    public String getStationsFromLine(String lineId) throws IOException {
+    public List<Station> getStationsFromLine(String lineId) throws IOException {
         var url = baseUrl + "/lines/" + lineId + "/stations";
 
         var request = buildRequest(url);
@@ -98,8 +113,21 @@ public class OkInventoryService implements InventoryService {
         var response = execute(request);
 
         try (ResponseBody responseBody = response.body()) {
-            return responseBody.string();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            List<StationInventoryResponse> inventoryResponseList = objectMapper.readValue(responseBody.string(), new TypeReference<>() {
+            });
+
+            return inventoryResponseList.stream().map(this::mapToStation).collect(Collectors.toList());
         }
+    }
+
+    private Station mapToStation(StationInventoryResponse inventoryResponse) {
+        Station station = new Station();
+        station.setId(inventoryResponse.getId());
+        station.setName(inventoryResponse.getName());
+        return station;
     }
 
     private Response execute(Request request) throws IOException {
