@@ -26,14 +26,10 @@ import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.presentation.api.dto.requests.EmployeeRequest;
 import org.utn.presentation.api.dto.requests.RejectedReasonRequest;
-import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
-import org.utn.presentation.api.dto.responses.ErrorResponse;
-import org.utn.presentation.api.dto.responses.LineResponse;
-import org.utn.presentation.api.dto.responses.StationResponse;
+import org.utn.presentation.api.dto.responses.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -57,7 +53,9 @@ public class IncidentsController {
 
         Incident incident = incidentManager.getIncident(id);
 
-        returnJson(objectMapper.writeValueAsString(incident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(incident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler getIncidents = ctx -> {
@@ -77,7 +75,9 @@ public class IncidentsController {
 
         List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, stateEnum, place);
 
-        returnJson(objectMapper.writeValueAsString(incidents), ctx);
+        List<IncidentResponse> incidentResponses = incidents.stream().map(IncidentResponse::new).toList();
+
+        returnJson(objectMapper.writeValueAsString(incidentResponses), ctx);
     };
 
     public Handler createIncident = ctx -> {
@@ -90,7 +90,9 @@ public class IncidentsController {
         Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate),
                 request.description, State.REPORTED, null, reporter, null, "");
 
-        returnJson(objectMapper.writeValueAsString(newIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(newIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
         ctx.status(201);
     };
 
@@ -103,7 +105,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.editIncident(id, request);
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler assignEmployeeIncident = ctx -> {
@@ -115,7 +119,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.assignEmployeeIncident(id, request.getEmployee());
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler confirmIncident = ctx -> {
@@ -125,7 +131,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.confirmIncident(id);
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler startProgressIncident = ctx -> {
@@ -135,7 +143,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.startProgressIncident(id);
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler resolveIncident = ctx -> {
@@ -145,7 +155,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.resolveIncident(id);
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler dismissIncident = ctx -> {
@@ -157,7 +169,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler getAccessibilityFeatures = ctx -> {

@@ -20,7 +20,7 @@ public class Incident {
     public LocalDate reportDate;
     public String description;
     public String operator;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "reporter_id")
     public User reportedBy;
     public LocalDate closingDate;
