@@ -119,13 +119,7 @@ public class UIController {
 
     public Handler createIncident = ctx -> {
         try {
-            String inventoryServiceUrl = System.getenv("INVENTORY_SERVICE_URL");
-            if (inventoryServiceUrl == null || inventoryServiceUrl.isEmpty()) {
-                inventoryServiceUrl = "http://localhost:8081/api";
-            }
-            Map<String, Object> model = new HashMap<>();
-            model.put("inventoryServiceUrl", inventoryServiceUrl);
-            ctx.render("create_incident.hbs", model);
+            ctx.render("create_incident.hbs");
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);

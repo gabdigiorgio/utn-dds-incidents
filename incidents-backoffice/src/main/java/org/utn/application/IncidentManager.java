@@ -14,7 +14,6 @@ import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
-
 import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -69,23 +68,22 @@ public class IncidentManager {
             String catalogCode,
             LocalDate reportDate,
             String description,
-            String state,
+            State state,
             String operator,
             String reportedBy,
             LocalDate closingDate,
             String rejectedReason
     ) throws InvalidCatalogCodeException, IOException {
         inventoryService.validateCatalogCode(catalogCode);
-        Incident newIncident = newIncident(
+        Incident newIncident = new Incident(
                 catalogCode,
                 reportDate,
                 description,
-                state,
                 operator,
                 reportedBy,
                 closingDate,
-                rejectedReason
-        );
+                rejectedReason,
+                state);
         incidentsRepository.save(newIncident);
         return newIncident;
     }
@@ -143,41 +141,6 @@ public class IncidentManager {
     public void deleteIncident(Integer id) {
         Incident incident = incidentsRepository.getById(id);
         incidentsRepository.remove(incident);
-    }
-
-    @NotNull
-    private static Incident newIncident(String catalogCode,
-                                        LocalDate reportDate,
-                                        String description,
-                                        String state,
-                                        String operator,
-                                        String reportedBy,
-                                        LocalDate closingDate,
-                                        String rejectedReason) {
-        Incident newIncident;
-        switch (state) {
-            case "Reportado":
-                newIncident = IncidentFactory.createReportedIncident(catalogCode, reportDate, description, operator, reportedBy);
-                break;
-            case "Asignado":
-                newIncident = IncidentFactory.createAssignedIncident(catalogCode, reportDate, description, operator, reportedBy, closingDate, rejectedReason);
-                break;
-            case "Confirmado":
-                newIncident = IncidentFactory.createConfirmedIncident(catalogCode, reportDate, description, operator, reportedBy, closingDate);
-                break;
-            case "Desestimado":
-                newIncident = IncidentFactory.createDismissedIncident(catalogCode, reportDate, description, operator, reportedBy, closingDate, rejectedReason);
-                break;
-            case "En progreso":
-                newIncident = IncidentFactory.createInProgressIncident(catalogCode, reportDate, description, operator, reportedBy, closingDate, rejectedReason);
-                break;
-            case "Solucionado":
-                newIncident = IncidentFactory.createResolvedIncident(catalogCode, reportDate, description, operator, reportedBy, closingDate, rejectedReason);
-                break;
-            default:
-                throw new IllegalArgumentException("Estado de incidencia inválido: " + state);
-        }
-        return newIncident;
     }
 
     public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException {

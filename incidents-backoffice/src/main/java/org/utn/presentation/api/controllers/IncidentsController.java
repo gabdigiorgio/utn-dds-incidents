@@ -83,7 +83,7 @@ public class IncidentsController {
 
         CreateIncidentRequest request = ctx.bodyAsClass(CreateIncidentRequest.class);
 
-        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate), request.description, State.REPORTED.toString(), null, request.reporterId, null, null);
+        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate), request.description, State.REPORTED, null, request.reporterId, null, "");
 
         returnJson(objectMapper.writeValueAsString(newIncident), ctx);
         ctx.status(201);

@@ -8,15 +8,13 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import org.utn.application.IncidentManager;
+import org.utn.application.IncidentCsvManager;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
-
 import org.utn.presentation.bot.telegram_user.TelegramUserUserBotRepo;
 import org.utn.presentation.bot.telegram_user.UserBotRepo;
 import org.utn.presentation.bot.telegram_user_state.WelcomeChat;
 import org.utn.presentation.incidents_load.CsvReader;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,11 +22,11 @@ import java.util.Date;
 public class TelegramBot extends TelegramLongPollingBot {
     private static boolean isBotStarted = false;
 
-    static IncidentManager manager;
+    static IncidentCsvManager incidentCsvManager;
 
-    public TelegramBot(String botToken, IncidentManager manager) {
+    public TelegramBot(String botToken, IncidentCsvManager incidentCsvManager) {
         super(botToken);
-        this.manager = manager;
+        this.incidentCsvManager = incidentCsvManager;
     }
 
     public static boolean isBotStarted() {
@@ -84,7 +82,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 java.io.File downloadedFile = downloadFile(file);
 
                 String filePath = downloadedFile.getAbsolutePath();
-                String result = new CsvReader(manager).execute(filePath);
+                String result = new CsvReader(incidentCsvManager).execute(filePath);
 
                 // Envia el mensaje al usuario
                 SendMessage responseMsg = new SendMessage();
@@ -107,7 +105,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             // Se devuelve el token que nos generó el BotFather de nuestro bot
             String tokenbot = System.getenv("TELEGRAM_BOT_TOKEN");
             // Se registra el bot
-            telegramBotsApi.registerBot(new TelegramBot(tokenbot, ManagerFactory.createIncidentManager()));
+            telegramBotsApi.registerBot(new TelegramBot(tokenbot, ManagerFactory.createIncidentCsvManager()));
             System.out.println("Se inicio la ejecución del BOT correctamente.");
 
             setBotStarted(true);

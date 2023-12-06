@@ -4,20 +4,19 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import org.utn.application.IncidentCsvManager;
 import org.utn.application.IncidentManager;
 import org.utn.utils.DateUtils;
-import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.*;
 
 public class CsvReader {
+    private final IncidentCsvManager incidentCsvManager;
 
-    private final IncidentManager manager;
-
-    public CsvReader(IncidentManager manager) {
-        this.manager = manager;
+    public CsvReader(IncidentCsvManager incidentCsvManager) {
+        this.incidentCsvManager = incidentCsvManager;
     }
 
     private static final Set<String> HEADERS = new HashSet<>(Arrays.asList(
@@ -89,7 +88,7 @@ public class CsvReader {
                 String rejectedReason = filledRecord[headerMap.get("Motivo rechazo")];
 
                 Validator.validate(catalogCode, reportDate, description, state, operator, reportedBy, closingDate, rejectedReason);
-                manager.createIncident(catalogCode,
+                incidentCsvManager.createIncident(catalogCode,
                         DateUtils.parseDate(reportDate),
                         description,
                         state,
