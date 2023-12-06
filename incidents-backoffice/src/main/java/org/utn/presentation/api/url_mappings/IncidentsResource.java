@@ -31,7 +31,7 @@ public class IncidentsResource implements EndpointGroup {
             ApiBuilder.post("/{id}/resolve", incidentsController.resolveIncident, Role.OPERATOR);
             ApiBuilder.post("/{id}/dismiss", incidentsController.dismissIncident, Role.OPERATOR);
             ApiBuilder.post("/upload-csv", incidentsController.createMassiveIncident, Role.OPERATOR);
-            ApiBuilder.get("/processing-csv-state/{id}", incidentsController.getCsvProcessingState, Role.OPERATOR);
+            ApiBuilder.get("/processing-csv-state/{id}", incidentsController.getCsvProcessingState, Role.ANYONE);
         });
     }
 }
