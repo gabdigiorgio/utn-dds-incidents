@@ -70,7 +70,7 @@ public class IncidentsCsvWorker extends DefaultConsumer {
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
             IncidentsCsvWorker worker = new IncidentsCsvWorker(channel, queueName,
-                    new CsvReader(ManagerFactory.createIncidentManager()), ManagerFactory.createJobManager());
+                    new CsvReader(ManagerFactory.createIncidentCsvManager()), ManagerFactory.createJobManager());
             worker.init();
         } catch (AuthenticationFailureException afe) {
             throw new AuthenticationFailureException("Error en la validacion de las credenciales del Worker : " + afe.getMessage());

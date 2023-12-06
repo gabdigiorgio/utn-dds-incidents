@@ -93,7 +93,7 @@
         const statusContainer = $('#status-container');
 
         function fetchAndUpdate() {
-            fetch(`/api/incidents/processing_csv_state/${jobId}`)
+            fetch(`/api/incidents/processing-csv-state/${jobId}`)
                 .then(response => response.json())
                 .then(data => {
                     const jobState = data.jobState;
