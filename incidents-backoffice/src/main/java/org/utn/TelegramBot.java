@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import org.utn.application.IncidentCsvManager;
+import org.utn.application.IncidentMassiveManager;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 import org.utn.presentation.bot.telegram_user.TelegramUserUserBotRepo;
@@ -22,11 +22,11 @@ import java.util.Date;
 public class TelegramBot extends TelegramLongPollingBot {
     private static boolean isBotStarted = false;
 
-    static IncidentCsvManager incidentCsvManager;
+    static IncidentMassiveManager incidentMassiveManager;
 
-    public TelegramBot(String botToken, IncidentCsvManager incidentCsvManager) {
+    public TelegramBot(String botToken, IncidentMassiveManager incidentMassiveManager) {
         super(botToken);
-        this.incidentCsvManager = incidentCsvManager;
+        this.incidentMassiveManager = incidentMassiveManager;
     }
 
     public static boolean isBotStarted() {
@@ -82,7 +82,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 java.io.File downloadedFile = downloadFile(file);
 
                 String filePath = downloadedFile.getAbsolutePath();
-                String result = new CsvReader(incidentCsvManager).execute(filePath);
+                String result = new CsvReader(incidentMassiveManager).execute(filePath);
 
                 // Envia el mensaje al usuario
                 SendMessage responseMsg = new SendMessage();

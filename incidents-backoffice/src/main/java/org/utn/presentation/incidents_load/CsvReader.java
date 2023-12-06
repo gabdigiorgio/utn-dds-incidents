@@ -4,8 +4,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import org.utn.application.IncidentCsvManager;
-import org.utn.application.IncidentManager;
+import org.utn.application.IncidentMassiveManager;
 import org.utn.utils.DateUtils;
 
 import java.io.FileReader;
@@ -13,10 +12,10 @@ import java.io.Reader;
 import java.util.*;
 
 public class CsvReader {
-    private final IncidentCsvManager incidentCsvManager;
+    private final IncidentMassiveManager incidentMassiveManager;
 
-    public CsvReader(IncidentCsvManager incidentCsvManager) {
-        this.incidentCsvManager = incidentCsvManager;
+    public CsvReader(IncidentMassiveManager incidentMassiveManager) {
+        this.incidentMassiveManager = incidentMassiveManager;
     }
 
     private static final Set<String> HEADERS = new HashSet<>(Arrays.asList(
@@ -88,7 +87,7 @@ public class CsvReader {
                 String rejectedReason = filledRecord[headerMap.get("Motivo rechazo")];
 
                 Validator.validate(catalogCode, reportDate, description, state, operator, reportedBy, closingDate, rejectedReason);
-                incidentCsvManager.createIncident(catalogCode,
+                incidentMassiveManager.createIncident(catalogCode,
                         DateUtils.parseDate(reportDate),
                         description,
                         state,

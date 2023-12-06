@@ -18,7 +18,9 @@ import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.job.Job;
+import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
+import org.utn.modules.RepositoryFactory;
 import org.utn.presentation.api.dto.CsvProcessingStateResponse;
 import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
@@ -80,10 +82,13 @@ public class IncidentsController {
 
     public Handler createIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
+        var userRepository = RepositoryFactory.createUserRepository();
 
         CreateIncidentRequest request = ctx.bodyAsClass(CreateIncidentRequest.class);
+        User reporter = userRepository.getByToken(ctx.header("token"));
 
-        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate), request.description, State.REPORTED, null, request.reporterId, null, "");
+        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate),
+                request.description, State.REPORTED, null, reporter, null, "");
 
         returnJson(objectMapper.writeValueAsString(newIncident), ctx);
         ctx.status(201);

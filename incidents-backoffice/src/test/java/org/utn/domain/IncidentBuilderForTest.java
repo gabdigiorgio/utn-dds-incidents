@@ -2,6 +2,8 @@ package org.utn.domain;
 
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.Incident;
+import org.utn.domain.users.Role;
+import org.utn.domain.users.User;
 
 import java.time.LocalDate;
 
@@ -10,7 +12,7 @@ public class IncidentBuilderForTest {
             LocalDate.of(2023, 5, 26),
             "Descripcion de prueba",
             "Operador de prueba",
-            "Reportado por de prueba",
+            new User("test@gmail.com", "123", Role.USER, "123"),
             null,
             "",
             State.DISMISSED);
@@ -19,7 +21,7 @@ public class IncidentBuilderForTest {
     private LocalDate reportDate = DefaultIncident.getReportDate();
     private String description = DefaultIncident.getDescription();
     private String operator = DefaultIncident.getOperator();
-    private String reportedBy = DefaultIncident.getReportedBy();
+    private User reportedBy = DefaultIncident.getReportedBy();
     private LocalDate closingDate = DefaultIncident.getClosingDate();
     private String rejectedReason = DefaultIncident.getRejectedReason();
     private State state = DefaultIncident.getState();
@@ -44,7 +46,7 @@ public class IncidentBuilderForTest {
         return this;
     }
 
-    public IncidentBuilderForTest withReportedBy(String reportedBy) {
+    public IncidentBuilderForTest withReportedBy(User reportedBy) {
         this.reportedBy = reportedBy;
         return this;
     }

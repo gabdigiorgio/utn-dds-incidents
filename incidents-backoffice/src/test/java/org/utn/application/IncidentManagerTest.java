@@ -20,7 +20,7 @@ public class IncidentManagerTest {
 
     private IncidentsRepository repo = mock(IncidentsRepository.class);
     private OkInventoryService inventoryService = mock(OkInventoryService.class);
-    private IncidentCsvManager incidentCsvManager = new IncidentCsvManager(repo, inventoryService);
+    private IncidentMassiveManager incidentMassiveManager = new IncidentMassiveManager(repo, inventoryService);
     private Incident expectedIncident;
 
     @Test
@@ -105,12 +105,12 @@ public class IncidentManagerTest {
     }
 
     private void whenCreateIncident() throws IOException {
-        incidentCsvManager.createIncident(expectedIncident.getCatalogCode(),
+        incidentMassiveManager.createIncident(expectedIncident.getCatalogCode(),
                 expectedIncident.getReportDate(),
                 expectedIncident.getDescription(),
                 expectedIncident.getState().toString(),
                 expectedIncident.getOperator(),
-                expectedIncident.getReportedBy(),
+                null,
                 expectedIncident.getClosingDate(),
                 expectedIncident.getRejectedReason());
     }

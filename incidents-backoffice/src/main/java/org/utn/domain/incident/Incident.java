@@ -1,9 +1,11 @@
 package org.utn.domain.incident;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.Fetch;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.state.StateConverter;
 import org.utn.domain.incident.state.StateTransitionException;
+import org.utn.domain.users.User;
 
 import javax.naming.OperationNotSupportedException;
 import javax.persistence.*;
@@ -18,7 +20,9 @@ public class Incident {
     public LocalDate reportDate;
     public String description;
     public String operator;
-    public String reportedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reporter_id")
+    public User reportedBy;
     public LocalDate closingDate;
     public String rejectedReason;
     @Convert(converter = StateConverter.class)
@@ -30,7 +34,7 @@ public class Incident {
         LocalDate reportDate,
         String description,
         String operator,
-        String reportedBy,
+        User reportedBy,
         LocalDate closingDate,
         String rejectedReason,
         State state
@@ -75,7 +79,7 @@ public class Incident {
         return operator;
     }
 
-    public String getReportedBy() {
+    public User getReportedBy() {
         return reportedBy;
     }
 
@@ -139,7 +143,7 @@ public class Incident {
         this.description = description;
     }
 
-    public void setReportedBy(String reportedBy) {
+    public void setReportedBy(User reportedBy) {
         this.reportedBy = reportedBy;
     }
 

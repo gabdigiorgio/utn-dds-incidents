@@ -9,11 +9,11 @@ import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import java.io.IOException;
 import java.time.LocalDate;
 
-public class IncidentCsvManager {
+public class IncidentMassiveManager {
     private final IncidentsRepository incidentsRepository;
     private InventoryService inventoryService;
 
-    public IncidentCsvManager(IncidentsRepository incidentRepository, InventoryService inventoryService) {
+    public IncidentMassiveManager(IncidentsRepository incidentRepository, InventoryService inventoryService) {
         this.incidentsRepository = incidentRepository;
         this.inventoryService = inventoryService;
     }

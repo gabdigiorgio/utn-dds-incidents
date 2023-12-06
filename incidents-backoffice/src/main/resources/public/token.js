@@ -5,6 +5,7 @@ export const saveToken = (token) => {
   };
 
 export const removeToken = () => {
+    document.cookie = '';
     localStorage.removeItem('token');
 };
 
