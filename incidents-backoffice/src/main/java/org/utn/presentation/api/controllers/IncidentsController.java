@@ -21,7 +21,7 @@ import org.utn.domain.job.Job;
 import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
 import org.utn.modules.RepositoryFactory;
-import org.utn.presentation.api.dto.CsvProcessingStateResponse;
+import org.utn.presentation.api.dto.responses.CsvProcessingStateResponse;
 import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.presentation.api.dto.requests.EmployeeRequest;

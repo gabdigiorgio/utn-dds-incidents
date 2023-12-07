@@ -1,4 +1,4 @@
-package org.utn.presentation.api.dto;
+package org.utn.presentation.api.dto.responses;
 
 import org.utn.domain.job.ProcessState;
 
