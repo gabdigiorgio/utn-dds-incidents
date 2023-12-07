@@ -3,6 +3,7 @@ package org.utn.application;
 import org.utn.domain.job.Job;
 import org.utn.domain.job.ProcessState;
 import org.utn.domain.job.JobsRepository;
+import org.utn.domain.users.User;
 import org.utn.presentation.incidents_load.CsvReader;
 
 public class JobManager {
@@ -13,8 +14,8 @@ public class JobManager {
         this.jobsRepository = jobsRepository;
     }
 
-    public Job createJob(String rawText) {
-        Job job = Job.create(rawText);
+    public Job createJob(String rawText, User creator) {
+        Job job = Job.create(rawText, creator);
         jobsRepository.save(job);
         return job;
     }

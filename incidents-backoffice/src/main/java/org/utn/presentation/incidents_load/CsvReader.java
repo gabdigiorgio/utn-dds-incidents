@@ -5,6 +5,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import org.utn.application.IncidentMassiveManager;
+import org.utn.domain.users.User;
 import org.utn.utils.DateUtils;
 
 import java.io.FileReader;
@@ -25,14 +26,14 @@ public class CsvReader {
     public String execute(String file_path) throws Exception {
         //SE HACE LA LECTURA DEL ARCHIVO
         Reader reader = new FileReader(file_path);
-        return processFile(reader);
+        return processFile(reader, null);
     }
 
-    public String execute(Reader reader) throws Exception {
-        return processFile(reader);
+    public String execute(Reader reader, User creator) throws Exception {
+        return processFile(reader, creator);
     }
 
-    private String processFile(Reader reader) throws Exception {
+    private String processFile(Reader reader, User creator) throws Exception {
 
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator('\t')
@@ -91,8 +92,8 @@ public class CsvReader {
                         DateUtils.parseDate(reportDate),
                         description,
                         state,
-                        operator,
-                        reportedBy,
+                        creator,
+                        creator,
                         DateUtils.parseDate(closingDate),
                         rejectedReason
                 );

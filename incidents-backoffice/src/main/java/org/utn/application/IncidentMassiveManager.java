@@ -5,6 +5,7 @@ import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.IncidentsRepository;
 import org.utn.domain.incident.InventoryService;
 import org.utn.domain.incident.factory.IncidentFactory;
+import org.utn.domain.users.User;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,8 +24,8 @@ public class IncidentMassiveManager {
             LocalDate reportDate,
             String description,
             String state,
-            String operator,
-            String reportedBy,
+            User operator,
+            User reportedBy,
             LocalDate closingDate,
             String rejectedReason
     ) throws InvalidCatalogCodeException, IOException {
@@ -48,8 +49,8 @@ public class IncidentMassiveManager {
                                         LocalDate reportDate,
                                         String description,
                                         String state,
-                                        String operator,
-                                        String reportedBy,
+                                        User operator,
+                                        User reportedBy,
                                         LocalDate closingDate,
                                         String rejectedReason) {
         Incident newIncident;

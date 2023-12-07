@@ -109,8 +109,8 @@ public class IncidentManagerTest {
                 expectedIncident.getReportDate(),
                 expectedIncident.getDescription(),
                 expectedIncident.getState().toString(),
-                expectedIncident.getOperator().toString(),
-                expectedIncident.getReportedBy().toString(),
+                expectedIncident.getOperator(),
+                expectedIncident.getReportedBy(),
                 expectedIncident.getClosingDate(),
                 expectedIncident.getRejectedReason());
     }
