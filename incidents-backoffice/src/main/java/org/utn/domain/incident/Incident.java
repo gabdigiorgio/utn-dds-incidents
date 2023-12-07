@@ -19,7 +19,9 @@ public class Incident {
     public String catalogCode;
     public LocalDate reportDate;
     public String description;
-    public String operator;
+    @ManyToOne
+    @JoinColumn(name = "operator_id")
+    public User operator;
     @ManyToOne
     @JoinColumn(name = "reporter_id")
     public User reportedBy;
@@ -33,7 +35,7 @@ public class Incident {
         String catalogCode,
         LocalDate reportDate,
         String description,
-        String operator,
+        User operator,
         User reportedBy,
         LocalDate closingDate,
         String rejectedReason,
@@ -75,7 +77,7 @@ public class Incident {
         return description;
     }
 
-    public String getOperator() {
+    public User getOperator() {
         return operator;
     }
 
@@ -158,4 +160,5 @@ public class Incident {
         this.rejectedReason = rejectedReason;
     }
 
+    public void setOperator(User operator) { this.operator = operator; }
 }

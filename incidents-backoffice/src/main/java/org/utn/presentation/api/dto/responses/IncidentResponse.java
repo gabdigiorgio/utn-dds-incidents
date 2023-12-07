@@ -24,7 +24,7 @@ public class IncidentResponse {
         this.rejectedReason = incident.getRejectedReason();
         this.state = incident.getState().toString();
         this.employee = incident.getEmployee();
-        this.operator = incident.getOperator();
+        if (incident.getOperator() != null) this.operator = incident.getOperator().getEmail();
     }
 
     public Integer getId() {

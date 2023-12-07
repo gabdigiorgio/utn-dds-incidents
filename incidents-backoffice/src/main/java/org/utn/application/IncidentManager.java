@@ -70,7 +70,7 @@ public class IncidentManager {
             LocalDate reportDate,
             String description,
             State state,
-            String operator,
+            User operator,
             User reportedBy,
             LocalDate closingDate,
             String rejectedReason
@@ -102,6 +102,10 @@ public class IncidentManager {
         action.accept(incident);
         incidentsRepository.update(incident);
         return incident;
+    }
+
+    public Incident setOperator(Integer id, User operator) throws StateTransitionException {
+        return performIncidentAction(id, incident -> incident.setOperator(operator));
     }
 
     public Incident assignEmployeeIncident(Integer id, String employee) throws StateTransitionException {

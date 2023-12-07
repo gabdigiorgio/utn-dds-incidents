@@ -11,8 +11,8 @@ public class IncidentBuilderForTest {
     public static Incident DefaultIncident = new Incident("1234-56",
             LocalDate.of(2023, 5, 26),
             "Descripcion de prueba",
-            "Operador de prueba",
-            new User("test@gmail.com", "123", Role.USER, "123"),
+            new User("operator@gmail.com", "123", Role.OPERATOR, "123"),
+            new User("user@gmail.com", "123", Role.USER, "123"),
             null,
             "",
             State.DISMISSED);
@@ -20,7 +20,7 @@ public class IncidentBuilderForTest {
     private String catalogCode = DefaultIncident.getCatalogCode();
     private LocalDate reportDate = DefaultIncident.getReportDate();
     private String description = DefaultIncident.getDescription();
-    private String operator = DefaultIncident.getOperator();
+    private User operator = DefaultIncident.getOperator();
     private User reportedBy = DefaultIncident.getReportedBy();
     private LocalDate closingDate = DefaultIncident.getClosingDate();
     private String rejectedReason = DefaultIncident.getRejectedReason();
@@ -41,7 +41,7 @@ public class IncidentBuilderForTest {
         return this;
     }
 
-    public IncidentBuilderForTest withOperator(String operator) {
+    public IncidentBuilderForTest withOperator(User operator) {
         this.operator = operator;
         return this;
     }

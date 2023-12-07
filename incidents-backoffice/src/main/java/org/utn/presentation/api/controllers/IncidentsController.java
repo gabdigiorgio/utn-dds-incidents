@@ -112,11 +112,14 @@ public class IncidentsController {
 
     public Handler assignEmployeeIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
+        var userRepository = RepositoryFactory.createUserRepository();
 
         Integer id = getId(ctx);
 
         EmployeeRequest request = ctx.bodyAsClass(EmployeeRequest.class);
+        User operator = userRepository.getByToken(ctx.header("token"));
 
+        incidentManager.setOperator(id, operator);
         Incident editedIncident = incidentManager.assignEmployeeIncident(id, request.getEmployee());
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
