@@ -18,20 +18,18 @@ import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.job.Job;
+import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.dto.CsvProcessingStateResponse;
+import org.utn.modules.RepositoryFactory;
+import org.utn.presentation.api.dto.responses.CsvProcessingStateResponse;
 import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.presentation.api.dto.requests.EmployeeRequest;
 import org.utn.presentation.api.dto.requests.RejectedReasonRequest;
-import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
-import org.utn.presentation.api.dto.responses.ErrorResponse;
-import org.utn.presentation.api.dto.responses.LineResponse;
-import org.utn.presentation.api.dto.responses.StationResponse;
+import org.utn.presentation.api.dto.responses.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
 import org.utn.utils.DateUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -55,7 +53,9 @@ public class IncidentsController {
 
         Incident incident = incidentManager.getIncident(id);
 
-        returnJson(objectMapper.writeValueAsString(incident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(incident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler getIncidents = ctx -> {
@@ -75,17 +75,24 @@ public class IncidentsController {
 
         List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, stateEnum, place);
 
-        returnJson(objectMapper.writeValueAsString(incidents), ctx);
+        List<IncidentResponse> incidentResponses = incidents.stream().map(IncidentResponse::new).toList();
+
+        returnJson(objectMapper.writeValueAsString(incidentResponses), ctx);
     };
 
     public Handler createIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
+        var userRepository = RepositoryFactory.createUserRepository();
 
         CreateIncidentRequest request = ctx.bodyAsClass(CreateIncidentRequest.class);
+        User reporter = userRepository.getByToken(ctx.header("token"));
 
-        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate), request.description, State.REPORTED, null, request.reporterId, null, "");
+        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate),
+                request.description, State.REPORTED, null, reporter, null, "");
 
-        returnJson(objectMapper.writeValueAsString(newIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(newIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
         ctx.status(201);
     };
 
@@ -98,19 +105,26 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.editIncident(id, request);
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler assignEmployeeIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
+        var userRepository = RepositoryFactory.createUserRepository();
 
         Integer id = getId(ctx);
 
         EmployeeRequest request = ctx.bodyAsClass(EmployeeRequest.class);
+        User operator = userRepository.getByToken(ctx.header("token"));
 
+        incidentManager.setOperator(id, operator);
         Incident editedIncident = incidentManager.assignEmployeeIncident(id, request.getEmployee());
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler confirmIncident = ctx -> {
@@ -120,7 +134,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.confirmIncident(id);
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler startProgressIncident = ctx -> {
@@ -130,7 +146,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.startProgressIncident(id);
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler resolveIncident = ctx -> {
@@ -140,7 +158,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.resolveIncident(id);
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler dismissIncident = ctx -> {
@@ -152,7 +172,9 @@ public class IncidentsController {
 
         Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
 
-        returnJson(objectMapper.writeValueAsString(editedIncident), ctx);
+        IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
+
+        returnJson(objectMapper.writeValueAsString(incidentResponse), ctx);
     };
 
     public Handler getAccessibilityFeatures = ctx -> {
@@ -267,7 +289,9 @@ public class IncidentsController {
                 InputStream inputStream = new ByteArrayInputStream(file.content().readAllBytes());
                 String text = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 if (areCsvHeadersValid(text)) {
-                    Job job = ManagerFactory.createJobManager().createJob(text); //TODO: pasar a capa aplicación
+                    var userRepository = RepositoryFactory.createUserRepository();
+                    User creator = userRepository.getByToken(ctx.header("token"));
+                    Job job = ManagerFactory.createJobManager().createJob(text, creator); //TODO: pasar a capa aplicación
                     sendToWorker(job.getId().toString());
                     ctx.json(Map.of("jobId", job.getId().toString()));
                     ctx.status(200);

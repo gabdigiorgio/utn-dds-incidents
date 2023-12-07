@@ -11,6 +11,7 @@ import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
+import org.utn.presentation.api.dto.responses.IncidentResponse;
 import org.utn.presentation.api.dto.responses.LineResponse;
 import org.utn.presentation.api.dto.responses.StationResponse;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
@@ -95,7 +96,7 @@ public class Shows {
     public static void showGetPlaceIncidents(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
-        String msg = "➡️ Escriba el código del lugar de las incidencias que desea visualizar\n"
+        String msg = "➡️ Escriba el código de catálogo de las incidencias que desea visualizar\n"
                 + "↩️ Si desea volver al menu anterior escriba 0️⃣";
 
         sendMessage.setText(msg);
@@ -112,9 +113,9 @@ public class Shows {
         bot.execute(sendMessage);
     }
 
-    public static void showIncidents(TelegramUserBot telegramUserBot, TelegramBot bot, List<Incident> incidents) throws TelegramApiException {
+    public static void showIncidents(TelegramUserBot telegramUserBot, TelegramBot bot, List<IncidentResponse> incidents) throws TelegramApiException {
 
-        for (Incident incident : incidents) {
+        for (IncidentResponse incident : incidents) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(telegramUserBot.getId());
 
@@ -252,18 +253,18 @@ public class Shows {
         return response;
     }
 
-    private static String msgFromIncident(Incident incidencia) {
+    private static String msgFromIncident(IncidentResponse incident) {
         StringBuilder msg = new StringBuilder();
 
         // Agregar encabezado de tabla
-        msg.append("Codigo de catalogo: ").append(incidencia.getCatalogCode()).append("\n")
-                .append("Fecha de reporte: ").append(incidencia.getReportDate()).append("\n")
-                .append("Descripcion: ").append(incidencia.getDescription()).append("\n")
-                .append("Estado: ").append(incidencia.getState().toString()).append("\n")
-                .append("Operador: ").append(incidencia.getOperator()).append("\n")
-                .append("Persona que lo reporto: ").append(incidencia.getReportedBy()).append("\n")
-                .append("Fecha cierre: ").append(incidencia.getClosingDate()).append("\n")
-                .append("Motivo rechazo: ").append(incidencia.getRejectedReason());
+        msg.append("Codigo de catalogo: ").append(incident.getCatalogCode()).append("\n")
+                .append("Fecha de reporte: ").append(incident.getReportDate()).append("\n")
+                .append("Descripcion: ").append(incident.getDescription()).append("\n")
+                .append("Estado: ").append(incident.getState()).append("\n")
+                .append("Operador: ").append(incident.getOperator()).append("\n")
+                .append("Persona que lo reporto: ").append(incident.getReporterEmail()).append("\n")
+                .append("Fecha cierre: ").append(incident.getClosingDate()).append("\n")
+                .append("Motivo rechazo: ").append(incident.getRejectedReason());
 
         return msg.toString();
     }

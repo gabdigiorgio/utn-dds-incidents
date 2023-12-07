@@ -4,6 +4,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
 import org.utn.application.IncidentManager;
 import org.utn.domain.incident.Incident;
+import org.utn.presentation.api.dto.responses.IncidentResponse;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 import org.utn.presentation.bot.UtilsBot;
 import org.utn.presentation.bot.Shows;
@@ -66,7 +67,8 @@ public class GetIncidentsByState extends UserBotState {
             }
 
             List<Incident> incidents = incidentManager.getIncidents(telegramUserBot.getIncidentsQuantity(), null, messageText, null);
-            showIncidents(telegramUserBot, bot, incidents);
+            List<IncidentResponse> incidentResponses = incidents.stream().map(IncidentResponse::new).toList();
+            showIncidents(telegramUserBot, bot, incidentResponses);
         }
     }
 

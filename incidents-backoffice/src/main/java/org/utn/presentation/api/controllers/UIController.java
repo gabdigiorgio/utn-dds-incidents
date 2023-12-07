@@ -8,6 +8,8 @@ import org.utn.domain.accessibility_feature.AccessibilityFeature;
 import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
+import org.utn.presentation.api.dto.responses.IncidentResponse;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,9 +106,10 @@ public class UIController {
             var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-
             Incident incident = incidentManager.getIncident(id);
-            model.put("incident", incident);
+
+            IncidentResponse incidentResponse = new IncidentResponse(incident);
+            model.put("incident", incidentResponse);
             ctx.render("incident.hbs", model);
         } catch (NotFoundException notFoundError) {
             ctx.status(404);
@@ -131,9 +134,10 @@ public class UIController {
             var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-
             Incident incident = incidentManager.getIncident(id);
-            model.put("incident", incident);
+
+            IncidentResponse incidentResponse = new IncidentResponse(incident);
+            model.put("incident", incidentResponse);
             ctx.render("edit_incident.hbs", model);
         } catch (NotFoundException notFoundError) {
             ctx.status(404);
@@ -150,7 +154,9 @@ public class UIController {
             Map<String, Object> model = new HashMap<>();
             Integer id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
             Incident incident = incidentManager.getIncident(id);
-            model.put("incident", incident);
+
+            IncidentResponse incidentResponse = new IncidentResponse(incident);
+            model.put("incident", incidentResponse);
             ctx.render("edit_incident_state.hbs", model);
         } catch (NotFoundException notFoundError) {
             ctx.status(404);

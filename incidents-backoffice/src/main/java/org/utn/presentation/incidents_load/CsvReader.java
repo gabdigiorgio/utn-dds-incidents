@@ -4,8 +4,8 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import org.utn.application.IncidentCsvManager;
-import org.utn.application.IncidentManager;
+import org.utn.application.IncidentMassiveManager;
+import org.utn.domain.users.User;
 import org.utn.utils.DateUtils;
 
 import java.io.FileReader;
@@ -13,10 +13,10 @@ import java.io.Reader;
 import java.util.*;
 
 public class CsvReader {
-    private final IncidentCsvManager incidentCsvManager;
+    private final IncidentMassiveManager incidentMassiveManager;
 
-    public CsvReader(IncidentCsvManager incidentCsvManager) {
-        this.incidentCsvManager = incidentCsvManager;
+    public CsvReader(IncidentMassiveManager incidentMassiveManager) {
+        this.incidentMassiveManager = incidentMassiveManager;
     }
 
     private static final Set<String> HEADERS = new HashSet<>(Arrays.asList(
@@ -26,14 +26,14 @@ public class CsvReader {
     public String execute(String file_path) throws Exception {
         //SE HACE LA LECTURA DEL ARCHIVO
         Reader reader = new FileReader(file_path);
-        return processFile(reader);
+        return processFile(reader, null);
     }
 
-    public String execute(Reader reader) throws Exception {
-        return processFile(reader);
+    public String execute(Reader reader, User creator) throws Exception {
+        return processFile(reader, creator);
     }
 
-    private String processFile(Reader reader) throws Exception {
+    private String processFile(Reader reader, User creator) throws Exception {
 
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator('\t')
@@ -88,12 +88,12 @@ public class CsvReader {
                 String rejectedReason = filledRecord[headerMap.get("Motivo rechazo")];
 
                 Validator.validate(catalogCode, reportDate, description, state, operator, reportedBy, closingDate, rejectedReason);
-                incidentCsvManager.createIncident(catalogCode,
+                incidentMassiveManager.createIncident(catalogCode,
                         DateUtils.parseDate(reportDate),
                         description,
                         state,
-                        operator,
-                        reportedBy,
+                        creator,
+                        creator,
                         DateUtils.parseDate(closingDate),
                         rejectedReason
                 );

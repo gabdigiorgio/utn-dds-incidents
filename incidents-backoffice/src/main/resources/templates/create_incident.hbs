@@ -94,10 +94,6 @@
                         name="description">
                     <label for="description">Descripcion</label>
                 </div>
-                <div class="form-floating mt-3 mb-3">
-                    <input type="text" class="form-control" id="reporterId" placeholder="reporterId" name="reporterId">
-                    <label for="reporterId">Reportado por</label>
-                </div>
                 <button type="submit" class="btn btn-primary">Finalizar</button>
             </form>
         </div>
@@ -220,7 +216,6 @@
                     catalogCode: $('#catalogCode').val(),
                     reportDate: formatDate($('#reportDate').val()),
                     description: $('#description').val(),
-                    reporterId: $('#reporterId').val()
                 };
 
                 $.ajax({

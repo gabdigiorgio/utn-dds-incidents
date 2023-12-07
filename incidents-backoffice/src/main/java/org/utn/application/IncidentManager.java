@@ -10,6 +10,7 @@ import org.utn.domain.incident.factory.IncidentFactory;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.state.StateTransitionException;
 import org.utn.domain.incident.IncidentsRepository;
+import org.utn.domain.users.User;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
@@ -69,8 +70,8 @@ public class IncidentManager {
             LocalDate reportDate,
             String description,
             State state,
-            String operator,
-            String reportedBy,
+            User operator,
+            User reportedBy,
             LocalDate closingDate,
             String rejectedReason
     ) throws InvalidCatalogCodeException, IOException {
@@ -92,7 +93,6 @@ public class IncidentManager {
         Incident incident = incidentsRepository.getById(id);
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
-        if (data.reporterId != null) incident.setReportedBy(data.reporterId);
         incidentsRepository.update(incident);
         return incident;
     }
@@ -102,6 +102,10 @@ public class IncidentManager {
         action.accept(incident);
         incidentsRepository.update(incident);
         return incident;
+    }
+
+    public Incident setOperator(Integer id, User operator) throws StateTransitionException {
+        return performIncidentAction(id, incident -> incident.setOperator(operator));
     }
 
     public Incident assignEmployeeIncident(Integer id, String employee) throws StateTransitionException {

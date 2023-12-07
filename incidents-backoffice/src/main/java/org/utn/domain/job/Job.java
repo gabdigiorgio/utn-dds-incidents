@@ -1,5 +1,6 @@
 package org.utn.domain.job;
 
+import org.utn.domain.users.User;
 import org.utn.presentation.incidents_load.CsvReader;
 
 import javax.persistence.*;
@@ -15,10 +16,14 @@ public class Job {
     private String rawText;
     private ProcessState state;
     private String errorMessage;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
-    public Job(Integer id, String rawText, ProcessState state) {
+    public Job(Integer id, String rawText, User creator, ProcessState state) {
         this.id = id;
         this.rawText = rawText;
+        this.creator = creator;
         this.state = state;
     }
 
@@ -26,15 +31,17 @@ public class Job {
         super();
     }
 
-    public static Job create(String rawText) {
-        return new Job(null, rawText, ProcessState.CREATED);
+    public static Job create(String rawText, User creator) {
+        return new Job(null, rawText, creator, ProcessState.CREATED);
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getRawText() { return rawText; }
+    public String getRawText() {
+        return rawText;
+    }
 
     public ProcessState getState() {
         return state;
@@ -44,12 +51,24 @@ public class Job {
         return errorMessage;
     }
 
-    public void setState(ProcessState state) { this.state = state; }
+    public void setState(ProcessState state) {
+        this.state = state;
+    }
 
-    public void setErrorMessage(String errorMessage) { this.errorMessage = errorMessage; }
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
     public void process(CsvReader csvReader, String rawText) throws Exception {
         Reader reader = new StringReader(rawText);
-        csvReader.execute(reader);
+        csvReader.execute(reader, this.creator);
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 }

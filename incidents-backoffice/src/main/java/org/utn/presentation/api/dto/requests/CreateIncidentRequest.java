@@ -4,5 +4,4 @@ public class CreateIncidentRequest {
     public String catalogCode;
     public String reportDate;
     public String description;
-    public String reporterId;
 }
