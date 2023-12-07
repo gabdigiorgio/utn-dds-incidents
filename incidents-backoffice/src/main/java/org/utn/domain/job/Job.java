@@ -16,7 +16,7 @@ public class Job {
     private String rawText;
     private ProcessState state;
     private String errorMessage;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private User creator;
 

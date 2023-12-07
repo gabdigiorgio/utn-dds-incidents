@@ -19,10 +19,10 @@ public class Incident {
     public String catalogCode;
     public LocalDate reportDate;
     public String description;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "operator_id")
     public User operator;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id")
     public User reportedBy;
     public LocalDate closingDate;
