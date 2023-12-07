@@ -44,11 +44,9 @@
             <div class="col-10 pt-3">
                 <h2>Editar incidencia {{incident.id}}</h2>
             </div>
-
             <div class="col-2 pt-3">
                 <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
             </div>
-
             <form id="form">
                 <div class="form-floating mt-3 mb-3">
                     <input type="date" class="form-control" id="reportDate" value="{{incident.reportDate}}"
@@ -60,26 +58,17 @@
                         placeholder="Enter description" name="description">
                     <label for="description">Descripcion</label>
                 </div>
-                <div class="form-floating mt-3 mb-3">
-                    <input type="text" class="form-control" id="reporterId" value="{{incident.reportedBy}}"
-                        placeholder="reporterId" name="reporterId">
-                    <label for="reporterId">Reportado por</label>
-                </div>
-
                 <div class="form-floating mt-3 mb-3" id="campo-empleado" style="display: none;">
                     <input type="text" class="form-control" id="empleado" placeholder="Empleado" name="empleado">
                     <label for="empleado">Empleado</label>
                 </div>
-
                 <div class="form-floating mt-3 mb-3" id="campo-motivo" style="display: none;">
                     <input type="text" class="form-control" id="motivo" placeholder="Motivo de rechazo" name="motivo">
                     <label for="motivo">Motivo de rechazo</label>
                 </div>
-
                 <div class="form-floating mt-3 mb-3">
                     <a class="btn btn-secondary" href="/ui/incidents/edit/{{incident.id}}/state">Editar Estado</a>
                 </div>
-
                 <div class="form-floating mt-3 mb-3">
                     <button type="submit" class="btn btn-primary">Finalizar</button>
                 </div>
@@ -90,8 +79,9 @@
 </body>
 
 
-<script>
-
+<script type="module" src="/token.js"></script>
+<script type="module">
+import { getToken } from '/token.js';
     form.onsubmit = async (e) => {
         e.preventDefault();
         const form = document.querySelector("#form");
@@ -99,7 +89,6 @@
         const incidenciaData = {
             reportDate: form.querySelector('input[name="reportDate"]').value,
             description: form.querySelector('input[name="description"]').value,
-            reporterId: form.querySelector('input[name="reporterId"]').value
         }
 
         const rawDate = form.querySelector('input[name="reportDate"]').value;
@@ -118,6 +107,7 @@
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'token': getToken(),
         },
         body: JSON.stringify(incidenciaData),
     });
