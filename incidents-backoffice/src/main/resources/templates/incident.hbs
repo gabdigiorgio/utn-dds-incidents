@@ -70,24 +70,28 @@
     </div>
 </div>
 </body>
+<script type="module" src="/user.js"></script>
 
-<script>
-const estadoMapping = {
-  REPORTED: "Reportado",
-  ASSIGNED: "Asignado",
-  CONFIRMED: "Confirmado",
-  DISMISSED: "Desestimado",
-  IN_PROGRESS: "En Progreso",
-  RESOLVED: "Resuelto"
-};
+<script type="module">
+    import { setUser } from '/user.js';
+    setUser();
 
-document.addEventListener('DOMContentLoaded', function () {
-    const estadoElement = document.querySelector('.estado');
-    const estado = estadoElement.textContent.trim();
-    
-    if (estadoMapping.hasOwnProperty(estado)) {
-        estadoElement.textContent = estadoMapping[estado];
-    }
-});
+    const estadoMapping = {
+    REPORTED: "Reportado",
+    ASSIGNED: "Asignado",
+    CONFIRMED: "Confirmado",
+    DISMISSED: "Desestimado",
+    IN_PROGRESS: "En Progreso",
+    RESOLVED: "Resuelto"
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const estadoElement = document.querySelector('.estado');
+        const estado = estadoElement.textContent.trim();
+        
+        if (estadoMapping.hasOwnProperty(estado)) {
+            estadoElement.textContent = estadoMapping[estado];
+        }
+    });
 </script>
 </html>

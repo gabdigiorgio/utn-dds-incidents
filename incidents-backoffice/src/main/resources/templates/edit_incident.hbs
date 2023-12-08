@@ -79,9 +79,11 @@
 </body>
 
 
-<script type="module" src="/token.js"></script>
+<script type="module" src="/user.js"></script>
 <script type="module">
-import { getToken } from '/token.js';
+    import { getToken, setUser } from '/user.js';
+    setUser();
+
     form.onsubmit = async (e) => {
         e.preventDefault();
         const form = document.querySelector("#form");

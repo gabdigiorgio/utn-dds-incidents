@@ -178,21 +178,25 @@ body {
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul id="navbar" class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ui/incidents">Incidencias</a>
+                    <a class="nav-link active" aria-current="page" href="#">Incidencias</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/ui/incidents/inaccessible-accessibility-features">Medidas de
+                        Accesibilidad</a>
+                </li>
+                <li id="cargar-csv" class="nav-item">
                     <a class="nav-link" href="/ui/incidents/upload_csv">Cargar</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/faqs">FAQs</a>
                 </li>
             </ul>
-            <form class="d-flex">
+            <form id="auth" class="d-flex">
                 <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
                 <a type="button" href="/ui/incidents/register-user" class="btn me-2 btn-warning">Registrarse</a>
             </form>
@@ -225,6 +229,11 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+<script type="module" src="/user.js"></script>
+<script type="module">
+    import { setUser } from '/user.js';
+    setUser();
+</script>
 
 </body>
 </html>

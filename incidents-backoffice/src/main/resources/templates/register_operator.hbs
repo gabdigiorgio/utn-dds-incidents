@@ -186,27 +186,27 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul id="navbar" class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/ui/incidents">Incidencias</a>
+                        <a class="nav-link active" aria-current="page" href="#">Incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ui/incidents/inaccessible-accessibility-features">Medidas de
+                        <a class="nav-link" href="/ui/incidents/inaccessible-accessibility-features">Medidas de
                             Accesibilidad</a>
                     </li>
-                    <li class="nav-item">
+                    <li id="cargar-csv" class="nav-item">
                         <a class="nav-link" href="/ui/incidents/upload_csv">Cargar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/faqs">FAQs</a>
                     </li>
                 </ul>
-                <form class="d-flex">
+                <form id="auth" class="d-flex">
                     <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
-                    <a type="button" href="#" class="btn me-2 btn-warning">Registrarse</a>
+                    <a type="button" href="/ui/incidents/register-user" class="btn me-2 btn-warning">Registrarse</a>
                 </form>
             </div>
         </div>
@@ -234,10 +234,10 @@
         </div>
     </div>
 </body>
-<script type="module" src="/token.js"></script>
+<script type="module" src="/user.js"></script>
 
 <script type="module">
-    import { saveToken } from '/token.js';
+    import { saveUser } from '/user.js';
     form.onsubmit = async (e) => {
         e.preventDefault();
         const form = document.querySelector("#form");
@@ -257,9 +257,9 @@
         })
 
         const responseData = await response.json();
-        if (responseData.status === 400) alert(responseData.message);
+        if (response.status !== 200) alert(responseData.message);
         else {
-            saveToken(responseData.token);
+            saveUser(responseData);
             window.location.href = "/ui/incidents";
         }
     }
