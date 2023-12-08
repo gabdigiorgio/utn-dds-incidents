@@ -5,6 +5,7 @@ import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.IncidentsRepository;
 import org.utn.domain.incident.InventoryService;
 import org.utn.domain.incident.factory.IncidentFactory;
+import org.utn.domain.incident.state.State;
 import org.utn.domain.users.User;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import java.io.IOException;
@@ -41,6 +42,9 @@ public class IncidentMassiveManager {
                 rejectedReason
         );
         incidentsRepository.save(newIncident);
+        if (newIncident.getState().equals(State.CONFIRMED)) {
+            inventoryService.setAccessibilityFeatureStatus(catalogCode, "inaccessible");
+        }
         return newIncident;
     }
 
