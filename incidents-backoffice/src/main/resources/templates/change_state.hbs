@@ -101,7 +101,6 @@
 </div>
 </body>
 
-
 <script>
 const selectEstado = document.querySelector('select[name="estado"]');
     const campoEmpleado = document.getElementById('campo-empleado');
@@ -160,7 +159,10 @@ campoNoSePuede.style.display = 'block';
 
 </script>
 
-<script>
+<script type="module" src="/user.js"></script>
+<script type="module">
+  import { getToken, setUser } from '/user.js';
+  setUser();
 
 const estadoMapping = {
   Asignado: "assigned",

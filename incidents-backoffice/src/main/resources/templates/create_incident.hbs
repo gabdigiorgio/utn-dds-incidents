@@ -99,10 +99,11 @@
         </div>
     </div>
 
-    <script type="module" src="/token.js"></script>
-
+    <script type="module" src="/user.js"></script>
     <script type="module">
-        import { getToken } from '/token.js';
+        import { getToken, setUser } from '/user.js';
+        setUser();
+
         $(document).ready(function () {
             const form = $("#form");
 

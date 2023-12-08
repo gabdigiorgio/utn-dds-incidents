@@ -3,6 +3,7 @@ package org.utn.presentation.api.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Handler;
 import org.utn.application.MissingUserFieldsException;
+import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.requests.RegisterUserRequest;
 import org.utn.presentation.api.dto.responses.LoginResponse;
@@ -19,9 +20,8 @@ public class UsersController {
         var manager = ManagerFactory.createUserManager();
 
         RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
-        var token = manager.login(data.getEmail(), data.getPassword());
-
-        String json = objectMapper.writeValueAsString(new LoginResponse(token));
+        User user = manager.login(data.getEmail(), data.getPassword());
+        String json = objectMapper.writeValueAsString(new RegisterResponse(user));
         ctx.json(json);
     };
 

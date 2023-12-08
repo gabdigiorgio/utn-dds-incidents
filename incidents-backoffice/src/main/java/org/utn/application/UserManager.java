@@ -14,12 +14,12 @@ public class UserManager {
         this.usersRepository = usersRepository;
     }
 
-    public String login(String email, String password) throws EntityNotFoundException {
+    public User login(String email, String password) throws EntityNotFoundException {
         var user = findByEmail(email);
         validatePassword(password, user);
         user.setToken(generateToken());
         usersRepository.update(user);
-        return user.getToken();
+        return user;
     }
 
     private void checkUserNotExists(String email) {

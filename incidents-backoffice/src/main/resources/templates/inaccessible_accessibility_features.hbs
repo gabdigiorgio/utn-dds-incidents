@@ -152,24 +152,25 @@ body {
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul id="navbar" class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ui/incidents">Incidencias</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link active" aria-current="page" href="#">Medidas de Accesibilidad</a>
+                    <a class="nav-link active" aria-current="page" href="#">Incidencias</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/ui/incidents/inaccessible-accessibility-features">Medidas de
+                        Accesibilidad</a>
+                </li>
+                <li id="cargar-csv" class="nav-item">
                     <a class="nav-link" href="/ui/incidents/upload_csv">Cargar</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/faqs">FAQs</a>
                 </li>
             </ul>
-            <form class="d-flex">
+            <form id="auth" class="d-flex">
                 <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
                 <a type="button" href="/ui/incidents/register-user" class="btn me-2 btn-warning">Registrarse</a>
             </form>
@@ -177,83 +178,80 @@ body {
     </div>
 </nav>
 
-
 <div class="container">
     <div class="row justify-content-between pt-5">
         <div class="col-15 d-flex justify-content-between">
-                <h2 style="display: inline;">Medidas de Accesibilidad Inaccesibles</h2>
-            </div>
-            <hr class="featurette-divider">
-
-            <table id="tablax" class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Código de catalogo</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">Línea</th>
-                        <th scope="col">Estación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each inaccessibleAccessibilityFeatures}}
-                    <tr>
-                        <td>{{this.catalogCode}}</td>
-                        <td>{{this.type}}</td>
-                        <td>{{this.status}}</td>
-                        <td>{{this.line}}</td>
-                        <td>{{this.station}}</td>
-                    </tr>
-                    {{/each}}
-
-                    <body>
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-                    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-                    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-                        </script>
-
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function () {
-                                function traducirValores() {
-                                    const traduccionesType = {
-                                        'ELEVATOR': 'Ascensor',
-                                        'ESCALATOR': 'Escalera mecánica',
-                                        'SIGNAGE': 'Señalización',
-                                        'RAMP': 'Rampa'
-                                    };
-
-                                    const traduccionesStatus = {
-                                        'FUNCTIONAL': 'Funcional',
-                                        'INACCESSIBLE': 'Inaccesible'
-                                    };
-                                    const celdasType = document.querySelectorAll('#tablax tbody td:nth-child(2)');
-                                    const celdasStatus = document.querySelectorAll('#tablax tbody td:nth-child(3)');
-
-                                    celdasType.forEach(function (celda) {
-                                        const valorOriginal = celda.textContent.trim();
-                                        if (traduccionesType[valorOriginal]) {
-                                            celda.textContent = traduccionesType[valorOriginal];
-                                        }
-                                    });
-
-                                    celdasStatus.forEach(function (celda) {
-                                        const valorOriginal = celda.textContent.trim();
-                                        if (traduccionesStatus[valorOriginal]) {
-                                            celda.textContent = traduccionesStatus[valorOriginal];
-                                        }
-                                    });
-                                }
-
-                                traducirValores();
-
-                                $('#tablax').DataTable();
-                            });
-                        </script>
-                    </body>
-                </tbody>
-            </table>
+            <h2 style="display: inline;">Medidas de Accesibilidad Inaccesibles</h2>
         </div>
+        <hr class="featurette-divider">
+
+        <table id="tablax" class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Código de catalogo</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Línea</th>
+                    <th scope="col">Estación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each inaccessibleAccessibilityFeatures}}
+                <tr>
+                    <td>{{this.catalogCode}}</td>
+                    <td>{{this.type}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this.line}}</td>
+                    <td>{{this.station}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+<script type="module" src="/user.js"></script>
+<script type="module">
+    import { setUser } from '/user.js';
+    setUser();
+    document.addEventListener('DOMContentLoaded', function () {
+        function traducirValores() {
+            const traduccionesType = {
+                'ELEVATOR': 'Ascensor',
+                'ESCALATOR': 'Escalera mecánica',
+                'SIGNAGE': 'Señalización',
+                'RAMP': 'Rampa'
+            };
+
+            const traduccionesStatus = {
+                'FUNCTIONAL': 'Funcional',
+                'INACCESSIBLE': 'Inaccesible'
+            };
+            const celdasType = document.querySelectorAll('#tablax tbody td:nth-child(2)');
+            const celdasStatus = document.querySelectorAll('#tablax tbody td:nth-child(3)');
+
+            celdasType.forEach(function (celda) {
+                const valorOriginal = celda.textContent.trim();
+                if (traduccionesType[valorOriginal]) {
+                    celda.textContent = traduccionesType[valorOriginal];
+                }
+            });
+
+            celdasStatus.forEach(function (celda) {
+                const valorOriginal = celda.textContent.trim();
+                if (traduccionesStatus[valorOriginal]) {
+                    celda.textContent = traduccionesStatus[valorOriginal];
+                }
+            });
+        }
+
+        traducirValores();
+
+        $('#tablax').DataTable();
+    });
+</script>
 </body>
 
 </html>

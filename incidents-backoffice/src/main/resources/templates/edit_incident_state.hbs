@@ -114,77 +114,79 @@
     });
 </script>
 
-<script type="module" src="/token.js"></script>
+<script type="module" src="/user.js"></script>
 <script type="module">
-import { getToken } from '/token.js';
-const estadoMapping = {
-  Asignado: "assigned",
-  Reportado: "reported",
-  Confirmado: "confirmed",
-  EnProgreso: "inProgress",
-  Desestimado: "dismissed",
-  Resuelto: "resolved"
-};
+  import { getToken, setUser } from '/user.js';
+  setUser();
 
-form.onsubmit = async (e) => {
-  e.preventDefault();
-  const form = document.querySelector("#form");
-
-  const estadoSeleccionado = selectEstado.value;
-
-  const id = {{incident.id}};
-  let stateUrl = `/api/incidents/${id}/state`;
-  let estadoData = {
-    employee: form.querySelector('input[name="empleado"]').value,
-    rejectedReason: form.querySelector('input[name="motivo"]').value
+  const estadoMapping = {
+    Asignado: "assigned",
+    Reportado: "reported",
+    Confirmado: "confirmed",
+    EnProgreso: "inProgress",
+    Desestimado: "dismissed",
+    Resuelto: "resolved"
   };
 
-  switch (estadoSeleccionado) {
-    case 'Asignado':
-      stateUrl = `/api/incidents/${id}/assign-employee`;
-      delete estadoData.rejectedReason;
-      break;
-    case 'Confirmado':
-      stateUrl = `/api/incidents/${id}/confirm`;
-      delete estadoData.employee;
-      delete estadoData.rejectedReason;
-      break;
-    case 'EnProgreso':
-      stateUrl = `/api/incidents/${id}/start-progress`;
-      delete estadoData.employee;
-      delete estadoData.rejectedReason;
-      break;
-    case 'Resuelto':
-      stateUrl = `/api/incidents/${id}/resolve`;
-      delete estadoData.employee;
-      delete estadoData.rejectedReason;
-      break;
-    case 'Desestimado':
-      stateUrl = `/api/incidents/${id}/dismiss`;
-      delete estadoData.employee;
-      break;
-    default:
-      break;
-  }
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const form = document.querySelector("#form");
 
-  if (estadoSeleccionado !== 'Seleccionar estado') {
-    const responseEstado = await fetch(stateUrl, {
-      method: 'POST',
-      headers: {
-        'token': getToken(),
-        },
-      body: JSON.stringify(estadoData),
-    });
+    const estadoSeleccionado = selectEstado.value;
 
-    const responseDataEstado = await responseEstado.json();
-    if (responseDataEstado.status === 422 || responseDataEstado.status === 400) {
-      alert(responseDataEstado.message);
-    } else if (responseEstado.status === 200) {
-      alert("Cambio de estado realizado con éxito");
-      window.location.href = `/ui/incidents/${id}`;
+    const id = {{incident.id}};
+    let stateUrl = `/api/incidents/${id}/state`;
+    let estadoData = {
+      employee: form.querySelector('input[name="empleado"]').value,
+      rejectedReason: form.querySelector('input[name="motivo"]').value
+    };
+
+    switch (estadoSeleccionado) {
+      case 'Asignado':
+        stateUrl = `/api/incidents/${id}/assign-employee`;
+        delete estadoData.rejectedReason;
+        break;
+      case 'Confirmado':
+        stateUrl = `/api/incidents/${id}/confirm`;
+        delete estadoData.employee;
+        delete estadoData.rejectedReason;
+        break;
+      case 'EnProgreso':
+        stateUrl = `/api/incidents/${id}/start-progress`;
+        delete estadoData.employee;
+        delete estadoData.rejectedReason;
+        break;
+      case 'Resuelto':
+        stateUrl = `/api/incidents/${id}/resolve`;
+        delete estadoData.employee;
+        delete estadoData.rejectedReason;
+        break;
+      case 'Desestimado':
+        stateUrl = `/api/incidents/${id}/dismiss`;
+        delete estadoData.employee;
+        break;
+      default:
+        break;
     }
-  }
-};
+
+    if (estadoSeleccionado !== 'Seleccionar estado') {
+      const responseEstado = await fetch(stateUrl, {
+        method: 'POST',
+        headers: {
+          'token': getToken(),
+          },
+        body: JSON.stringify(estadoData),
+      });
+
+      const responseDataEstado = await responseEstado.json();
+      if (responseDataEstado.status === 422 || responseDataEstado.status === 400) {
+        alert(responseDataEstado.message);
+      } else if (responseEstado.status === 200) {
+        alert("Cambio de estado realizado con éxito");
+        window.location.href = `/ui/incidents/${id}`;
+      }
+    }
+  };
 </script>
 
 
