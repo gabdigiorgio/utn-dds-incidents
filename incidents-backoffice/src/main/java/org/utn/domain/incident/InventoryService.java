@@ -1,6 +1,7 @@
 package org.utn.domain.incident;
 
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 
@@ -12,7 +13,8 @@ public interface InventoryService {
 
     void setAccessibilityFeatureStatus(String catalogCode, String status) throws IOException;
 
-    List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException;
+    AccessibilityFeatures getAccessibilityFeatures(Integer limit, String status, String line, String station,
+                                                   Integer page, Integer pageSize) throws IOException;
 
     List<Line> getLines() throws IOException;
 

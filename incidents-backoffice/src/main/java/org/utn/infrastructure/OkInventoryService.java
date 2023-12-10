@@ -4,13 +4,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.InventoryService;
-import org.utn.infrastructure.responses.AccessibilityFeatureInventoryResponse;
+import org.utn.infrastructure.responses.AccessibilityFeaturesInventoryResponse;
 import org.utn.infrastructure.responses.LineInventoryResponse;
 import org.utn.infrastructure.responses.StationInventoryResponse;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,11 +61,18 @@ public class OkInventoryService implements InventoryService {
     }
 
     @Override
-    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException {
+    public AccessibilityFeatures getAccessibilityFeatures(Integer limit, String status, String line, String station,
+                                                          Integer page, Integer pageSize) throws IOException {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(baseUrl + "/accessibility-features/").newBuilder();
 
         if (limit != null) {
             urlBuilder.addQueryParameter("limit", limit.toString());
+        }
+        if (page != null) {
+            urlBuilder.addQueryParameter("page", page.toString());
+        }
+        if (pageSize != null) {
+            urlBuilder.addQueryParameter("pageSize", pageSize.toString());
         }
         if (status != null) {
             urlBuilder.addQueryParameter("status", status.toString());
@@ -84,21 +93,26 @@ public class OkInventoryService implements InventoryService {
         try (ResponseBody responseBody = response.body()) {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<AccessibilityFeatureInventoryResponse> inventoryResponseList = objectMapper.readValue(responseBody.string(), new TypeReference<>() {
+            AccessibilityFeaturesInventoryResponse inventoryResponse = objectMapper.readValue(responseBody.string(), new TypeReference<>() {
             });
 
-            return inventoryResponseList.stream().map(this::mapToAccessibilityFeature).collect(Collectors.toList());
+            return mapToAccessibilityFeatures(inventoryResponse);
         }
     }
 
-    private AccessibilityFeature mapToAccessibilityFeature(AccessibilityFeatureInventoryResponse inventoryResponse) {
-        AccessibilityFeature feature = new AccessibilityFeature();
-        feature.setCatalogCode(inventoryResponse.getCatalogCode());
-        feature.setType(inventoryResponse.getType());
-        feature.setStatus(inventoryResponse.getStatus());
-        feature.setStation(inventoryResponse.getStation());
-        feature.setLine(inventoryResponse.getLine());
-        return feature;
+    private AccessibilityFeatures mapToAccessibilityFeatures(AccessibilityFeaturesInventoryResponse inventoryResponse) {
+        List<AccessibilityFeature> items = inventoryResponse.getItems().stream()
+                        .map(feature -> {
+                            AccessibilityFeature responseItem = new AccessibilityFeature();
+                            responseItem.setCatalogCode(feature.getCatalogCode());
+                            responseItem.setType(feature.getType());
+                            responseItem.setStatus(feature.getStatus());
+                            responseItem.setStation(feature.getStation());
+                            responseItem.setLine(feature.getLine());
+                            return responseItem;
+                        })
+                        .collect(Collectors.toList());
+        return new AccessibilityFeatures(items, inventoryResponse.getTotalCount());
     }
 
 

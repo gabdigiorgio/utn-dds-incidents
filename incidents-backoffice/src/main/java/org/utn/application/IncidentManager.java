@@ -3,6 +3,7 @@ package org.utn.application;
 import javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.*;
@@ -147,8 +148,9 @@ public class IncidentManager {
         incidentsRepository.remove(incident);
     }
 
-    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException {
-        return inventoryService.getAccessibilityFeatures(limit, status, line, station);
+    public AccessibilityFeatures getAccessibilityFeatures(Integer limit, String status, String line, String station,
+                                                          Integer page, Integer pageSize) throws IOException {
+        return inventoryService.getAccessibilityFeatures(limit, status, line, station, page, pageSize);
     }
 
     public List<Line> getLines() throws IOException {

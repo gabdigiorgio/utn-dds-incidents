@@ -75,7 +75,7 @@ public class UIController {
 
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
         try {
-            var incidentManager = ManagerFactory.createIncidentManager();
+            /*var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
             var inaccessibleAccessibilityFeatures = incidentManager.getAccessibilityFeatures(null,
                     "inaccessible", null, null);
@@ -84,7 +84,7 @@ public class UIController {
                     map(this::mapToAccessibilityFeatureResponse).toList();
 
             model.put("inaccessibleAccessibilityFeatures", accessibilityFeaturesResponse);
-            ctx.render("inaccessible_accessibility_features.hbs", model);
+            ctx.render("inaccessible_accessibility_features.hbs", model);*/
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);

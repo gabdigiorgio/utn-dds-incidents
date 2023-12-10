@@ -12,7 +12,7 @@ import com.opencsv.CSVReaderBuilder;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
-import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class IncidentsController {
     private ObjectMapper objectMapper;
@@ -181,12 +182,14 @@ public class IncidentsController {
         var incidentManager = ManagerFactory.createIncidentManager();
 
         Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(null);
+        Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(null);
+        Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(null);
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
         String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
 
-        var accessibilityFeatures = incidentManager.getAccessibilityFeatures(limit, status, line, station);
-        var accessibilityFeaturesResponse = accessibilityFeatures.stream().map(this::mapToAccessibilityFeatureResponse).toList();
+        var accessibilityFeatures = incidentManager.getAccessibilityFeatures(limit, status, line, station, page, pageSize);
+        var accessibilityFeaturesResponse = mapToAccessibilityFeaturesResponse(accessibilityFeatures);
 
         ctx.json(accessibilityFeaturesResponse);
     };
@@ -208,13 +211,23 @@ public class IncidentsController {
         ctx.json(stationResponses);
     };
 
-    private AccessibilityFeatureResponse mapToAccessibilityFeatureResponse(AccessibilityFeature feature) {
-        AccessibilityFeatureResponse response = new AccessibilityFeatureResponse();
-        response.setCatalogCode(feature.getCatalogCode());
-        response.setType(feature.getType());
-        response.setStatus(feature.getStatus());
-        response.setStation(feature.getStation());
-        response.setLine(feature.getLine());
+    private AccessibilityFeaturesResponse mapToAccessibilityFeaturesResponse(AccessibilityFeatures features) {
+        AccessibilityFeaturesResponse response = new AccessibilityFeaturesResponse();
+
+        List<AccessibilityFeatureResponse> mappedItems = features.getItems().stream()
+                .map(feature -> {
+                    AccessibilityFeatureResponse responseItem = new AccessibilityFeatureResponse();
+                    responseItem.setCatalogCode(feature.getCatalogCode());
+                    responseItem.setType(feature.getType());
+                    responseItem.setStatus(feature.getStatus());
+                    responseItem.setStation(feature.getStation());
+                    responseItem.setLine(feature.getLine());
+                    return responseItem;
+                })
+                .collect(Collectors.toList());
+        response.setItems(mappedItems);
+
+        response.setTotalCount(features.getTotalCount());
         return response;
     }
 

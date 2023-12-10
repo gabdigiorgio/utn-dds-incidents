@@ -6,18 +6,17 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
-import org.utn.presentation.api.dto.responses.IncidentResponse;
-import org.utn.presentation.api.dto.responses.LineResponse;
-import org.utn.presentation.api.dto.responses.StationResponse;
+import org.utn.presentation.api.dto.responses.*;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Shows {
     static void showWelcomeMessage(TelegramUserBot telegramUserBot, TelegramBot bot) throws TelegramApiException {
@@ -128,13 +127,12 @@ public class Shows {
     }
 
     public static void showInaccessibleAccessibilityFeatures(TelegramUserBot telegramUserBot,
-                                                      TelegramBot bot, List<AccessibilityFeature> inaccessibleAccessibilityFeatures)
+                                                      TelegramBot bot, AccessibilityFeatures inaccessibleAccessibilityFeatures)
             throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramUserBot.getId());
 
-        var accessibilityFeaturesResponse = inaccessibleAccessibilityFeatures.stream().
-                map(Shows::mapToAccessibilityFeatureResponse).toList();
+        var accessibilityFeaturesResponse = mapToAccessibilityFeaturesResponse(inaccessibleAccessibilityFeatures);
 
         String tmp_msg = msgFromAccessibilityFeature(accessibilityFeaturesResponse);
         sendMessage.setText(tmp_msg);
@@ -142,13 +140,23 @@ public class Shows {
         showBackMainMenu(telegramUserBot, bot);
     }
 
-    private static AccessibilityFeatureResponse mapToAccessibilityFeatureResponse(AccessibilityFeature feature) {
-        AccessibilityFeatureResponse response = new AccessibilityFeatureResponse();
-        response.setCatalogCode(feature.getCatalogCode());
-        response.setType(feature.getType());
-        response.setStatus(feature.getStatus());
-        response.setStation(feature.getStation());
-        response.setLine(feature.getLine());
+    private static AccessibilityFeaturesResponse mapToAccessibilityFeaturesResponse(AccessibilityFeatures features) {
+        AccessibilityFeaturesResponse response = new AccessibilityFeaturesResponse();
+
+        List<AccessibilityFeatureResponse> mappedItems = features.getItems().stream()
+                .map(feature -> {
+                    AccessibilityFeatureResponse responseItem = new AccessibilityFeatureResponse();
+                    responseItem.setCatalogCode(feature.getCatalogCode());
+                    responseItem.setType(feature.getType());
+                    responseItem.setStatus(feature.getStatus());
+                    responseItem.setStation(feature.getStation());
+                    responseItem.setLine(feature.getLine());
+                    return responseItem;
+                })
+                .collect(Collectors.toList());
+        response.setItems(mappedItems);
+
+        response.setTotalCount(features.getTotalCount());
         return response;
     }
 
@@ -269,11 +277,11 @@ public class Shows {
         return msg.toString();
     }
 
-    public static String msgFromAccessibilityFeature(List<AccessibilityFeatureResponse> inaccessibleAccessibilityFeatures) {
+    public static String msgFromAccessibilityFeature(AccessibilityFeaturesResponse inaccessibleAccessibilityFeatures) {
         StringBuilder formattedText = new StringBuilder("Medidas de Accesibilidad Inaccesibles:\n");
 
         try {
-            for (AccessibilityFeatureResponse feature : inaccessibleAccessibilityFeatures) {
+            for (AccessibilityFeatureResponse feature : inaccessibleAccessibilityFeatures.getItems()) {
                 String catalogCode = feature.getCatalogCode();
                 String type = translateType(feature.getType());
                 String status = translateStatus(feature.getStatus());

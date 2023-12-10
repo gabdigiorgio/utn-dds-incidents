@@ -16,7 +16,7 @@ public class AccessibilityFeaturesResponse {
         this.totalCount = accessibilityFeatures.getTotalCount();
     }
 
-    public List<AccessibilityFeatureResponse> getAccessibilityFeatures() {
+    public List<AccessibilityFeatureResponse> getItems() {
         return items;
     }
 
