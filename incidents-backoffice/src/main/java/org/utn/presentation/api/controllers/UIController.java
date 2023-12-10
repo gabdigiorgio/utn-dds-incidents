@@ -5,15 +5,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Handler;
 import javassist.NotFoundException;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
+import org.utn.presentation.api.dto.responses.AccessibilityFeaturesResponse;
 import org.utn.presentation.api.dto.responses.IncidentResponse;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
 import static org.utn.presentation.api.controllers.IncidentsController.parseErrorResponse;
 
 public class UIController {
@@ -75,31 +79,15 @@ public class UIController {
 
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
         try {
-            /*var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
-            var inaccessibleAccessibilityFeatures = incidentManager.getAccessibilityFeatures(null,
-                    "inaccessible", null, null);
-
-            var accessibilityFeaturesResponse = inaccessibleAccessibilityFeatures.stream().
-                    map(this::mapToAccessibilityFeatureResponse).toList();
-
-            model.put("inaccessibleAccessibilityFeatures", accessibilityFeaturesResponse);
-            ctx.render("inaccessible_accessibility_features.hbs", model);*/
+            Integer pageSize = 2;
+            model.put("pageSize", pageSize);
+            ctx.render("inaccessible_accessibility_features.hbs", model);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(400, error.getMessage()));
             ctx.status(400);
         }
     };
-
-    private AccessibilityFeatureResponse mapToAccessibilityFeatureResponse(AccessibilityFeature feature) {
-        AccessibilityFeatureResponse response = new AccessibilityFeatureResponse();
-        response.setCatalogCode(feature.getCatalogCode());
-        response.setType(feature.getType());
-        response.setStatus(feature.getStatus());
-        response.setStation(feature.getStation());
-        response.setLine(feature.getLine());
-        return response;
-    }
 
     public Handler getIncident = ctx -> {
         try {
