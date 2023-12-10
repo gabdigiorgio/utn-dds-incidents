@@ -57,17 +57,9 @@ public class UIController {
 
     public Handler getIncidents = ctx -> {
         try {
-            var incidentManager = ManagerFactory.createIncidentManager();
             Map<String, Object> model = new HashMap<>();
-
             Integer pageSize = 10;
-
-            int totalIncidents = incidentManager.getTotalIncidentsCount();
-            int totalPages = (int) Math.ceil((double) totalIncidents / pageSize);
-
             model.put("pageSize", pageSize);
-            model.put("totalPages", totalPages);
-
             ctx.render("incidents.hbs", model);
         } catch (Exception error) {
             ctx.json(parseErrorResponse(500, error.getMessage()));

@@ -53,16 +53,16 @@ public class IncidentManager {
         return incidentsRepository.count();
     }
 
-    public List<Incident> getIncidentsWithPagination(
-            Integer startIndex,
+    public Incidents getIncidentsWithPagination(
+            Integer page,
             Integer pageSize,
             String orderBy,
             State state,
             String catalogCode
     ) throws InvalidCatalogCodeException {
-        List<Incident> incidents;
+        Incidents incidents;
 
-        incidents = incidentsRepository.findIncidentsWithPagination(startIndex, pageSize, state, orderBy, catalogCode);
+        incidents = incidentsRepository.findIncidentsWithPagination(page, pageSize, state, orderBy, catalogCode);
         return incidents;
     }
 

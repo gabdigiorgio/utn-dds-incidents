@@ -12,10 +12,12 @@ import com.opencsv.CSVReaderBuilder;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
+import org.jetbrains.annotations.NotNull;
 import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.Incidents;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.job.Job;
 import org.utn.domain.users.User;
@@ -67,19 +69,22 @@ public class IncidentsController {
         Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
         Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(10);
 
-        Integer startIndex = (page - 1) * pageSize;
-
         State stateEnum = null;
         if (stateString != null) {
             stateEnum = State.valueOf(stateString.toUpperCase());
         }
 
-        List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, stateEnum, place);
+        Incidents incidents = incidentManager.getIncidentsWithPagination(page, pageSize, orderBy, stateEnum, place);
 
-        List<IncidentResponse> incidentResponses = incidents.stream().map(IncidentResponse::new).toList();
+        IncidentsResponse incidentResponses = mapIncidentsResponse(incidents);
 
         returnJson(objectMapper.writeValueAsString(incidentResponses), ctx);
     };
+
+    @NotNull
+    private static IncidentsResponse mapIncidentsResponse(Incidents incidents) {
+        return new IncidentsResponse(incidents);
+    }
 
     public Handler createIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();

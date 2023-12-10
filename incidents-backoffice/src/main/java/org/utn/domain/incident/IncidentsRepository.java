@@ -15,7 +15,7 @@ public interface IncidentsRepository {
 
     List<Incident> findIncidents(int quantity, String state, String orderBy, String catalogCode);
 
-    List<Incident> findIncidentsWithPagination(int startIndex, int pageSize, State state, String orderBy, String catalogCode);
+    Incidents findIncidentsWithPagination(Integer page, Integer pageSize, State state, String orderBy, String catalogCode);
 
     int count();
 
