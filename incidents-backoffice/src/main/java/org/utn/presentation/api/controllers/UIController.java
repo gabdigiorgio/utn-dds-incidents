@@ -80,7 +80,7 @@ public class UIController {
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
         try {
             Map<String, Object> model = new HashMap<>();
-            Integer pageSize = 2;
+            Integer pageSize = 10;
             model.put("pageSize", pageSize);
             ctx.render("inaccessible_accessibility_features.hbs", model);
         } catch (Exception error) {

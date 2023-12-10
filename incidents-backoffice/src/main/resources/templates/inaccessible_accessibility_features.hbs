@@ -244,6 +244,18 @@
         var currentPage = 1;
         var totalPages = 1;
 
+        const typeTranslations = {
+            'ELEVATOR': 'Ascensor',
+            'ESCALATOR': 'Escalera mecánica',
+            'RAMP': 'Rampa',
+            'SIGNAGE': 'Señalización'
+        };
+
+        const statusTranslations = {
+            'FUNCTIONAL': 'Funcional',
+            'INACCESSIBLE': 'Inaccesible'
+        };
+
         function updateTotalPagesSpan() {
             totalPagesSpan.textContent = ` of ${totalPages}`;
         }
@@ -274,8 +286,8 @@
                         var trItem = document.createElement('tr');
                         trItem.innerHTML = `
                         <td scope="row">${accessibilityFeature.catalogCode}</td>
-                        <td>${accessibilityFeature.type}</td>
-                        <td>${accessibilityFeature.status}</td>
+                        <td>${typeTranslations[accessibilityFeature.type]}</td>
+                        <td>${statusTranslations[accessibilityFeature.status]}</td>
                         <td>${accessibilityFeature.line}</td>
                         <td>${accessibilityFeature.station}</td>
                     `;
