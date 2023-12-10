@@ -1,7 +1,7 @@
 package org.utn.domain;
 
-import org.utn.domain.AccessibilityFeature;
-
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public interface AccessibilityFeatureRepository {
@@ -12,6 +12,7 @@ public interface AccessibilityFeatureRepository {
 
     AccessibilityFeature getByCatalogCode(String catalogCode);
 
-    List<AccessibilityFeature> findAccessibilityFeatures(Integer quantity, String catalogCode, String line, Integer station,
-                                                         AccessibilityFeature.Status status, AccessibilityFeature.Type type);
+    AccessibilityFeatures findAccessibilityFeatures(Integer limit, String catalogCode, String line, Integer station,
+                                                         AccessibilityFeature.Status status, AccessibilityFeature.Type type,
+                                                         Integer page, Integer pageSize);
 }

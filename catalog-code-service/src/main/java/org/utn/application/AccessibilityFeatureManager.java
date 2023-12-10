@@ -2,6 +2,7 @@ package org.utn.application;
 
 import org.utn.domain.AccessibilityFeature;
 import org.utn.domain.AccessibilityFeatureRepository;
+import org.utn.domain.AccessibilityFeatures;
 
 import java.util.List;
 
@@ -17,9 +18,12 @@ public class AccessibilityFeatureManager {
         return accessibilityFeatureRepository.getByCatalogCode(catalogCode);
     }
 
-    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String catalogCode, String line, Integer stationId,
-                                                               AccessibilityFeature.Status status, AccessibilityFeature.Type type) {
-        var accessibilityFeatures = accessibilityFeatureRepository.findAccessibilityFeatures(limit, catalogCode, line, stationId, status, type);
+    public AccessibilityFeatures getAccessibilityFeatures(Integer limit, String catalogCode, String line, Integer stationId,
+                                                                AccessibilityFeature.Status status, AccessibilityFeature.Type type,
+                                                                Integer page, Integer pageSize) {
+        var accessibilityFeatures = accessibilityFeatureRepository.findAccessibilityFeatures(limit, catalogCode, line,
+                stationId, status, type,
+                page, pageSize);
         return accessibilityFeatures;
     }
 
@@ -29,4 +33,5 @@ public class AccessibilityFeatureManager {
         accessibilityFeatureRepository.update(accessibilityFeature);
         return accessibilityFeature;
     }
+
 }
