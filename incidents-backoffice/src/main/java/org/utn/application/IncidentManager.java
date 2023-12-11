@@ -3,6 +3,7 @@ package org.utn.application;
 import javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.*;
@@ -48,20 +49,17 @@ public class IncidentManager {
         return incidents;
     }
 
-    public int getTotalIncidentsCount()  {
-        return incidentsRepository.count();
-    }
-
-    public List<Incident> getIncidentsWithPagination(
-            Integer startIndex,
+    public Incidents getIncidentsWithPagination(
+            Integer page,
             Integer pageSize,
             String orderBy,
             State state,
-            String catalogCode
+            String catalogCode,
+            User reporter
     ) throws InvalidCatalogCodeException {
-        List<Incident> incidents;
+        Incidents incidents;
 
-        incidents = incidentsRepository.findIncidentsWithPagination(startIndex, pageSize, state, orderBy, catalogCode);
+        incidents = incidentsRepository.findIncidentsWithPagination(page, pageSize, state, orderBy, catalogCode, reporter);
         return incidents;
     }
 
@@ -147,8 +145,9 @@ public class IncidentManager {
         incidentsRepository.remove(incident);
     }
 
-    public List<AccessibilityFeature> getAccessibilityFeatures(Integer limit, String status, String line, String station) throws IOException {
-        return inventoryService.getAccessibilityFeatures(limit, status, line, station);
+    public AccessibilityFeatures getAccessibilityFeatures(Integer limit, String status, String line, String station,
+                                                          Integer page, Integer pageSize) throws IOException {
+        return inventoryService.getAccessibilityFeatures(limit, status, line, station, page, pageSize);
     }
 
     public List<Line> getLines() throws IOException {

@@ -9,10 +9,13 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.AccessibilityFeature;
+import org.utn.domain.AccessibilityFeatures;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.requests.StatusRequest;
 import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
+import org.utn.presentation.api.dto.responses.AccessibilityFeaturesResponse;
 import org.utn.presentation.api.dto.responses.ErrorResponse;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +46,8 @@ public class AccessibilityController {
         String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
         Integer stationId = ctx.queryParamAsClass("station", Integer.class).getOrDefault(null);
+        Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(null);
+        Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(null);
 
         AccessibilityFeature.Status status = null;
         String statusParam = ctx.queryParam("status");
@@ -56,8 +61,9 @@ public class AccessibilityController {
             type = AccessibilityFeature.Type.valueOf(typeParam.toUpperCase());
         }
 
-        var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line, stationId, status, type);
-        var accessibilityFeaturesResponse = mapAccessibilityFeatureResponses(accessibilityFeatures);
+        var accessibilityFeatures = accessibilityFeatureManager.getAccessibilityFeatures(limit, catalogCode, line,
+                stationId, status, type, page, pageSize);
+        var accessibilityFeaturesResponse = mapAccessibilityFeaturesResponse(accessibilityFeatures);
 
         returnJson(objectMapper.writeValueAsString(accessibilityFeaturesResponse), ctx);
     };
@@ -84,10 +90,16 @@ public class AccessibilityController {
     }
 
     @NotNull
-    private static List<AccessibilityFeatureResponse> mapAccessibilityFeatureResponses(List<AccessibilityFeature> accessibilityFeatures) {
+    private static List<AccessibilityFeatureResponse> mapAccessibilityFeatureResponses(
+            List<AccessibilityFeature> accessibilityFeatures) {
         return accessibilityFeatures.stream()
                 .map(AccessibilityFeatureResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @NotNull
+    private static AccessibilityFeaturesResponse mapAccessibilityFeaturesResponse(AccessibilityFeatures accessibilityFeatures) {
+        return new AccessibilityFeaturesResponse(accessibilityFeatures);
     }
 
     public static String parseErrorResponse(int statusCode, String errorMsg) throws JsonProcessingException {

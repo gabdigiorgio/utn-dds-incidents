@@ -2,9 +2,13 @@ package org.utn.persistence;
 
 import org.utn.domain.AccessibilityFeature;
 import org.utn.domain.AccessibilityFeatureRepository;
+import org.utn.domain.AccessibilityFeatures;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +42,9 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
     }
 
     @Override
-    public List<AccessibilityFeature> findAccessibilityFeatures(Integer quantity, String catalogCode, String line, Integer stationId,
-                                                                AccessibilityFeature.Status status, AccessibilityFeature.Type type) {
+    public AccessibilityFeatures findAccessibilityFeatures(Integer limit, String catalogCode, String line, Integer stationId,
+                                                                 AccessibilityFeature.Status status, AccessibilityFeature.Type type,
+                                                                 Integer page, Integer pageSize) {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(AccessibilityFeature.class);
         var root = criteriaQuery.from(AccessibilityFeature.class);
@@ -66,13 +71,33 @@ public class DbAccessibilityFeatureRepository implements AccessibilityFeatureRep
             predicates.add(criteriaBuilder.equal(root.get("type"), type));
         }
 
-        if (quantity != null) {
+        if (limit != null) {
             criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-            var results = entityManager.createQuery(criteriaQuery).setMaxResults(quantity).getResultList();
-            return results;
+            var results = entityManager.createQuery(criteriaQuery).setMaxResults(limit).getResultList();
+            var count = count(criteriaBuilder, predicates);
+            return new AccessibilityFeatures(results, count);
+        } else if (page != null && pageSize != null) {
+            int startIndex = (page - 1) * pageSize;
+            criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+            var query = entityManager.createQuery(criteriaQuery);
+            query.setFirstResult(startIndex);
+            query.setMaxResults(pageSize);
+            var results = query.getResultList();
+            var count = count(criteriaBuilder, predicates);
+            return new AccessibilityFeatures(results, count);
         } else {
             criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-            return entityManager.createQuery(criteriaQuery).getResultList();
+            var results = entityManager.createQuery(criteriaQuery).getResultList();
+            var count = count(criteriaBuilder, predicates);
+            return new AccessibilityFeatures(results, count);
         }
+    }
+
+    private int count(CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        var criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(AccessibilityFeature.class)));
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+        var count = entityManager.createQuery(criteriaQuery).getSingleResult();
+        return count.intValue();
     }
 }

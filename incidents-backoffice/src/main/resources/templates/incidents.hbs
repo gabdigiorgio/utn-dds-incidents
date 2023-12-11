@@ -226,7 +226,7 @@
         var previousPageButton = document.getElementById('previousPageButton');
         var nextPageButton = document.getElementById('nextPageButton');
         var currentPage = 1;
-        var totalPages = {{ totalPages }};
+        var totalPages = 1;
 
         function updateCurrentPageSpan() {
             var currentPageSpan = document.getElementById('currentPageSpan');
@@ -245,9 +245,12 @@
                     return response.json();
                 })
                 .then(data => {
+                    totalPages = Math.ceil(data.totalCount / pageSize);
+                    updateCurrentPageSpan();
+
                     tableBody.innerHTML = '';
 
-                    data.forEach(incident => {
+                    data.items.forEach(incident => {
                         var trItem = document.createElement('tr');
                         trItem.innerHTML = `
                             <td scope="row">${incident.id}</td>

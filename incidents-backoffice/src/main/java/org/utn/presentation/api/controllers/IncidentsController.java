@@ -12,10 +12,12 @@ import com.opencsv.CSVReaderBuilder;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
-import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import org.jetbrains.annotations.NotNull;
+import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.Incidents;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.job.Job;
 import org.utn.domain.users.User;
@@ -38,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class IncidentsController {
     private ObjectMapper objectMapper;
@@ -62,23 +65,33 @@ public class IncidentsController {
         var incidentManager = ManagerFactory.createIncidentManager();
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String stateString = ctx.queryParamAsClass("state", String.class).getOrDefault(null);
-        String place = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
+        String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
+        String reporterId = ctx.queryParamAsClass("reporterId", String.class).getOrDefault(null);
         Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
         Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(10);
-
-        Integer startIndex = (page - 1) * pageSize;
 
         State stateEnum = null;
         if (stateString != null) {
             stateEnum = State.valueOf(stateString.toUpperCase());
         }
 
-        List<Incident> incidents = incidentManager.getIncidentsWithPagination(startIndex, pageSize, orderBy, stateEnum, place);
+        User reporter = null;
+        if (reporterId != null) {
+            var userRepository = RepositoryFactory.createUserRepository();
+            reporter = userRepository.getById(reporterId);
+        }
 
-        List<IncidentResponse> incidentResponses = incidents.stream().map(IncidentResponse::new).toList();
+        Incidents incidents = incidentManager.getIncidentsWithPagination(page, pageSize, orderBy, stateEnum, catalogCode, reporter);
+
+        IncidentsResponse incidentResponses = mapIncidentsResponse(incidents);
 
         returnJson(objectMapper.writeValueAsString(incidentResponses), ctx);
     };
+
+    @NotNull
+    private static IncidentsResponse mapIncidentsResponse(Incidents incidents) {
+        return new IncidentsResponse(incidents);
+    }
 
     public Handler createIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
@@ -181,12 +194,14 @@ public class IncidentsController {
         var incidentManager = ManagerFactory.createIncidentManager();
 
         Integer limit = ctx.queryParamAsClass("limit", Integer.class).getOrDefault(null);
+        Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(null);
+        Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(null);
         String status = ctx.queryParamAsClass("status", String.class).getOrDefault(null);
         String line = ctx.queryParamAsClass("line", String.class).getOrDefault(null);
         String station = ctx.queryParamAsClass("station", String.class).getOrDefault(null);
 
-        var accessibilityFeatures = incidentManager.getAccessibilityFeatures(limit, status, line, station);
-        var accessibilityFeaturesResponse = accessibilityFeatures.stream().map(this::mapToAccessibilityFeatureResponse).toList();
+        var accessibilityFeatures = incidentManager.getAccessibilityFeatures(limit, status, line, station, page, pageSize);
+        var accessibilityFeaturesResponse = mapToAccessibilityFeaturesResponse(accessibilityFeatures);
 
         ctx.json(accessibilityFeaturesResponse);
     };
@@ -208,13 +223,23 @@ public class IncidentsController {
         ctx.json(stationResponses);
     };
 
-    private AccessibilityFeatureResponse mapToAccessibilityFeatureResponse(AccessibilityFeature feature) {
-        AccessibilityFeatureResponse response = new AccessibilityFeatureResponse();
-        response.setCatalogCode(feature.getCatalogCode());
-        response.setType(feature.getType());
-        response.setStatus(feature.getStatus());
-        response.setStation(feature.getStation());
-        response.setLine(feature.getLine());
+    private AccessibilityFeaturesResponse mapToAccessibilityFeaturesResponse(AccessibilityFeatures features) {
+        AccessibilityFeaturesResponse response = new AccessibilityFeaturesResponse();
+
+        List<AccessibilityFeatureResponse> mappedItems = features.getItems().stream()
+                .map(feature -> {
+                    AccessibilityFeatureResponse responseItem = new AccessibilityFeatureResponse();
+                    responseItem.setCatalogCode(feature.getCatalogCode());
+                    responseItem.setType(feature.getType());
+                    responseItem.setStatus(feature.getStatus());
+                    responseItem.setStation(feature.getStation());
+                    responseItem.setLine(feature.getLine());
+                    return responseItem;
+                })
+                .collect(Collectors.toList());
+        response.setItems(mappedItems);
+
+        response.setTotalCount(features.getTotalCount());
         return response;
     }
 

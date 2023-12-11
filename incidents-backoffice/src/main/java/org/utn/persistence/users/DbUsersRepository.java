@@ -59,6 +59,20 @@ public class DbUsersRepository implements UsersRepository {
     }
 
     @Override
+    public User getById(String id) {
+        var criteriaBuilder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = criteriaBuilder.createQuery(User.class);
+        var root = criteriaQuery.from(User.class);
+
+        Predicate idFilter = criteriaBuilder.equal(root.get("id"), id);
+        criteriaQuery.where(idFilter);
+
+        List<User> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+
+        return resultList.stream().findFirst().orElseThrow(() -> new UserNotExistsException("User not exists with id: " + id));
+    }
+
+    @Override
     public boolean userExists(String email) {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Long.class);

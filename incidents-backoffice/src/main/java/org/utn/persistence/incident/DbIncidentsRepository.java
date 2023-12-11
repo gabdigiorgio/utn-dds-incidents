@@ -1,8 +1,11 @@
 package org.utn.persistence.incident;
 
 import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.Incidents;
 import org.utn.domain.incident.IncidentsRepository;
 import org.utn.domain.incident.state.State;
+import org.utn.domain.users.User;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
@@ -10,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,19 +80,24 @@ public class DbIncidentsRepository implements IncidentsRepository {
     }
 
     @Override
-    public List<Incident> findIncidentsWithPagination(int startIndex, int pageSize, State state, String orderBy, String catalogCode) {
+    public Incidents findIncidentsWithPagination(Integer page, Integer pageSize, State state, String orderBy, String catalogCode,
+                                                 User reporter) {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Incident.class);
         var root = criteriaQuery.from(Incident.class);
 
+        List<Predicate> predicates = new ArrayList<>();
+
         if (state != null) {
-            Predicate stateFilter = criteriaBuilder.equal(root.get("state"), state);
-            criteriaQuery.where(stateFilter);
+            predicates.add(criteriaBuilder.equal(root.get("state"), state));
         }
 
         if (catalogCode != null) {
-            Predicate catalogCodeFilter = criteriaBuilder.equal(root.get("catalogCode"), catalogCode);
-            criteriaQuery.where(catalogCodeFilter);
+            predicates.add(criteriaBuilder.equal(root.get("catalogCode"), catalogCode));
+        }
+
+        if (reporter != null) {
+            predicates.add(criteriaBuilder.equal(root.get("reportedBy"), reporter));
         }
 
         if (orderBy != null) {
@@ -99,12 +108,30 @@ public class DbIncidentsRepository implements IncidentsRepository {
             }
         }
 
-        TypedQuery<Incident> query = entityManager.createQuery(criteriaQuery);
+        if (page != null && pageSize != null) {
+            int startIndex = (page - 1) * pageSize;
+            criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+            var query = entityManager.createQuery(criteriaQuery);
+            query.setFirstResult(startIndex);
+            query.setMaxResults(pageSize);
+            var results = query.getResultList();
+            var count = count(criteriaBuilder, predicates);
+            return new Incidents(results, count);
+        }
+        else {
+            TypedQuery<Incident> query = entityManager.createQuery(criteriaQuery);
+            query.setMaxResults(10);
+            var results = query.getResultList();
+            return new Incidents(results, count(criteriaBuilder, predicates));
+        }
+    }
 
-        query.setFirstResult(startIndex);
-        query.setMaxResults(pageSize);
-
-        return query.getResultList();
+    private int count(CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        var criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Incident.class)));
+        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+        var count = entityManager.createQuery(criteriaQuery).getSingleResult();
+        return count.intValue();
     }
 
     @Override
