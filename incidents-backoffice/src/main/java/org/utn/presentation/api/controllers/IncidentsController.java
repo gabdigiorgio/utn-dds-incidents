@@ -65,7 +65,8 @@ public class IncidentsController {
         var incidentManager = ManagerFactory.createIncidentManager();
         String orderBy = ctx.queryParamAsClass("orderBy", String.class).getOrDefault("createdAt");
         String stateString = ctx.queryParamAsClass("state", String.class).getOrDefault(null);
-        String place = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
+        String catalogCode = ctx.queryParamAsClass("catalogCode", String.class).getOrDefault(null);
+        String reporterId = ctx.queryParamAsClass("reporterId", String.class).getOrDefault(null);
         Integer page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
         Integer pageSize = ctx.queryParamAsClass("pageSize", Integer.class).getOrDefault(10);
 
@@ -74,7 +75,13 @@ public class IncidentsController {
             stateEnum = State.valueOf(stateString.toUpperCase());
         }
 
-        Incidents incidents = incidentManager.getIncidentsWithPagination(page, pageSize, orderBy, stateEnum, place);
+        User reporter = null;
+        if (reporterId != null) {
+            var userRepository = RepositoryFactory.createUserRepository();
+            reporter = userRepository.getById(reporterId);
+        }
+
+        Incidents incidents = incidentManager.getIncidentsWithPagination(page, pageSize, orderBy, stateEnum, catalogCode, reporter);
 
         IncidentsResponse incidentResponses = mapIncidentsResponse(incidents);
 

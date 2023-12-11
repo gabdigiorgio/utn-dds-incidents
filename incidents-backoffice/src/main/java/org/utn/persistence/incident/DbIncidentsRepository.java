@@ -4,6 +4,8 @@ import org.utn.domain.incident.Incident;
 import org.utn.domain.incident.Incidents;
 import org.utn.domain.incident.IncidentsRepository;
 import org.utn.domain.incident.state.State;
+import org.utn.domain.users.User;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
@@ -78,7 +80,8 @@ public class DbIncidentsRepository implements IncidentsRepository {
     }
 
     @Override
-    public Incidents findIncidentsWithPagination(Integer page, Integer pageSize, State state, String orderBy, String catalogCode) {
+    public Incidents findIncidentsWithPagination(Integer page, Integer pageSize, State state, String orderBy, String catalogCode,
+                                                 User reporter) {
         var criteriaBuilder = entityManager.getCriteriaBuilder();
         var criteriaQuery = criteriaBuilder.createQuery(Incident.class);
         var root = criteriaQuery.from(Incident.class);
@@ -91,6 +94,10 @@ public class DbIncidentsRepository implements IncidentsRepository {
 
         if (catalogCode != null) {
             predicates.add(criteriaBuilder.equal(root.get("catalogCode"), catalogCode));
+        }
+
+        if (reporter != null) {
+            predicates.add(criteriaBuilder.equal(root.get("reportedBy"), reporter));
         }
 
         if (orderBy != null) {
