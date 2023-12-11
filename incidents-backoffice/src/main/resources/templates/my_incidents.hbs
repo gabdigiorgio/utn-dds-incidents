@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale-1.0">
     <meta name="author" content="Grupo 1 - DDS 2023 - K3003">
 
-    <title>SMESTPE - Medidas inaccesibles</title>
+    <title>SMESTPE - Incidencias</title>
     <link rel="icon"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='orange' class='fa-solid fa-1' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm7.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z'/%3E%3C/svg%3E"
         sizes="any" type="image/svg+xml">
@@ -50,15 +50,9 @@
         body {
             padding-top: 2.3rem;
 
+
             /* RESPONSIVE CSS */
             @media (min-width: 40em) {
-                .carousel-caption p {
-                    margin-bottom: 1.25rem;
-                    font-size: 1.25rem;
-                    line-height: 1.4;
-                    bottom: 3rem;
-                    z-index: 10;
-                }
 
                 .featurette-heading {
                     font-size: 50px;
@@ -83,7 +77,7 @@
 
             /* Featurettes */
             .featurette-divider {
-                margin: 1rem;
+                margin-top: 1rem;
             }
 
             .featurette-heading {
@@ -93,73 +87,62 @@
 
             /* RESPONSIVE CSS */
             @media (min-width: 40em) {
-                .carousel-caption p {
-                    margin-bottom: 1.25rem;
-                    font-size: 1.25rem;
-                    line-height: 1.4;
+
+                /* Botones */
+                .btn-secondary,
+                .btn-secondary:hover,
+                .btn-secondary:focus {
+                    color: #333;
+                    text-shadow: none;
+                    /* Prevent inheritance from `body` */
                 }
 
-                .featurette-heading {
-                    font-size: 50px;
+                /* Base structure */
+                .cover-container {
+                    max-width: 42em;
+                }
+
+                /* Header */
+                .nav-masthead .nav-link {
+                    padding: .25rem 0;
+                    font-weight: 700;
+                    color: rgba(255, 255, 255, .5);
+                    background-color: transparent;
+                    border-bottom: .25rem solid transparent;
+                }
+
+                .nav-masthead .nav-link:hover,
+                .nav-masthead .nav-link:focus {
+                    border-bottom-color: rgba(255, 255, 255, .25);
+                }
+
+                .nav-masthead .nav-link+.nav-link {
+                    margin-left: 1rem;
+                }
+
+                .nav-masthead .active {
+                    color: #fff;
+                    border-bottom-color: #fff;
+                }
+
+                #pagination {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: 1rem;
+                }
+
+                #previousPageButton,
+                #nextPageButton {
+                    padding: 0.5rem 1rem;
+                    font-size: 1rem;
+                    margin-left: 0.5rem;
                 }
             }
-
-            /* Botones */
-            .btn-secondary,
-            .btn-secondary:hover,
-            .btn-secondary:focus {
-                color: #333;
-                text-shadow: none;
-                /* Prevent inheritance from `body` */
-            }
-
-            /* Base structure */
-            .cover-container {
-                max-width: 42em;
-            }
-
-            /* Header */
-            .nav-masthead .nav-link {
-                padding: .25rem 0;
-                font-weight: 700;
-                color: rgba(255, 255, 255, .5);
-                background-color: transparent;
-                border-bottom: .25rem solid transparent;
-            }
-
-            .nav-masthead .nav-link:hover,
-            .nav-masthead .nav-link:focus {
-                border-bottom-color: rgba(255, 255, 255, .25);
-            }
-
-            .nav-masthead .nav-link+.nav-link {
-                margin-left: 1rem;
-            }
-
-            .nav-masthead .active {
-                color: #fff;
-                border-bottom-color: #fff;
-            }
-
-            #pagination {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-top: 1rem;
-            }
-
-            #previousPageButton,
-            #nextPageButton {
-                padding: 0.5rem 1rem;
-                font-size: 1rem;
-                margin-left: 0.5rem;
-            }
-        }
     </style>
 </head>
 
-<body>
-
+<tbody>
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
@@ -182,10 +165,11 @@
                         <a class="nav-link" href="/ui/incidents">Incidencias</a>
                     </li>
                     <li id="mis-incidencias" class="nav-item">
-                        <a class="nav-link" href="/ui/incidents/my-incidents">Mis incidencias</a>
+                        <a class="nav-link active" aria-current="page" href="#">Mis incidencias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Medidas de Accesibilidad</a>
+                        <a class="nav-link" href="/ui/incidents/inaccessible-accessibility-features">Medidas de
+                            Accesibilidad</a>
                     </li>
                     <li id="cargar-csv" class="nav-item">
                         <a class="nav-link" href="/ui/incidents/upload_csv">Cargar</a>
@@ -205,17 +189,20 @@
     <div class="container">
         <div class="row justify-content-between pt-5">
             <div class="col-15 d-flex justify-content-between">
-                <h2 style="display: inline;">Medidas de accesibilidad inaccesibles</h2>
+                <h2 style="display: inline;">Mis incidencias</h2>
+                <a type="button" class="btn me-2 btn-primary" href="/ui/incidents/new">Crear nueva incidencia</a>
             </div>
             <hr class="featurette-divider">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">Código de catalogo</th>
-                        <th scope="col">Tipo</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Descripcion</th>
+                        <th scope="col">Reportó</th>
                         <th scope="col">Estado</th>
-                        <th scope="col">Línea</th>
-                        <th scope="col">Estación</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -228,47 +215,32 @@
 
     <div id="pagination">
         <button id="previousPageButton">Previous</button>
-        <span id="currentPageSpan">Page 1 of <span id="totalPagesSpan"></span></span>
+        <span id="currentPageSpan">Page 1 of {{totalPages}}</span>
         <button id="nextPageButton">Next</button>
     </div>
     <script type="module" src="/user.js"></script>
 
     <script type="module">
         import { setUser } from '/user.js';
+        import { getUserId } from '/user.js';
         setUser();
 
-        var totalPagesSpan = document.getElementById('totalPagesSpan');
         var pageSize = {{ pageSize }};
         var tableBody = document.getElementById('tableBody');
         var previousPageButton = document.getElementById('previousPageButton');
         var nextPageButton = document.getElementById('nextPageButton');
         var currentPage = 1;
         var totalPages = 1;
-
-        const typeTranslations = {
-            'ELEVATOR': 'Ascensor',
-            'ESCALATOR': 'Escalera mecánica',
-            'RAMP': 'Rampa',
-            'SIGNAGE': 'Señalización'
-        };
-
-        const statusTranslations = {
-            'FUNCTIONAL': 'Funcional',
-            'INACCESSIBLE': 'Inaccesible'
-        };
-
-        function updateTotalPagesSpan() {
-            totalPagesSpan.textContent = ` of ${totalPages}`;
-        }
+        var userId = getUserId();
 
         function updateCurrentPageSpan() {
             var currentPageSpan = document.getElementById('currentPageSpan');
             currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
         }
 
-        function loadAccessibilityFeatures(page) {
+        function loadIncidents(page) {
             var startIndex = (page - 1) * pageSize;
-            var url = `/api/incidents/accessibility-features?status=inaccessible&page=${page}&pageSize=${pageSize}`;
+            var url = `/api/incidents?page=${page}&pageSize=${pageSize}&reporterId=${userId}`;
 
             fetch(url)
                 .then(response => {
@@ -279,19 +251,35 @@
                 })
                 .then(data => {
                     totalPages = Math.ceil(data.totalCount / pageSize);
-                    updateTotalPagesSpan();
+                    updateCurrentPageSpan();
 
                     tableBody.innerHTML = '';
 
-                    data.items.forEach(accessibilityFeature => {
+                    data.items.forEach(incident => {
                         var trItem = document.createElement('tr');
                         trItem.innerHTML = `
-                        <td scope="row">${accessibilityFeature.catalogCode}</td>
-                        <td>${typeTranslations[accessibilityFeature.type]}</td>
-                        <td>${statusTranslations[accessibilityFeature.status]}</td>
-                        <td>${accessibilityFeature.line}</td>
-                        <td>${accessibilityFeature.station}</td>
-                    `;
+                            <td scope="row">${incident.id}</td>
+                            <td>${incident.catalogCode}</td>
+                            <td>${incident.reportDate}</td>
+                            <td>${incident.description}</td>
+                            <td>${incident.reporterEmail}</td>
+                            <td>${incident.state}</td>
+                            <td>
+                                <div class="d-flex justify-content-around">
+                                    <a href="/ui/incidents/${incident.id}" class="text-decoration-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-eye" viewBox="0 0 16 16">
+                                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="/ui/incidents/edit/${incident.id}" class="text-decoration-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        `;
                         tableBody.appendChild(trItem);
                     });
 
@@ -304,7 +292,7 @@
             previousPageButton.addEventListener('click', function () {
                 if (currentPage > 1) {
                     currentPage--;
-                    loadAccessibilityFeatures(currentPage);
+                    loadIncidents(currentPage);
                 }
             });
         }
@@ -313,14 +301,14 @@
             nextPageButton.addEventListener('click', function () {
                 if (currentPage < totalPages) {
                     currentPage++;
-                    loadAccessibilityFeatures(currentPage);
+                    loadIncidents(currentPage);
                 }
             });
         }
 
-        loadAccessibilityFeatures(currentPage);
+        loadIncidents(currentPage);
     </script>
 
-</body>
+    </body>
 
 </html>

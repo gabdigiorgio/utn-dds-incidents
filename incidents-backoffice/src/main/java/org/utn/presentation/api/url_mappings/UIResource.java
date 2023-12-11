@@ -51,6 +51,7 @@ public class UIResource implements EndpointGroup {
             ApiBuilder.get("/register-user", UIController.getRegisterUser, Role.ANYONE);
             ApiBuilder.get("/register-operator", UIController.getRegisterOperator, Role.ANYONE);
             ApiBuilder.get("/", UIController.getIncidents, Role.ANYONE);
+            ApiBuilder.get("/my-incidents", UIController.getUserIncidents, Role.USER, Role.OPERATOR);
             ApiBuilder.get("/inaccessible-accessibility-features", UIController.getInaccessibleAccessibilityFeatures, Role.ANYONE);
             ApiBuilder.get("/upload_csv", UIController.createMassiveIncident, Role.OPERATOR);
             ApiBuilder.get("/processing-csv-state/{id}", UIController.getCsvProcessingState, Role.ANYONE);

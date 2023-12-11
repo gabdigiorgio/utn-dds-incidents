@@ -6,7 +6,6 @@ import org.utn.application.MissingUserFieldsException;
 import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.requests.RegisterUserRequest;
-import org.utn.presentation.api.dto.responses.LoginResponse;
 import org.utn.presentation.api.dto.responses.RegisterResponse;
 
 public class UsersController {
