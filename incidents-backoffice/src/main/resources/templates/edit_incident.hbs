@@ -23,21 +23,21 @@
                     <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
                     <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
                     <li id="mis-incidencias" class="nav-item">
-                        <a class="nav-link" href="/ui/incidents/my-incidents">Mis incidencias</a>
+                        <a class="nav-link px-2 text-white" href="/ui/incidents/my-incidents">Mis incidencias</a>
                     </li>
                     <li><a href="/ui/incidents/inaccessible-accessibility-features"
                             class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
-                    <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
+                    <li id="cargar-csv" class="nav-item">
+                        <a class="nav-link px-2 text-white" href="/ui/incidents/upload_csv">Cargar</a>
+                    </li>
                     <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
-                    <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
-                    <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
                 </ul>
 
 
-                <div class="text-end">
-                    <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
-                    <button type="button" class="btn btn-warning">Registrarse</button>
-                </div>
+                <form id="auth" class="d-flex">
+                    <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
+                    <a type="button" href="/ui/incidents/register-user" class="btn me-2 btn-warning">Registrarse</a>
+                </form>
             </div>
         </div>
     </header>
