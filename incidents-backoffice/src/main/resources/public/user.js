@@ -2,6 +2,7 @@
 export const saveUser = (user) => {
   document.cookie = `auth=${user.token}`;
   localStorage.setItem('token', user.token);
+  localStorage.setItem('userId', user.id);
   localStorage.setItem('userRole', user.role);
   localStorage.setItem('userEmail', user.email);
 };
@@ -9,6 +10,10 @@ export const saveUser = (user) => {
 export const removeToken = () => {
   document.cookie = '';
   localStorage.removeItem('token');
+};
+
+export const getUserId = () => {
+  return localStorage.getItem('userId');
 };
 
 export const getToken = () => {

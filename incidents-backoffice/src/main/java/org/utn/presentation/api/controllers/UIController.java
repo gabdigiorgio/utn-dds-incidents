@@ -68,6 +68,18 @@ public class UIController {
         }
     };
 
+    public Handler getUserIncidents = ctx -> {
+        try {
+            Map<String, Object> model = new HashMap<>();
+            Integer pageSize = 10;
+            model.put("pageSize", pageSize);
+            ctx.render("my_incidents.hbs", model);
+        } catch (Exception error) {
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
+        }
+    };
 
     public Handler getInaccessibleAccessibilityFeatures = ctx -> {
         try {
