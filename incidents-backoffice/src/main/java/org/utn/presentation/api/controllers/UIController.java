@@ -108,8 +108,9 @@ public class UIController {
             ctx.status(404);
             ctx.result("Incidencia no encontrada");
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
         }
     };
 
@@ -117,8 +118,9 @@ public class UIController {
         try {
             ctx.render("create_incident.hbs");
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
         }
     };
 
@@ -136,8 +138,9 @@ public class UIController {
             ctx.status(404);
             ctx.result("Incidencia no encontrada");
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
         }
     };
 
@@ -155,8 +158,9 @@ public class UIController {
             ctx.status(404);
             ctx.result("Incidencia no encontrada");
         } catch (Exception error) {
-            ctx.json(parseErrorResponse(400, error.getMessage()));
-            ctx.status(400);
+            ctx.json(parseErrorResponse(500, error.getMessage()));
+            ctx.status(500);
+            ctx.render("error.hbs");
         }
     };
 

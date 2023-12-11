@@ -23,21 +23,20 @@
                     <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
                     <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
                     <li id="mis-incidencias" class="nav-item">
-                        <a class="nav-link" href="/ui/incidents/my-incidents">Mis incidencias</a>
+                        <a class="nav-link px-2 text-white" href="/ui/incidents/my-incidents">Mis incidencias</a>
                     </li>
                     <li><a href="/ui/incidents/inaccessible-accessibility-features"
                             class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
-                    <li><a href="/ui/incidents/upload_csv" class="nav-link px-2 text-white">Cargar CSV</a></li>
-                    <li><a href="/faqs" class="nav-link px-2 text-white">FAQs</a></li>
-                    <li><a href="/nosotros" class="nav-link px-2 text-white">Nosotros</a></li>
-                    <li><a href="/contacto" class="nav-link px-2 text-white">Contacto</a></li>
+                    <li id="cargar-csv" class="nav-item">
+                        <a class="nav-link px-2 text-white" href="/ui/incidents/upload_csv">Cargar</a>
+                    </li>
                 </ul>
 
 
-                <div class="text-end">
-                    <button type="button" class="btn btn-outline-light me-2">Ingresar</button>
-                    <button type="button" class="btn btn-warning">Registrarse</button>
-                </div>
+                <form id="auth" class="d-flex">
+                    <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
+                    <a type="button" href="/ui/incidents/register-user" class="btn me-2 btn-warning">Registrarse</a>
+                </form>
             </div>
         </div>
     </header>
@@ -70,7 +69,7 @@
                     <label for="motivo">Motivo de rechazo</label>
                 </div>
                 <div class="form-floating mt-3 mb-3">
-                    <a class="btn btn-secondary" href="/ui/incidents/edit/{{incident.id}}/state">Editar Estado</a>
+                    <a id="editarEstadoBtn" class="btn btn-secondary" href="/ui/incidents/edit/{{incident.id}}/state">Editar Estado</a>
                 </div>
                 <div class="form-floating mt-3 mb-3">
                     <button type="submit" class="btn btn-primary">Finalizar</button>
@@ -84,8 +83,14 @@
 
 <script type="module" src="/user.js"></script>
 <script type="module">
-    import { getToken, setUser } from '/user.js';
+    import { getToken, setUser, getUserRole } from '/user.js';
     setUser();
+
+    const userRole = getUserRole();
+
+    if (userRole !== 'OPERATOR') {
+        editarEstadoBtn.style.display = 'none';
+    }
 
     form.onsubmit = async (e) => {
         e.preventDefault();
