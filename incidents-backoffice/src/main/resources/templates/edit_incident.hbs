@@ -111,7 +111,7 @@
         incidenciaData.reportDate = formattedDate;
 
         const id = {{ incident.id }};
-    const incidenciaUrl = `/api/incidents/${id}`;
+        const incidenciaUrl = `/api/incidents/${id}`;
 
     const responseIncidencia = await fetch(incidenciaUrl, {
         method: 'PUT',
@@ -123,13 +123,12 @@
     });
 
     const responseDataIncidencia = await responseIncidencia.json();
-    if (responseDataIncidencia.status === 400) {
+    if (responseDataIncidencia.status === 403) {
         alert(responseDataIncidencia.message);
     } else {
         alert("Incidencia editada con éxito");
+        window.location.href = `/ui/incidents/${id}`;
     }
-
-    window.location.href = `/ui/incidents/${id}`;
 };
 </script>
 

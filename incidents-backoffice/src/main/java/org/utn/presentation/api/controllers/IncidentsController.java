@@ -118,7 +118,7 @@ public class IncidentsController {
         EditIncidentRequest request = ctx.bodyAsClass(EditIncidentRequest.class);
         User editor = userRepository.getByToken(ctx.header("token"));
 
-        Incident editedIncident = incidentManager.editIncident(id, request, editor.getId());
+        Incident editedIncident = incidentManager.editIncident(id, request, editor.getId(), editor.getRole());
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 
