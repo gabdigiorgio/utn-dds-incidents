@@ -2,6 +2,7 @@ package org.utn.presentation.api.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.javalin.http.ForbiddenResponse;
 import io.javalin.http.Handler;
 import javassist.NotFoundException;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;

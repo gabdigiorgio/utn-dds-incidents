@@ -1,5 +1,7 @@
 package org.utn.application;
 
+import io.javalin.http.ForbiddenResponse;
+import io.javalin.http.UnauthorizedResponse;
 import javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
@@ -20,6 +22,7 @@ import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class IncidentManager {
@@ -87,8 +90,10 @@ public class IncidentManager {
         return newIncident;
     }
 
-    public Incident editIncident(Integer id, EditIncidentRequest data) throws InvalidDateException, OperationNotSupportedException {
+    public Incident editIncident(Integer id, EditIncidentRequest data, Integer editorId) throws InvalidDateException, OperationNotSupportedException {
         Incident incident = incidentsRepository.getById(id);
+        Integer incidentReporterId = incident.getReportedBy().getId();
+        if (!Objects.equals(editorId, incidentReporterId)) throw new ForbiddenResponse();
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
         incidentsRepository.update(incident);
