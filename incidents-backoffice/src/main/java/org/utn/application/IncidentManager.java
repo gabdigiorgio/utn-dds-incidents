@@ -1,5 +1,7 @@
 package org.utn.application;
 
+import io.javalin.http.ForbiddenResponse;
+import io.javalin.http.UnauthorizedResponse;
 import javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.accessibility_feature.AccessibilityFeature;
@@ -11,6 +13,7 @@ import org.utn.domain.incident.factory.IncidentFactory;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.state.StateTransitionException;
 import org.utn.domain.incident.IncidentsRepository;
+import org.utn.domain.users.Role;
 import org.utn.domain.users.User;
 import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.utils.DateUtils;
@@ -20,6 +23,7 @@ import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class IncidentManager {
@@ -87,8 +91,19 @@ public class IncidentManager {
         return newIncident;
     }
 
-    public Incident editIncident(Integer id, EditIncidentRequest data) throws InvalidDateException, OperationNotSupportedException {
+    public Incident editIncident(Integer id, EditIncidentRequest data, Integer editorId,
+                                 Role editorRole) throws InvalidDateException, OperationNotSupportedException {
         Incident incident = incidentsRepository.getById(id);
+        Integer incidentReporterId = incident.getReportedBy().getId();
+        if (!Objects.equals(editorId, incidentReporterId) && !editorRole.equals(Role.OPERATOR))
+            throw new ForbiddenResponse("Only the reporter can edit incident properties");
+        if (incident.getState().equals(State.REPORTED)) {
+            if (!editorRole.equals(Role.USER))
+                throw new ForbiddenResponse("Only the reporter can edit incident properties in state: " + incident.getState().toString());
+        } else {
+            if (!editorRole.equals(Role.OPERATOR))
+                throw new ForbiddenResponse("Only the operator can edit incident properties in state: " + incident.getState().toString());
+        }
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);
         incidentsRepository.update(incident);

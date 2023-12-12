@@ -11,6 +11,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
+import io.javalin.http.ForbiddenResponse;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
 import org.utn.application.InvalidPasswordException;
@@ -57,6 +58,7 @@ public class ServerApi {
 
     private static void setupExceptions(Javalin server) {
         setupExceptionHandling(server, EntityNotFoundException.class, 404);
+        setupExceptionHandling(server, ForbiddenResponse.class, 403);
         setupExceptionHandling(server, IllegalArgumentException.class, 400);
         setupExceptionHandling(server, StateTransitionException.class, 400);
         setupExceptionHandling(server, UnrecognizedPropertyException.class, 400);
