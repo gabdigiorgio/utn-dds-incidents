@@ -100,8 +100,8 @@ public class IncidentsController {
         CreateIncidentRequest request = ctx.bodyAsClass(CreateIncidentRequest.class);
         User reporter = userRepository.getByToken(ctx.header("token"));
 
-        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate),
-                request.description, State.REPORTED, null, reporter, null, ""); // que lo haga la capa de aplicacion
+        Incident newIncident = incidentManager.createReportedIncident(request.catalogCode, DateUtils.parseDate(request.reportDate),
+                request.description, reporter);
 
         IncidentResponse incidentResponse = new IncidentResponse(newIncident);
 

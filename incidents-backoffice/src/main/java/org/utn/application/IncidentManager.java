@@ -67,6 +67,12 @@ public class IncidentManager {
         return incidents;
     }
 
+    public Incident createReportedIncident(String catalogCode, LocalDate reportDate, String description, User reporter)
+            throws InvalidCatalogCodeException, IOException {
+        return createIncident(catalogCode, reportDate, description, State.REPORTED, null, reporter,
+                null, "");
+    }
+
     public Incident createIncident(
             String catalogCode,
             LocalDate reportDate,
