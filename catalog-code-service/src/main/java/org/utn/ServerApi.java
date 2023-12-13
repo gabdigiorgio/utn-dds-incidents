@@ -18,7 +18,7 @@ import static org.utn.presentation.api.controllers.AccessibilityController.parse
 public class ServerApi {
     public static void main(String[] args) {
 
-        Integer port = Integer.parseInt(System.getProperty("port", "8081")); //TODO: cambiar puerto a 8080 en deploy!!!
+        Integer port = Integer.parseInt(System.getProperty("port", "8080")); //TODO: cambiar puerto a 8080 en deploy!!!
         Javalin server = Javalin.create().start(port);
         setupExceptions(server);
 
