@@ -1,6 +1,9 @@
 package org.utn.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "accessibility_feature")
@@ -15,6 +18,7 @@ public class AccessibilityFeature {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_id")
     private Station station;
+    private LocalDate dateSinceInaccessible;
 
     public AccessibilityFeature(String catalogCode, Type type, Status status, Station station) {
         this.catalogCode = catalogCode;
@@ -41,6 +45,15 @@ public class AccessibilityFeature {
 
     public Station getStation() {
         return station;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public LocalDate getDateSinceInaccessible() {
+        return dateSinceInaccessible;
+    }
+
+    public void setDateSinceInaccessible(LocalDate dateSinceInaccessible) {
+        this.dateSinceInaccessible = dateSinceInaccessible;
     }
 
     public enum Type {

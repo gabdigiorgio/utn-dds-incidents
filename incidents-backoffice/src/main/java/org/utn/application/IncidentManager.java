@@ -1,24 +1,23 @@
 package org.utn.application;
 
 import io.javalin.http.ForbiddenResponse;
-import io.javalin.http.UnauthorizedResponse;
 import javassist.NotFoundException;
-import org.jetbrains.annotations.NotNull;
-import org.utn.domain.accessibility_feature.AccessibilityFeature;
+import net.bytebuddy.asm.Advice;
 import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
-import org.utn.domain.incident.*;
-import org.utn.domain.incident.factory.IncidentFactory;
+import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.Incidents;
+import org.utn.domain.incident.IncidentsRepository;
+import org.utn.domain.incident.InventoryService;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.state.StateTransitionException;
-import org.utn.domain.incident.IncidentsRepository;
 import org.utn.domain.users.Role;
 import org.utn.domain.users.User;
-import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
+
 import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -67,6 +66,12 @@ public class IncidentManager {
         return incidents;
     }
 
+    public Incident createReportedIncident(String catalogCode, LocalDate reportDate, String description, User reporter)
+            throws InvalidCatalogCodeException, IOException {
+        return createIncident(catalogCode, reportDate, description, State.REPORTED, null, reporter,
+                null, "");
+    }
+
     public Incident createIncident(
             String catalogCode,
             LocalDate reportDate,
@@ -91,21 +96,22 @@ public class IncidentManager {
         return newIncident;
     }
 
-    public Incident editIncident(Integer id, EditIncidentRequest data, Integer editorId,
-                                 Role editorRole) throws InvalidDateException, OperationNotSupportedException {
+    public Incident editIncident(Integer id, EditIncident data) throws InvalidDateException, OperationNotSupportedException {
         Incident incident = incidentsRepository.getById(id);
         Integer incidentReporterId = incident.getReportedBy().getId();
-        if (!Objects.equals(editorId, incidentReporterId) && !editorRole.equals(Role.OPERATOR))
-            throw new ForbiddenResponse("Only the reporter can edit incident properties");
+        if (!Objects.equals(data.getEditorId(), incidentReporterId) && !data.getEditorRole().equals(Role.OPERATOR))
+            throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia");
         if (incident.getState().equals(State.REPORTED)) {
-            if (!editorRole.equals(Role.USER))
-                throw new ForbiddenResponse("Only the reporter can edit incident properties in state: " + incident.getState().toString());
+            if (!data.getEditorRole().equals(Role.USER))
+                throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
+                        + incident.getState().toString());
         } else {
-            if (!editorRole.equals(Role.OPERATOR))
-                throw new ForbiddenResponse("Only the operator can edit incident properties in state: " + incident.getState().toString());
+            if (!data.getEditorRole().equals(Role.OPERATOR))
+                throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
+                        + incident.getState().toString());
         }
-        if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
-        if (data.description != null) incident.setDescription(data.description);
+        if (data.getReportDate() != null) incident.setReportDate(DateUtils.parseDate(data.getReportDate()));
+        if (data.getDescription() != null) incident.setDescription(data.getDescription());
         incidentsRepository.update(incident);
         return incident;
     }
@@ -137,9 +143,9 @@ public class IncidentManager {
     }
 
     public Incident resolveIncident(Integer id) throws StateTransitionException, IOException {
-        var incident = performIncidentAction(id, Incident::resolveIncident);
-        var catalogCode = incident.getCatalogCode();
+        var incident = performIncidentAction(id, inc -> inc.resolveIncident(LocalDate.now()));
 
+        var catalogCode = incident.getCatalogCode();
         if (checkAllIncidentsResolved(catalogCode)) {
             inventoryService.setAccessibilityFeatureStatus(catalogCode, "functional");
         }
@@ -147,12 +153,12 @@ public class IncidentManager {
         return incident;
     }
 
-    private boolean checkAllIncidentsResolved(String catalogCode) {
-        return incidentsRepository.allIncidentsResolved(catalogCode);
+    public Incident dismissIncident(Integer id, String rejectedReason) throws StateTransitionException {
+        return performIncidentAction(id, inc -> inc.dismiss(rejectedReason, LocalDate.now()));
     }
 
-    public Incident dismissIncident(Integer id, String rejectedReason) throws StateTransitionException {
-        return performIncidentAction(id, incident -> incident.dismiss(rejectedReason));
+    private boolean checkAllIncidentsResolved(String catalogCode) {
+        return incidentsRepository.allIncidentsResolved(catalogCode);
     }
 
     public void deleteIncident(Integer id) {

@@ -102,7 +102,7 @@
                 </div>
                 <div class="form-floating mt-3 mb-3">
                     <input type="text" class="form-control" id="description" placeholder="Enter description"
-                        name="description">
+                        name="description" maxlength="200">
                     <label for="description">Descripcion</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Finalizar</button>
@@ -180,6 +180,9 @@
                     },
                     cache: true,
                 },
+            }).on('change', function () {
+                $('#station').val(null).trigger('change');
+                $('#catalogCode').val(null).trigger('change');
             });
 
             $('#station').select2({
@@ -211,6 +214,8 @@
                     },
                     cache: true,
                 },
+            }).on('change', function () {
+                $('#catalogCode').val(null).trigger('change');
             });
 
             form.submit(function (e) {
@@ -239,14 +244,17 @@
                     },
                     data: JSON.stringify(data),
                     success: function (responseData) {
-                        if (responseData.status === 400) {
-                            alert(responseData.message);
-                        } else {
-                            window.location.href = "/ui/incidents";
-                        }
+                        window.location.href = "/ui/incidents";
                     },
-                    error: function () {
-                        alert('Error en la solicitud AJAX');
+                    error: function (xhr, textStatus, errorThrown) {
+                        if (xhr.status === 400) {
+                            const errorResponse = JSON.parse(xhr.responseText);
+                            alert(errorResponse.message);
+                        }
+                        else {
+                            console.error("Error en la solicitud: ", xhr.status, textStatus, errorThrown);
+                            alert("Error inesperado, intente nuevamente.")
+                        }
                     }
                 });
             });

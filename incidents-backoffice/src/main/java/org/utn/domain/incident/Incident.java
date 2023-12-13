@@ -104,24 +104,27 @@ public class Incident {
     }
 
     public void assignEmployee(String employee) throws StateTransitionException, IllegalArgumentException {
-        this.setState(State.ASSIGNED);
         this.setEmployee(employee);
+        this.setState(State.ASSIGNED);
     }
 
     public void confirm() throws StateTransitionException {
         this.setState(State.CONFIRMED);
     }
 
-    public void dismiss(String rejectedReason) throws IllegalArgumentException, StateTransitionException {
-        this.setState(State.DISMISSED);
+    public void dismiss(String rejectedReason, LocalDate closingDate) throws IllegalArgumentException, StateTransitionException {
+        this.setClosingDate(closingDate);
         this.setRejectedReason(rejectedReason);
+        this.setState(State.DISMISSED);
+
     }
 
     public void startProgress() throws StateTransitionException {
         this.setState(State.IN_PROGRESS);
     }
 
-    public void resolveIncident() throws StateTransitionException {
+    public void resolveIncident(LocalDate closingDate) throws StateTransitionException {
+        this.setClosingDate(closingDate);
         this.setState(State.RESOLVED);
     }
 
@@ -129,7 +132,7 @@ public class Incident {
 
     public void setEmployee(String employee) {
         if (employee == null || employee.isEmpty()) {
-            throw new IllegalArgumentException("The 'employee' field cannot be null or empty.");
+            throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo o vacío.");
         }
         this.employee = employee;
     }
@@ -140,7 +143,7 @@ public class Incident {
 
     public void setDescription(String description) throws OperationNotSupportedException {
         if(this.state.equals(State.RESOLVED) || this.state.equals(State.DISMISSED)) {
-            throw new OperationNotSupportedException("Cannot modify description in a final state.");
+            throw new OperationNotSupportedException("No es posible modificar la descripción en un estado final.");
         }
         this.description = description;
     }
@@ -155,7 +158,7 @@ public class Incident {
 
     public void setRejectedReason(String rejectedReason) {
         if (rejectedReason == null || rejectedReason.isEmpty()) {
-            throw new IllegalArgumentException("The 'rejected reason' field cannot be null or empty.");
+            throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo o vacío.");
         }
         this.rejectedReason = rejectedReason;
     }

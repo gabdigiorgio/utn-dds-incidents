@@ -4,6 +4,7 @@ import org.utn.domain.AccessibilityFeature;
 import org.utn.domain.AccessibilityFeatureRepository;
 import org.utn.domain.AccessibilityFeatures;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class AccessibilityFeatureManager {
@@ -29,6 +30,12 @@ public class AccessibilityFeatureManager {
 
     public AccessibilityFeature updateAccessibilityFeatureStatus(String catalogCode, AccessibilityFeature.Status status) {
         AccessibilityFeature accessibilityFeature = accessibilityFeatureRepository.getByCatalogCode(catalogCode);
+        if (status == AccessibilityFeature.Status.INACCESSIBLE) {
+            LocalDate currentDate = LocalDate.now();
+            accessibilityFeature.setDateSinceInaccessible(currentDate);
+        } else if (status == AccessibilityFeature.Status.FUNCTIONAL) {
+            accessibilityFeature.setDateSinceInaccessible(null);
+        }
         accessibilityFeature.setStatus(status);
         accessibilityFeatureRepository.update(accessibilityFeature);
         return accessibilityFeature;

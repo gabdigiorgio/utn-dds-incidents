@@ -1,6 +1,6 @@
 package org.utn.presentation.api.dto.requests;
 
-public class RejectedReasonRequest {
+public class DismissIncidentRequest {
     private String rejectedReason;
 
     public String getRejectedReason() {

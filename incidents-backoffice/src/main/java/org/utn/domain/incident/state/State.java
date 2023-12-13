@@ -78,8 +78,8 @@ public enum State implements Transitionable {
     };
 
     void throwTransitionException(State targetState) throws StateTransitionException {
-        throw new StateTransitionException("Cannot transition from state " +
-                this + " to state: " + targetState);
+        throw new StateTransitionException("No es posible transicionar de estado: " +
+                this + " a estado: " + targetState);
     }
 
 }

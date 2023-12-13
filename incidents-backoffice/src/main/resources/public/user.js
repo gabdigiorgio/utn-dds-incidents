@@ -54,7 +54,7 @@ export const setUser = () => {
       identification.classList.add('me-2');
       identification.classList.add('btn-outline-light');
       identification.type = "button";
-      const newContent = document.createTextNode(`${email}(${translatedRole})`);
+      const newContent = document.createTextNode(`${email} (${translatedRole})`);
       identification.appendChild(newContent);
   
       auth.appendChild(identification);

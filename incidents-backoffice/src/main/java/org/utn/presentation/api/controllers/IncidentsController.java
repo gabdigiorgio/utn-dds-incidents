@@ -13,6 +13,7 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import org.jetbrains.annotations.NotNull;
+import org.utn.application.EditIncident;
 import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
@@ -23,11 +24,8 @@ import org.utn.domain.job.Job;
 import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
 import org.utn.modules.RepositoryFactory;
+import org.utn.presentation.api.dto.requests.*;
 import org.utn.presentation.api.dto.responses.CsvProcessingStateResponse;
-import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
-import org.utn.presentation.api.dto.requests.EditIncidentRequest;
-import org.utn.presentation.api.dto.requests.EmployeeRequest;
-import org.utn.presentation.api.dto.requests.RejectedReasonRequest;
 import org.utn.presentation.api.dto.responses.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
@@ -36,6 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -100,8 +99,8 @@ public class IncidentsController {
         CreateIncidentRequest request = ctx.bodyAsClass(CreateIncidentRequest.class);
         User reporter = userRepository.getByToken(ctx.header("token"));
 
-        Incident newIncident = incidentManager.createIncident(request.catalogCode, DateUtils.parseDate(request.reportDate),
-                request.description, State.REPORTED, null, reporter, null, "");
+        Incident newIncident = incidentManager.createReportedIncident(request.catalogCode, DateUtils.parseDate(request.reportDate),
+                request.description, reporter);
 
         IncidentResponse incidentResponse = new IncidentResponse(newIncident);
 
@@ -118,7 +117,9 @@ public class IncidentsController {
         EditIncidentRequest request = ctx.bodyAsClass(EditIncidentRequest.class);
         User editor = userRepository.getByToken(ctx.header("token"));
 
-        Incident editedIncident = incidentManager.editIncident(id, request, editor.getId(), editor.getRole());
+        EditIncident data = new EditIncident(request, editor);
+
+        Incident editedIncident = incidentManager.editIncident(id, data);
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 
@@ -183,7 +184,7 @@ public class IncidentsController {
 
         Integer id = getId(ctx);
 
-        RejectedReasonRequest request = ctx.bodyAsClass(RejectedReasonRequest.class);
+        DismissIncidentRequest request = ctx.bodyAsClass(DismissIncidentRequest.class);
 
         Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
 
@@ -236,6 +237,7 @@ public class IncidentsController {
                     responseItem.setStatus(feature.getStatus());
                     responseItem.setStation(feature.getStation());
                     responseItem.setLine(feature.getLine());
+                    responseItem.setDateSinceInaccessible(feature.getDateSinceInaccessible());
                     return responseItem;
                 })
                 .collect(Collectors.toList());

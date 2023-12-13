@@ -5,6 +5,8 @@ import org.utn.domain.incident.*;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.state.StateTransitionException;
 
+import java.time.LocalDate;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -260,14 +262,14 @@ public class IncidentsTest {
     }
 
     private void whenDismissIncident() throws IllegalArgumentException, StateTransitionException {
-        incident.dismiss("");
+        incident.dismiss("", LocalDate.now());
     }
     private void whenDismissIncident(String reason) throws IllegalArgumentException, StateTransitionException {
-        incident.dismiss(reason);
+        incident.dismiss(reason,  LocalDate.now());
     }
 
     private void whenResolveIncident() throws StateTransitionException {
-        incident.resolveIncident();
+        incident.resolveIncident(LocalDate.now());
     }
 
     private void whenStartProgressIncident() throws StateTransitionException {
