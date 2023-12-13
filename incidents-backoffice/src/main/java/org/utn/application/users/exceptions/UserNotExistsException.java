@@ -1,4 +1,4 @@
-package org.utn.application;
+package org.utn.application.users.exceptions;
 
 public class UserNotExistsException extends RuntimeException {
 

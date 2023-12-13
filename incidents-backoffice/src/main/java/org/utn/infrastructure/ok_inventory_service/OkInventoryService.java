@@ -1,4 +1,4 @@
-package org.utn.infrastructure;
+package org.utn.infrastructure.ok_inventory_service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,9 +8,9 @@ import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
 import org.utn.domain.incident.InventoryService;
-import org.utn.infrastructure.responses.AccessibilityFeaturesInventoryResponse;
-import org.utn.infrastructure.responses.LineInventoryResponse;
-import org.utn.infrastructure.responses.StationInventoryResponse;
+import org.utn.infrastructure.ok_inventory_service.responses.AccessibilityFeaturesInventoryResponse;
+import org.utn.infrastructure.ok_inventory_service.responses.LineInventoryResponse;
+import org.utn.infrastructure.ok_inventory_service.responses.StationInventoryResponse;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 
 import java.io.IOException;

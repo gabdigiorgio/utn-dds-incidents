@@ -1,4 +1,4 @@
-package org.utn.application;
+package org.utn.application.incident;
 
 import org.jetbrains.annotations.NotNull;
 import org.utn.domain.incident.Incident;

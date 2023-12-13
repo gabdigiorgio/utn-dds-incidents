@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import org.utn.application.IncidentMassiveManager;
+import org.utn.application.incident.IncidentMassiveManager;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 import org.utn.presentation.bot.telegram_user.TelegramUserUserBotRepo;

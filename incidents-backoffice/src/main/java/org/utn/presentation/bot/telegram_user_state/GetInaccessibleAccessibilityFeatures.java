@@ -2,7 +2,7 @@ package org.utn.presentation.bot.telegram_user_state;
 
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
-import org.utn.application.IncidentManager;
+import org.utn.application.incident.IncidentManager;
 import org.utn.presentation.api.dto.responses.StationResponse;
 import org.utn.presentation.bot.Shows;
 import org.utn.presentation.bot.UtilsBot;

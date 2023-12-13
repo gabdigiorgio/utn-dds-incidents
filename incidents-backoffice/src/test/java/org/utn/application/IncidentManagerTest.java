@@ -4,10 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.utn.application.incident.IncidentMassiveManager;
 import org.utn.domain.IncidentBuilderForTest;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.Incident;
-import org.utn.infrastructure.OkInventoryService;
+import org.utn.infrastructure.ok_inventory_service.OkInventoryService;
 import org.utn.domain.incident.IncidentsRepository;
 
 import java.io.IOException;

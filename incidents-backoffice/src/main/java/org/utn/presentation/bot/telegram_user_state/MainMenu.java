@@ -3,7 +3,7 @@ package org.utn.presentation.bot.telegram_user_state;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.utn.TelegramBot;
-import org.utn.application.IncidentManager;
+import org.utn.application.incident.IncidentManager;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.bot.telegram_user.TelegramUserBot;
 

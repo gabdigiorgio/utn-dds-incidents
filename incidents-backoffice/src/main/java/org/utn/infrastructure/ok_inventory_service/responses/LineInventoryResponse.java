@@ -1,6 +1,6 @@
-package org.utn.infrastructure.responses;
+package org.utn.infrastructure.ok_inventory_service.responses;
 
-public class StationInventoryResponse {
+public class LineInventoryResponse {
     private String id;
     private String name;
 

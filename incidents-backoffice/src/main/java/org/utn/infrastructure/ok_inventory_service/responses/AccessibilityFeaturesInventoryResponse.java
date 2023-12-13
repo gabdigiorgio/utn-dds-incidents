@@ -1,4 +1,4 @@
-package org.utn.infrastructure.responses;
+package org.utn.infrastructure.ok_inventory_service.responses;
 
 import java.util.List;
 

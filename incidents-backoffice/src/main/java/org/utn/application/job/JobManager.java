@@ -1,4 +1,4 @@
-package org.utn.application;
+package org.utn.application.job;
 
 import org.utn.domain.job.Job;
 import org.utn.domain.job.ProcessState;
