@@ -6,6 +6,7 @@ import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.responses.IncidentResponse;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -96,9 +97,9 @@ public class UIController {
             IncidentResponse incidentResponse = new IncidentResponse(incident);
             model.put("incident", incidentResponse);
             ctx.render("incident.hbs", model);
-        } catch (NotFoundException notFoundError) {
+        } catch (EntityNotFoundException notFoundError) {
             ctx.status(404);
-            ctx.result("Incidencia no encontrada");
+            ctx.render("incident_not_found.hbs");
         } catch (Exception error) {
             ctx.json(parseErrorResponse(500, error.getMessage()));
             ctx.status(500);
@@ -126,9 +127,9 @@ public class UIController {
             IncidentResponse incidentResponse = new IncidentResponse(incident);
             model.put("incident", incidentResponse);
             ctx.render("edit_incident.hbs", model);
-        } catch (NotFoundException notFoundError) {
+        } catch (EntityNotFoundException notFoundError) {
             ctx.status(404);
-            ctx.result("Incidencia no encontrada");
+            ctx.render("incident_not_found.hbs");
         } catch (Exception error) {
             ctx.json(parseErrorResponse(500, error.getMessage()));
             ctx.status(500);
@@ -146,9 +147,9 @@ public class UIController {
             IncidentResponse incidentResponse = new IncidentResponse(incident);
             model.put("incident", incidentResponse);
             ctx.render("edit_incident_state.hbs", model);
-        } catch (NotFoundException notFoundError) {
+        } catch (EntityNotFoundException notFoundError) {
             ctx.status(404);
-            ctx.result("Incidencia no encontrada");
+            ctx.render("incident_not_found.hbs");
         } catch (Exception error) {
             ctx.json(parseErrorResponse(500, error.getMessage()));
             ctx.status(500);
