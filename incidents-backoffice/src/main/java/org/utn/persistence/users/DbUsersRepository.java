@@ -3,8 +3,8 @@ package org.utn.persistence.users;
 import org.utn.application.UserNotExistsException;
 import org.utn.domain.users.User;
 import org.utn.domain.users.UsersRepository;
+
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.Predicate;
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class DbUsersRepository implements UsersRepository {
 
         List<User> resultList = entityManager.createQuery(criteriaQuery).getResultList();
 
-        return resultList.stream().findFirst().orElseThrow(() -> new UserNotExistsException("User not exists with email: " + email));
+        return resultList.stream().findFirst().orElseThrow(() -> new UserNotExistsException("No existe usuario con email: " + email));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class DbUsersRepository implements UsersRepository {
 
         List<User> resultList = entityManager.createQuery(criteriaQuery).getResultList();
 
-        return resultList.stream().findFirst().orElseThrow(() -> new UserNotExistsException("User not exists with id: " + id));
+        return resultList.stream().findFirst().orElseThrow(() -> new UserNotExistsException("No existe usuario con id: " + id));
     }
 
     @Override

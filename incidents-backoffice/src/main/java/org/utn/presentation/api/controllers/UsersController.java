@@ -41,7 +41,7 @@ public class UsersController {
 
     private static void validateField(String field, String fieldName) {
         if (field == null || field.isEmpty()) {
-            throw new MissingUserFieldsException("Missing " + fieldName + " field");
+            throw new MissingUserFieldsException("Falta el campo: " + fieldName);
         }
     }
 }

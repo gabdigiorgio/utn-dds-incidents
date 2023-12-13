@@ -96,13 +96,15 @@ public class IncidentManager {
         Incident incident = incidentsRepository.getById(id);
         Integer incidentReporterId = incident.getReportedBy().getId();
         if (!Objects.equals(editorId, incidentReporterId) && !editorRole.equals(Role.OPERATOR))
-            throw new ForbiddenResponse("Only the reporter can edit incident properties");
+            throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia");
         if (incident.getState().equals(State.REPORTED)) {
             if (!editorRole.equals(Role.USER))
-                throw new ForbiddenResponse("Only the reporter can edit incident properties in state: " + incident.getState().toString());
+                throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
+                        + incident.getState().toString());
         } else {
             if (!editorRole.equals(Role.OPERATOR))
-                throw new ForbiddenResponse("Only the operator can edit incident properties in state: " + incident.getState().toString());
+                throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
+                        + incident.getState().toString());
         }
         if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
         if (data.description != null) incident.setDescription(data.description);

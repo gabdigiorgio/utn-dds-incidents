@@ -129,7 +129,7 @@ public class Incident {
 
     public void setEmployee(String employee) {
         if (employee == null || employee.isEmpty()) {
-            throw new IllegalArgumentException("The 'employee' field cannot be null or empty.");
+            throw new IllegalArgumentException("El campo 'empleado' no puede ser nulo o vacío.");
         }
         this.employee = employee;
     }
@@ -140,7 +140,7 @@ public class Incident {
 
     public void setDescription(String description) throws OperationNotSupportedException {
         if(this.state.equals(State.RESOLVED) || this.state.equals(State.DISMISSED)) {
-            throw new OperationNotSupportedException("Cannot modify description in a final state.");
+            throw new OperationNotSupportedException("No es posible modificar la descripción en un estado final.");
         }
         this.description = description;
     }
@@ -155,7 +155,7 @@ public class Incident {
 
     public void setRejectedReason(String rejectedReason) {
         if (rejectedReason == null || rejectedReason.isEmpty()) {
-            throw new IllegalArgumentException("The 'rejected reason' field cannot be null or empty.");
+            throw new IllegalArgumentException("El campo 'motivo de rechazo' no puede ser nulo o vacío.");
         }
         this.rejectedReason = rejectedReason;
     }

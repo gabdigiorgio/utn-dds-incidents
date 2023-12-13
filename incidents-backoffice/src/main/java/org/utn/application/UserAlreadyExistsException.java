@@ -2,7 +2,7 @@ package org.utn.application;
 
 public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException() {
-        super("The provided email is already registered");
+        super("El email ingresado ya está registrado");
     }
 
 }
