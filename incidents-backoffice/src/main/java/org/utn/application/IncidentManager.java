@@ -2,6 +2,7 @@ package org.utn.application;
 
 import io.javalin.http.ForbiddenResponse;
 import javassist.NotFoundException;
+import net.bytebuddy.asm.Advice;
 import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
@@ -141,10 +142,10 @@ public class IncidentManager {
         return performIncidentAction(id, Incident::startProgress);
     }
 
-    public Incident resolveIncident(Integer id, LocalDate closingDate) throws StateTransitionException, IOException {
-        var incident = performIncidentAction(id, inc -> inc.resolveIncident(closingDate));
-        var catalogCode = incident.getCatalogCode();
+    public Incident resolveIncident(Integer id) throws StateTransitionException, IOException {
+        var incident = performIncidentAction(id, inc -> inc.resolveIncident(LocalDate.now()));
 
+        var catalogCode = incident.getCatalogCode();
         if (checkAllIncidentsResolved(catalogCode)) {
             inventoryService.setAccessibilityFeatureStatus(catalogCode, "functional");
         }
@@ -152,12 +153,12 @@ public class IncidentManager {
         return incident;
     }
 
-    private boolean checkAllIncidentsResolved(String catalogCode) {
-        return incidentsRepository.allIncidentsResolved(catalogCode);
+    public Incident dismissIncident(Integer id, String rejectedReason) throws StateTransitionException {
+        return performIncidentAction(id, inc -> inc.dismiss(rejectedReason, LocalDate.now()));
     }
 
-    public Incident dismissIncident(Integer id, String rejectedReason, LocalDate closingDate) throws StateTransitionException {
-        return performIncidentAction(id, incident -> incident.dismiss(rejectedReason, closingDate));
+    private boolean checkAllIncidentsResolved(String catalogCode) {
+        return incidentsRepository.allIncidentsResolved(catalogCode);
     }
 
     public void deleteIncident(Integer id) {

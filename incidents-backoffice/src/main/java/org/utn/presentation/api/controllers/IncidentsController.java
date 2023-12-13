@@ -172,9 +172,7 @@ public class IncidentsController {
 
         Integer id = getId(ctx);
 
-        ResolveIncidentRequest request = ctx.bodyAsClass(ResolveIncidentRequest.class);
-
-        Incident editedIncident = incidentManager.resolveIncident(id, DateUtils.parseDate(request.getClosingDate()));
+        Incident editedIncident = incidentManager.resolveIncident(id);
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 
@@ -188,12 +186,7 @@ public class IncidentsController {
 
         DismissIncidentRequest request = ctx.bodyAsClass(DismissIncidentRequest.class);
 
-        LocalDate closingDate = null;
-        if (request.getClosingDate() != null) {
-            closingDate = DateUtils.parseDate(request.getClosingDate());
-        }
-
-        Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason(), closingDate);
+        Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 

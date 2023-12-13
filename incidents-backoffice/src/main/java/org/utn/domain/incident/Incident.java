@@ -138,9 +138,6 @@ public class Incident {
     }
 
     public void setClosingDate(LocalDate date) {
-        if (date == null) {
-            throw new IllegalArgumentException("El campo 'fecha de cierre' no puede ser nulo.");
-        }
         this.closingDate = date;
     }
 

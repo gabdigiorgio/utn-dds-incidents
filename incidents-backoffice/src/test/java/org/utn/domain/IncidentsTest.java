@@ -262,14 +262,14 @@ public class IncidentsTest {
     }
 
     private void whenDismissIncident() throws IllegalArgumentException, StateTransitionException {
-        incident.dismiss("", LocalDate.of(2023, 12, 12));
+        incident.dismiss("", LocalDate.now());
     }
     private void whenDismissIncident(String reason) throws IllegalArgumentException, StateTransitionException {
-        incident.dismiss(reason,  LocalDate.of(2023, 12, 12));
+        incident.dismiss(reason,  LocalDate.now());
     }
 
     private void whenResolveIncident() throws StateTransitionException {
-        incident.resolveIncident(LocalDate.of(2023, 12, 12));
+        incident.resolveIncident(LocalDate.now());
     }
 
     private void whenStartProgressIncident() throws StateTransitionException {
