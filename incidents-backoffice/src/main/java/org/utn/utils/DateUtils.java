@@ -11,8 +11,8 @@ public class DateUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
         try{
             if (!stringDate.isEmpty()) {
-                LocalDate fecha = LocalDate.parse(stringDate, formatter);
-                return fecha;
+                LocalDate date = LocalDate.parse(stringDate, formatter);
+                return date;
             } else {
                 return null;
             }

@@ -24,11 +24,8 @@ import org.utn.domain.job.Job;
 import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
 import org.utn.modules.RepositoryFactory;
+import org.utn.presentation.api.dto.requests.*;
 import org.utn.presentation.api.dto.responses.CsvProcessingStateResponse;
-import org.utn.presentation.api.dto.requests.CreateIncidentRequest;
-import org.utn.presentation.api.dto.requests.EditIncidentRequest;
-import org.utn.presentation.api.dto.requests.EmployeeRequest;
-import org.utn.presentation.api.dto.requests.RejectedReasonRequest;
 import org.utn.presentation.api.dto.responses.*;
 import org.utn.presentation.incidents_load.CsvReader;
 import org.utn.presentation.worker.MQCLient;
@@ -37,6 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -174,7 +172,9 @@ public class IncidentsController {
 
         Integer id = getId(ctx);
 
-        Incident editedIncident = incidentManager.resolveIncident(id);
+        ResolveIncidentRequest request = ctx.bodyAsClass(ResolveIncidentRequest.class);
+
+        Incident editedIncident = incidentManager.resolveIncident(id, DateUtils.parseDate(request.getClosingDate()));
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 
@@ -186,9 +186,14 @@ public class IncidentsController {
 
         Integer id = getId(ctx);
 
-        RejectedReasonRequest request = ctx.bodyAsClass(RejectedReasonRequest.class);
+        DismissIncidentRequest request = ctx.bodyAsClass(DismissIncidentRequest.class);
 
-        Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
+        LocalDate closingDate = null;
+        if (request.getClosingDate() != null) {
+            closingDate = DateUtils.parseDate(request.getClosingDate());
+        }
+
+        Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason(), closingDate);
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 

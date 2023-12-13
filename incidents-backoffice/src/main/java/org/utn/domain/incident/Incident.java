@@ -104,24 +104,27 @@ public class Incident {
     }
 
     public void assignEmployee(String employee) throws StateTransitionException, IllegalArgumentException {
-        this.setState(State.ASSIGNED);
         this.setEmployee(employee);
+        this.setState(State.ASSIGNED);
     }
 
     public void confirm() throws StateTransitionException {
         this.setState(State.CONFIRMED);
     }
 
-    public void dismiss(String rejectedReason) throws IllegalArgumentException, StateTransitionException {
-        this.setState(State.DISMISSED);
+    public void dismiss(String rejectedReason, LocalDate closingDate) throws IllegalArgumentException, StateTransitionException {
+        this.setClosingDate(closingDate);
         this.setRejectedReason(rejectedReason);
+        this.setState(State.DISMISSED);
+
     }
 
     public void startProgress() throws StateTransitionException {
         this.setState(State.IN_PROGRESS);
     }
 
-    public void resolveIncident() throws StateTransitionException {
+    public void resolveIncident(LocalDate closingDate) throws StateTransitionException {
+        this.setClosingDate(closingDate);
         this.setState(State.RESOLVED);
     }
 
@@ -135,6 +138,9 @@ public class Incident {
     }
 
     public void setClosingDate(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException("El campo 'fecha de cierre' no puede ser nulo.");
+        }
         this.closingDate = date;
     }
 

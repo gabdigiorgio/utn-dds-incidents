@@ -141,8 +141,8 @@ public class IncidentManager {
         return performIncidentAction(id, Incident::startProgress);
     }
 
-    public Incident resolveIncident(Integer id) throws StateTransitionException, IOException {
-        var incident = performIncidentAction(id, Incident::resolveIncident);
+    public Incident resolveIncident(Integer id, LocalDate closingDate) throws StateTransitionException, IOException {
+        var incident = performIncidentAction(id, inc -> inc.resolveIncident(closingDate));
         var catalogCode = incident.getCatalogCode();
 
         if (checkAllIncidentsResolved(catalogCode)) {
@@ -156,8 +156,8 @@ public class IncidentManager {
         return incidentsRepository.allIncidentsResolved(catalogCode);
     }
 
-    public Incident dismissIncident(Integer id, String rejectedReason) throws StateTransitionException {
-        return performIncidentAction(id, incident -> incident.dismiss(rejectedReason));
+    public Incident dismissIncident(Integer id, String rejectedReason, LocalDate closingDate) throws StateTransitionException {
+        return performIncidentAction(id, incident -> incident.dismiss(rejectedReason, closingDate));
     }
 
     public void deleteIncident(Integer id) {
