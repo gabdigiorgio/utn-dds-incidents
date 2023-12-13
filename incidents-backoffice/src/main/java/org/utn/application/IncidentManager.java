@@ -1,24 +1,22 @@
 package org.utn.application;
 
 import io.javalin.http.ForbiddenResponse;
-import io.javalin.http.UnauthorizedResponse;
 import javassist.NotFoundException;
-import org.jetbrains.annotations.NotNull;
-import org.utn.domain.accessibility_feature.AccessibilityFeature;
 import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
-import org.utn.domain.incident.*;
-import org.utn.domain.incident.factory.IncidentFactory;
+import org.utn.domain.incident.Incident;
+import org.utn.domain.incident.Incidents;
+import org.utn.domain.incident.IncidentsRepository;
+import org.utn.domain.incident.InventoryService;
 import org.utn.domain.incident.state.State;
 import org.utn.domain.incident.state.StateTransitionException;
-import org.utn.domain.incident.IncidentsRepository;
 import org.utn.domain.users.Role;
 import org.utn.domain.users.User;
-import org.utn.presentation.api.dto.requests.EditIncidentRequest;
 import org.utn.utils.DateUtils;
 import org.utn.utils.exceptions.validator.InvalidCatalogCodeException;
 import org.utn.utils.exceptions.validator.InvalidDateException;
+
 import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
 import java.time.LocalDate;

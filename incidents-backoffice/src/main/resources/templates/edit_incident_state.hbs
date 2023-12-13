@@ -102,18 +102,6 @@
             document.querySelector('input[name="motivo"]').value = '';
         }
     });
-
-    form.addEventListener('submit', function (event) {
-        const estadoSeleccionado = selectEstado.value;
-
-        if (estadoSeleccionado === 'Asignado' && !document.querySelector('input[name="empleado"]').value.trim()) {
-            alert('Por favor, llene el campo "Empleado" antes de enviar el formulario.');
-            event.preventDefault();
-        } else if (estadoSeleccionado === 'Desestimado' && !document.querySelector('input[name="motivo"]').value.trim()) {
-            alert('Por favor, llene el campo "Motivo" antes de enviar el formulario.');
-            event.preventDefault();
-        }
-    });
 </script>
 
 <script type="module" src="/user.js"></script>
