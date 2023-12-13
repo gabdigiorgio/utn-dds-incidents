@@ -15,7 +15,7 @@ public class ManagerFactory {
     }
 
     public static UserManager createUserManager() {
-        return new UserManager(RepositoryFactory.createUserRepository());
+        return new UserManager(RepositoryFactory.createUserRepository(), ServiceFactory.createPasswordHasher());
     }
 
     public static JobManager createJobManager() {

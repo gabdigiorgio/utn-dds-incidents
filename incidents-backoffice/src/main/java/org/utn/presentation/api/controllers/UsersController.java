@@ -2,7 +2,7 @@ package org.utn.presentation.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.Handler;
-import org.utn.application.users.MissingUserFieldsException;
+import org.utn.application.users.exceptions.MissingUserFieldsException;
 import org.utn.domain.users.User;
 import org.utn.modules.ManagerFactory;
 import org.utn.presentation.api.dto.requests.RegisterUserRequest;

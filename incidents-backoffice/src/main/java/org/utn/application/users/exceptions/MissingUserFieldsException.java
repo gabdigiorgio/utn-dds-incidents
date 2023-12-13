@@ -1,4 +1,4 @@
-package org.utn.application.users;
+package org.utn.application.users.exceptions;
 
 public class MissingUserFieldsException extends RuntimeException {
     public MissingUserFieldsException() {

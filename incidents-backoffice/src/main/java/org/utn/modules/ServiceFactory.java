@@ -1,7 +1,8 @@
 package org.utn.modules;
 
 import okhttp3.OkHttpClient;
-import org.utn.infrastructure.OkInventoryService;
+import org.utn.infrastructure.bcrypt_password_hasher.BCryptPasswordHasher;
+import org.utn.infrastructure.ok_inventory_service.OkInventoryService;
 
 public class ServiceFactory {
 
@@ -14,5 +15,9 @@ public class ServiceFactory {
         }
 
         return new OkInventoryService(client, baseUrl);
+    }
+    
+    public static BCryptPasswordHasher createPasswordHasher() {
+        return new BCryptPasswordHasher();
     }
 }

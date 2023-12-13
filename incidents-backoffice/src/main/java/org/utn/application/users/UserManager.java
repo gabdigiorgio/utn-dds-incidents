@@ -1,6 +1,7 @@
 package org.utn.application.users;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.utn.application.users.exceptions.IncorrectPasswordException;
+import org.utn.application.users.exceptions.UserAlreadyExistsException;
 import org.utn.domain.users.Role;
 import org.utn.domain.users.User;
 import org.utn.domain.users.UsersRepository;
@@ -11,8 +12,10 @@ import java.util.UUID;
 
 public class UserManager {
     private final UsersRepository usersRepository;
-    public UserManager(UsersRepository usersRepository) {
+    private final PasswordHasher passwordHasher;
+    public UserManager(UsersRepository usersRepository, PasswordHasher passwordHasher) {
         this.usersRepository = usersRepository;
+        this.passwordHasher = passwordHasher;
     }
 
     public User login(String email, String password) throws EntityNotFoundException {
@@ -26,16 +29,11 @@ public class UserManager {
     public User registerUser(String email, String password, String stringRole) {
         checkUserNotExists(email);
         Role role = Objects.equals(stringRole, "USER") ? Role.USER : Role.OPERATOR;
-        String hashedPassword = hashPassword(password);
+        String hashedPassword = passwordHasher.hashPassword(password);
         var newUser = User.newUser(email, hashedPassword, role, generateToken());
         usersRepository.save(newUser);
         return newUser;
     }
-
-    private String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
     private void checkUserNotExists(String email) {
         if (usersRepository.userExists(email)) throw new UserAlreadyExistsException();
     }
@@ -49,8 +47,8 @@ public class UserManager {
         return UUID.randomUUID().toString();
     }
 
-    private static void validatePassword(String password, User user) {
-        if (!BCrypt.checkpw(password, user.getPassword())) {
+    private void validatePassword(String password, User user) {
+        if (!passwordHasher.checkPassword(password, user.getPassword())) {
             throw new IncorrectPasswordException();
         }
     }
