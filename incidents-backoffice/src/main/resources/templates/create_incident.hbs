@@ -202,9 +202,10 @@
                     },
                     processResults: function (data) {
                         const formattedResults = data.map(item => {
+                            const connectionText = item.lineConnection ? ` (Conexión con: ${item.lineConnection})` : '';
                             return {
                                 id: item.id,
-                                text: item.name,
+                                text: `${item.name}${connectionText}`,
                             };
                         });
 

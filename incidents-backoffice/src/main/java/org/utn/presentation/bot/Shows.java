@@ -239,7 +239,14 @@ public class Shows {
             StringBuilder stationsMsg = new StringBuilder("Estaciones de la " + selectedLine + ":\n");
 
             for (int i = 0; i < stationsResponse.size(); i++) {
-                stationsMsg.append((i + 1)).append("️⃣ ☞ ").append(stationsResponse.get(i).getName()).append("\n");
+                String stationName = stationsResponse.get(i).getName();
+                String connectionText = stationsResponse.get(i).getLineConnection();
+
+                if (connectionText != null && !connectionText.isEmpty()) {
+                    stationsMsg.append((i + 1)).append("️⃣ ☞ ").append(stationName).append(" (Conexión con: ").append(connectionText).append(")\n");
+                } else {
+                    stationsMsg.append((i + 1)).append("️⃣ ☞ ").append(stationName).append("\n");
+                }
             }
 
             sendMessage.setText(stationsMsg.toString());
@@ -259,6 +266,7 @@ public class Shows {
         StationResponse response = new StationResponse();
         response.setId(station.getId());
         response.setName(station.getName());
+        response.setLineConnection(station.getLineConnection());
         return response;
     }
 

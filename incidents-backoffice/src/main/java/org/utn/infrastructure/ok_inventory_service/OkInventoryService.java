@@ -166,6 +166,7 @@ public class OkInventoryService implements InventoryService {
         Station station = new Station();
         station.setId(inventoryResponse.getId());
         station.setName(inventoryResponse.getName());
+        station.setLineConnection(inventoryResponse.getLineConnection());
         return station;
     }
 
