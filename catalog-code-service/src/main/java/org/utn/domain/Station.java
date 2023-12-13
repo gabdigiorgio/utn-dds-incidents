@@ -1,7 +1,6 @@
 package org.utn.domain;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Station {
@@ -12,13 +11,9 @@ public class Station {
     @ManyToOne
     private Line line;
 
-    @ManyToMany
-    @JoinTable(
-            name = "station_connections",
-            joinColumns = @JoinColumn(name = "station_id"),
-            inverseJoinColumns = @JoinColumn(name = "connected_station_id")
-    )
-    private List<Station> connections;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "connection_id")
+    private Station connection;
 
     protected Station() {
         super();
@@ -34,5 +29,9 @@ public class Station {
 
     public Integer getId() {
         return id;
+    }
+
+    public Station getConnection() {
+        return connection;
     }
 }

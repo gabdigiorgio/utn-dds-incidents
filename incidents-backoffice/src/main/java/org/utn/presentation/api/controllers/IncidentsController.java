@@ -257,6 +257,7 @@ public class IncidentsController {
         StationResponse response = new StationResponse();
         response.setId(station.getId());
         response.setName(station.getName());
+        response.setLineConnection(station.getLineConnection());
         return response;
     }
 
