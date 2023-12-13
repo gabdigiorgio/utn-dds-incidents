@@ -102,7 +102,7 @@
                 </div>
                 <div class="form-floating mt-3 mb-3">
                     <input type="text" class="form-control" id="description" placeholder="Enter description"
-                        name="description">
+                        name="description" maxlength="200">
                     <label for="description">Descripcion</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Finalizar</button>
@@ -180,6 +180,9 @@
                     },
                     cache: true,
                 },
+            }).on('change', function () {
+                $('#station').val(null).trigger('change');
+                $('#catalogCode').val(null).trigger('change');
             });
 
             $('#station').select2({
@@ -211,6 +214,8 @@
                     },
                     cache: true,
                 },
+            }).on('change', function () {
+                $('#catalogCode').val(null).trigger('change');
             });
 
             form.submit(function (e) {
