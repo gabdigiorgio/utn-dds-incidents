@@ -97,23 +97,22 @@ public class IncidentManager {
         return newIncident;
     }
 
-    public Incident editIncident(Integer id, EditIncidentRequest data, Integer editorId,
-                                 Role editorRole) throws InvalidDateException, OperationNotSupportedException {
+    public Incident editIncident(Integer id, EditIncident data) throws InvalidDateException, OperationNotSupportedException {
         Incident incident = incidentsRepository.getById(id);
         Integer incidentReporterId = incident.getReportedBy().getId();
-        if (!Objects.equals(editorId, incidentReporterId) && !editorRole.equals(Role.OPERATOR))
+        if (!Objects.equals(data.getEditorId(), incidentReporterId) && !data.getEditorRole().equals(Role.OPERATOR))
             throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia");
         if (incident.getState().equals(State.REPORTED)) {
-            if (!editorRole.equals(Role.USER))
+            if (!data.getEditorRole().equals(Role.USER))
                 throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
                         + incident.getState().toString());
         } else {
-            if (!editorRole.equals(Role.OPERATOR))
+            if (!data.getEditorRole().equals(Role.OPERATOR))
                 throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
                         + incident.getState().toString());
         }
-        if (data.reportDate != null) incident.setReportDate(DateUtils.parseDate(data.reportDate));
-        if (data.description != null) incident.setDescription(data.description);
+        if (data.getReportDate() != null) incident.setReportDate(DateUtils.parseDate(data.getReportDate()));
+        if (data.getDescription() != null) incident.setDescription(data.getDescription());
         incidentsRepository.update(incident);
         return incident;
     }

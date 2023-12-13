@@ -13,6 +13,7 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.UploadedFile;
 import org.jetbrains.annotations.NotNull;
+import org.utn.application.EditIncident;
 import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.accessibility_feature.Line;
 import org.utn.domain.accessibility_feature.Station;
@@ -118,7 +119,9 @@ public class IncidentsController {
         EditIncidentRequest request = ctx.bodyAsClass(EditIncidentRequest.class);
         User editor = userRepository.getByToken(ctx.header("token"));
 
-        Incident editedIncident = incidentManager.editIncident(id, request, editor.getId(), editor.getRole());
+        EditIncident data = new EditIncident(request, editor);
+
+        Incident editedIncident = incidentManager.editIncident(id, data);
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 

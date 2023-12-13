@@ -1,6 +1,14 @@
 package org.utn.presentation.api.dto.requests;
 
 public class EditIncidentRequest {
-  public String reportDate;
-  public String description;
+  private String reportDate;
+  private String description;
+
+  public String getReportDate() {
+    return reportDate;
+  }
+
+  public String getDescription() {
+    return description;
+  }
 }
