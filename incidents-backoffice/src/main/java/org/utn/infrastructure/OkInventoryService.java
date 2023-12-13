@@ -109,6 +109,7 @@ public class OkInventoryService implements InventoryService {
                             responseItem.setStatus(feature.getStatus());
                             responseItem.setStation(feature.getStation());
                             responseItem.setLine(feature.getLine());
+                            responseItem.setDateSinceInaccessible(feature.getDateSinceInaccessible());
                             return responseItem;
                         })
                         .collect(Collectors.toList());

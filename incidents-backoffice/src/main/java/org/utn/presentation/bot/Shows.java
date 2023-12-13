@@ -151,6 +151,7 @@ public class Shows {
                     responseItem.setStatus(feature.getStatus());
                     responseItem.setStation(feature.getStation());
                     responseItem.setLine(feature.getLine());
+                    responseItem.setDateSinceInaccessible(feature.getDateSinceInaccessible());
                     return responseItem;
                 })
                 .collect(Collectors.toList());
@@ -287,12 +288,14 @@ public class Shows {
                 String status = translateStatus(feature.getStatus());
                 String stationName = feature.getStation();
                 String stationLine = feature.getLine();
+                String dateSinceInaccessible = feature.getDateSinceInaccessible();
 
                 formattedText.append("\n🔍 Código de Catálogo: ").append(catalogCode)
                         .append("\n🛠️ Tipo: ").append(type)
                         .append("\n🚦 Estado: ").append(status)
                         .append("\n🚉 Estación: ").append(stationName)
                         .append("\n🛤️ Línea: ").append(stationLine)
+                        .append("\n⏰ Desde: ").append(dateSinceInaccessible)
                         .append("\n---------------------------");
             }
 

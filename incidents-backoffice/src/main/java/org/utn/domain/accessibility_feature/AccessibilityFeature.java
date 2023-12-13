@@ -6,6 +6,7 @@ public class AccessibilityFeature {
     private String status;
     private String station;
     private String line;
+    private String dateSinceInaccessible;
 
     public String getCatalogCode() {
         return catalogCode;
@@ -45,5 +46,13 @@ public class AccessibilityFeature {
 
     public void setLine(String line) {
         this.line = line;
+    }
+
+    public String getDateSinceInaccessible() {
+        return dateSinceInaccessible;
+    }
+
+    public void setDateSinceInaccessible(String dateSinceInaccessible) {
+        this.dateSinceInaccessible = dateSinceInaccessible;
     }
 }

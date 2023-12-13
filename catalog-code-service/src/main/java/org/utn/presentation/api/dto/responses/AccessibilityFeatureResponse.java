@@ -8,6 +8,7 @@ public class AccessibilityFeatureResponse {
     private String type;
     private String station;
     private String line;
+    private String dateSinceInaccessible;
 
     public AccessibilityFeatureResponse(AccessibilityFeature accessibilityFeature) {
         this.catalogCode = accessibilityFeature.getCatalogCode();
@@ -15,6 +16,8 @@ public class AccessibilityFeatureResponse {
         this.type = accessibilityFeature.getType().toString();
         this.station = accessibilityFeature.getStation().getName();
         this.line = accessibilityFeature.getStation().getLine().getName();
+        if (accessibilityFeature.getDateSinceInaccessible() != null)
+            this.dateSinceInaccessible = accessibilityFeature.getDateSinceInaccessible().toString();
     }
 
     public String getCatalogCode() {
@@ -35,5 +38,9 @@ public class AccessibilityFeatureResponse {
 
     public String getLine() {
         return line;
+    }
+
+    public String getDateSinceInaccessible() {
+        return dateSinceInaccessible;
     }
 }

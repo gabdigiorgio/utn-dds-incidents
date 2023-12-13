@@ -6,6 +6,7 @@ public class AccessibilityFeatureInventoryResponse {
     private String status;
     private String station;
     private String line;
+    private String dateSinceInaccessible;
 
     public String getCatalogCode() {
         return catalogCode;
@@ -25,5 +26,9 @@ public class AccessibilityFeatureInventoryResponse {
 
     public String getLine() {
         return line;
+    }
+
+    public String getDateSinceInaccessible() {
+        return dateSinceInaccessible;
     }
 }

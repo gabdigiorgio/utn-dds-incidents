@@ -209,6 +209,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Código de catalogo</th>
+                        <th scope="col">Fecha</th>
                         <th scope="col">Tipo</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Línea</th>
@@ -284,6 +285,7 @@
                         var trItem = document.createElement('tr');
                         trItem.innerHTML = `
                         <td scope="row">${accessibilityFeature.catalogCode}</td>
+                        <td>${accessibilityFeature.dateSinceInaccessible}</td>
                         <td>${typeTranslations[accessibilityFeature.type]}</td>
                         <td>${statusTranslations[accessibilityFeature.status]}</td>
                         <td>${accessibilityFeature.line}</td>

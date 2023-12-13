@@ -1,23 +1,14 @@
 package org.utn.presentation.api.controllers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.javalin.http.ForbiddenResponse;
 import io.javalin.http.Handler;
 import javassist.NotFoundException;
-import org.utn.domain.accessibility_feature.AccessibilityFeature;
-import org.utn.domain.accessibility_feature.AccessibilityFeatures;
 import org.utn.domain.incident.Incident;
 import org.utn.modules.ManagerFactory;
-import org.utn.presentation.api.dto.responses.AccessibilityFeatureResponse;
-import org.utn.presentation.api.dto.responses.AccessibilityFeaturesResponse;
 import org.utn.presentation.api.dto.responses.IncidentResponse;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.utn.presentation.api.controllers.IncidentsController.parseErrorResponse;
 
