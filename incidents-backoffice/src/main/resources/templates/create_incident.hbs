@@ -239,14 +239,17 @@
                     },
                     data: JSON.stringify(data),
                     success: function (responseData) {
-                        if (responseData.status === 400) {
-                            alert(responseData.message);
-                        } else {
-                            window.location.href = "/ui/incidents";
-                        }
+                        window.location.href = "/ui/incidents";
                     },
-                    error: function () {
-                        alert('Error en la solicitud AJAX');
+                    error: function (xhr, textStatus, errorThrown) {
+                        if (xhr.status === 400) {
+                            const errorResponse = JSON.parse(xhr.responseText);
+                            alert(errorResponse.message);
+                        }
+                        else {
+                            console.error("Error en la solicitud: ", xhr.status, textStatus, errorThrown);
+                            alert("Error inesperado, intente nuevamente.")
+                        }
                     }
                 });
             });
