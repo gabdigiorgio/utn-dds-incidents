@@ -1,5 +1,6 @@
 package org.utn.application;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.utn.domain.users.Role;
 import org.utn.domain.users.User;
 import org.utn.domain.users.UsersRepository;
@@ -22,16 +23,21 @@ public class UserManager {
         return user;
     }
 
-    private void checkUserNotExists(String email) {
-        if (usersRepository.userExists(email)) throw new UserAlreadyExistsException();
-    }
-
     public User registerUser(String email, String password, String stringRole) {
         checkUserNotExists(email);
         Role role = Objects.equals(stringRole, "USER") ? Role.USER : Role.OPERATOR;
-        var newUser = User.newUser(email, password, role, generateToken());
+        String hashedPassword = hashPassword(password);
+        var newUser = User.newUser(email, hashedPassword, role, generateToken());
         usersRepository.save(newUser);
         return newUser;
+    }
+
+    private String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    private void checkUserNotExists(String email) {
+        if (usersRepository.userExists(email)) throw new UserAlreadyExistsException();
     }
 
     private User findByEmail(String email) {
@@ -44,7 +50,9 @@ public class UserManager {
     }
 
     private static void validatePassword(String password, User user) {
-        if(!Objects.equals(user.getPassword(), password)) throw new InvalidPasswordException();
+        if (!BCrypt.checkpw(password, user.getPassword())) {
+            throw new IncorrectPasswordException();
+        }
     }
 }
 
