@@ -1,4 +1,4 @@
-package org.utn.application;
+package org.utn.application.users;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.utn.domain.users.Role;

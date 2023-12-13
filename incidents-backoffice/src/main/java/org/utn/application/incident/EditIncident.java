@@ -1,4 +1,4 @@
-package org.utn.application;
+package org.utn.application.incident;
 
 import org.utn.domain.users.Role;
 import org.utn.domain.users.User;

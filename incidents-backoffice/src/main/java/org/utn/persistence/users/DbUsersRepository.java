@@ -1,6 +1,6 @@
 package org.utn.persistence.users;
 
-import org.utn.application.UserNotExistsException;
+import org.utn.application.users.UserNotExistsException;
 import org.utn.domain.users.User;
 import org.utn.domain.users.UsersRepository;
 

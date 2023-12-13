@@ -1,9 +1,9 @@
 package org.utn.modules;
 
-import org.utn.application.IncidentMassiveManager;
-import org.utn.application.IncidentManager;
-import org.utn.application.JobManager;
-import org.utn.application.UserManager;
+import org.utn.application.incident.IncidentMassiveManager;
+import org.utn.application.incident.IncidentManager;
+import org.utn.application.job.JobManager;
+import org.utn.application.users.UserManager;
 
 public class ManagerFactory {
     public static IncidentManager createIncidentManager() {

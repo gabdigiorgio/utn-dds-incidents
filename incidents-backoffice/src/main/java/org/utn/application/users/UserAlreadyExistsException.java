@@ -1,4 +1,4 @@
-package org.utn.application;
+package org.utn.application.users;
 
 public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException() {
