@@ -18,7 +18,6 @@ public class RegisterResponse {
     public String getEmail() {
         return email;
     }
-
     public String getToken() { return token; }
     public String getRole() {
         return role;

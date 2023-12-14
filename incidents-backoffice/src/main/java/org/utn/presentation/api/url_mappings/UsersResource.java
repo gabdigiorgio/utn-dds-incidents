@@ -17,7 +17,8 @@ public class UsersResource implements EndpointGroup {
     public void addEndpoints() {
         UsersController usersController = new UsersController(objectMapper);
         ApiBuilder.path("/api/users", () -> {
-            ApiBuilder.post("/", usersController.register, Role.ANYONE);
+            ApiBuilder.post("/", usersController.registerUser, Role.ANYONE);
+            ApiBuilder.post("/operator", usersController.registerOperator, Role.OPERATOR);
             ApiBuilder.post("/login", usersController.login, Role.ANYONE);
         });
     }

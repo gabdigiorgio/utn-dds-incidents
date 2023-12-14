@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale-1.0">
     <meta name="author" content="Grupo 1 - DDS 2023 - K3003">
 
-    <title>SMESTPE - Register Operator</title>
+    <title>SMESTPE - Registro de Operador</title>
     <link rel="icon"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='orange' class='fa-solid fa-1' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm7.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z'/%3E%3C/svg%3E"
         sizes="any" type="image/svg+xml">
@@ -204,10 +204,6 @@
                         <a class="nav-link" href="/ui/incidents/upload_csv">Cargar</a>
                     </li>
                 </ul>
-                <form id="auth" class="d-flex">
-                    <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
-                    <a type="button" href="/ui/incidents/register-user" class="btn me-2 btn-warning">Registrarse</a>
-                </form>
             </div>
         </div>
     </nav>
@@ -218,7 +214,7 @@
     <div class="container mt-3">
         <div class="row justify-content-between pt-5">
             <div class="col-md-8 offset-md-2">
-                <h2>Bienvenid@ !</h2>
+                <h2>Registro de Operador</h2>
             </div>
             <div class="col-md-8 offset-md-2">
                 <form id="form">
@@ -273,10 +269,9 @@
         const data = {
             email: form.querySelector('input[name="email"]').value,
             password: form.querySelector('input[name="password"]').value,
-            role: "OPERATOR",
         }
 
-        const response = await fetch('/api/users', {
+        const response = await fetch('/api/users/operator', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

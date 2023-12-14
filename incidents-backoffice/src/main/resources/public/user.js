@@ -64,6 +64,16 @@ export const setUser = () => {
           document.getElementById('cargar-csv').remove();
       }
 
+      if (role === 'OPERATOR') {
+        const registerOperatorLink = document.createElement('a');
+        registerOperatorLink.classList.add('btn', 'me-2', 'btn-info', 'btn-outline-light');
+        registerOperatorLink.type = 'button';
+        registerOperatorLink.href = '/ui/incidents/register-operator';
+        const registerOperatorContent = document.createTextNode('Registrar Operador');
+        registerOperatorLink.appendChild(registerOperatorContent);
+        auth.appendChild(registerOperatorLink);
+    }
+
       const logoutButton = document.createElement('button');
         logoutButton.classList.add('btn', 'btn-outline-light', 'btn-danger', 'me-2');
         logoutButton.textContent = 'Cerrar Sesión';
