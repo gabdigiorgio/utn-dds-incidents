@@ -26,14 +26,22 @@ public class UserManager {
         return user;
     }
 
-    public User registerUser(String email, String password, String stringRole) {
+    public User registerUser(String email, String password) {
         checkUserNotExists(email);
-        Role role = Objects.equals(stringRole, "USER") ? Role.USER : Role.OPERATOR;
         String hashedPassword = passwordHasher.hashPassword(password);
-        var newUser = User.newUser(email, hashedPassword, role, generateToken());
+        var newUser = User.newUser(email, hashedPassword, generateToken());
         usersRepository.save(newUser);
         return newUser;
     }
+
+    public User registerOperator(String email, String password) {
+        checkUserNotExists(email);
+        String hashedPassword = passwordHasher.hashPassword(password);
+        var newOperator = User.newOperator(email, hashedPassword, generateToken());
+        usersRepository.save(newOperator);
+        return newOperator;
+    }
+
     private void checkUserNotExists(String email) {
         if (usersRepository.userExists(email)) throw new UserAlreadyExistsException();
     }

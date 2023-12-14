@@ -49,7 +49,7 @@ public class UIResource implements EndpointGroup {
         ApiBuilder.path("/ui/incidents", () -> {
             ApiBuilder.get("/login", UIController.getLogin, Role.ANYONE);
             ApiBuilder.get("/register-user", UIController.getRegisterUser, Role.ANYONE);
-            ApiBuilder.get("/register-operator", UIController.getRegisterOperator, Role.ANYONE);
+            ApiBuilder.get("/register-operator", UIController.getRegisterOperator, Role.OPERATOR);
             ApiBuilder.get("/", UIController.getIncidents, Role.ANYONE);
             ApiBuilder.get("/my-incidents", UIController.getUserIncidents, Role.USER, Role.OPERATOR);
             ApiBuilder.get("/inaccessible-accessibility-features", UIController.getInaccessibleAccessibilityFeatures, Role.ANYONE);

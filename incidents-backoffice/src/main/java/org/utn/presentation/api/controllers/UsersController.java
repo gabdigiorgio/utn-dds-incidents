@@ -24,16 +24,29 @@ public class UsersController {
         ctx.json(json);
     };
 
-    public Handler register = ctx -> {
+    public Handler registerUser = ctx -> {
         var manager = ManagerFactory.createUserManager();
 
         RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
 
         validateField(data.getEmail(), "email");
         validateField(data.getPassword(), "password");
-        validateField(data.getRole(), "role");
 
-        var user = manager.registerUser(data.getEmail(), data.getPassword(), data.getRole());
+        var user = manager.registerUser(data.getEmail(), data.getPassword());
+
+        String json = objectMapper.writeValueAsString(new RegisterResponse(user));
+        ctx.json(json);
+    };
+
+    public Handler registerOperator = ctx -> {
+        var manager = ManagerFactory.createUserManager();
+
+        RegisterUserRequest data = ctx.bodyAsClass(RegisterUserRequest.class);
+
+        validateField(data.getEmail(), "email");
+        validateField(data.getPassword(), "password");
+
+        var user = manager.registerOperator(data.getEmail(), data.getPassword());
 
         String json = objectMapper.writeValueAsString(new RegisterResponse(user));
         ctx.json(json);
