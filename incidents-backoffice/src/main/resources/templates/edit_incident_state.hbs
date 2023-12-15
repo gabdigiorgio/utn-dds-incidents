@@ -178,7 +178,7 @@
       });
 
       const responseDataEstado = await responseEstado.json();
-      if (responseDataEstado.status === 422 || responseDataEstado.status === 400) {
+      if (responseDataEstado.status === 422 || responseDataEstado.status === 400 || responseDataEstado.status === 403) {
         alert(responseDataEstado.message);
       } else if (responseEstado.status === 200) {
         alert("Cambio de estado realizado con éxito");

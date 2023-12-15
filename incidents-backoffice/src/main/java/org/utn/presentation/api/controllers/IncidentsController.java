@@ -134,8 +134,8 @@ public class IncidentsController {
         EmployeeRequest request = ctx.bodyAsClass(EmployeeRequest.class);
         User operator = userRepository.getByToken(ctx.header("token"));
 
+        Incident editedIncident = incidentManager.assignEmployeeIncident(id, request.getEmployee(), operator.getId());
         incidentManager.setOperator(id, operator);
-        Incident editedIncident = incidentManager.assignEmployeeIncident(id, request.getEmployee());
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 
@@ -144,10 +144,13 @@ public class IncidentsController {
 
     public Handler confirmIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
+        var userRepository = RepositoryFactory.createUserRepository();
 
         Integer id = getId(ctx);
 
-        Incident editedIncident = incidentManager.confirmIncident(id);
+        User operator = userRepository.getByToken(ctx.header("token"));
+
+        Incident editedIncident = incidentManager.confirmIncident(id, operator.getId());
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 
@@ -156,10 +159,13 @@ public class IncidentsController {
 
     public Handler startProgressIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
+        var userRepository = RepositoryFactory.createUserRepository();
 
         Integer id = getId(ctx);
 
-        Incident editedIncident = incidentManager.startProgressIncident(id);
+        User operator = userRepository.getByToken(ctx.header("token"));
+
+        Incident editedIncident = incidentManager.startProgressIncident(id, operator.getId());
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 
@@ -168,10 +174,13 @@ public class IncidentsController {
 
     public Handler resolveIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
+        var userRepository = RepositoryFactory.createUserRepository();
 
         Integer id = getId(ctx);
 
-        Incident editedIncident = incidentManager.resolveIncident(id);
+        User operator = userRepository.getByToken(ctx.header("token"));
+
+        Incident editedIncident = incidentManager.resolveIncident(id, operator.getId());
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 
@@ -180,12 +189,15 @@ public class IncidentsController {
 
     public Handler dismissIncident = ctx -> {
         var incidentManager = ManagerFactory.createIncidentManager();
+        var userRepository = RepositoryFactory.createUserRepository();
 
         Integer id = getId(ctx);
 
         DismissIncidentRequest request = ctx.bodyAsClass(DismissIncidentRequest.class);
 
-        Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason());
+        User operator = userRepository.getByToken(ctx.header("token"));
+
+        Incident editedIncident = incidentManager.dismissIncident(id, request.getRejectedReason(), operator.getId());
 
         IncidentResponse incidentResponse = new IncidentResponse(editedIncident);
 

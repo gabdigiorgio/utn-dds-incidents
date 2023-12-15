@@ -97,20 +97,20 @@ public class IncidentManager {
 
     public Incident editIncident(Integer id, EditIncident data) throws InvalidDateException, OperationNotSupportedException {
         Incident incident = incidentsRepository.getById(id);
-        Integer incidentReporterId = incident.getReportedBy().getId();
+        Integer editorId = data.getEditorId();
 
-        if (!(isReporter(data, incidentReporterId) || isOperator(data))) {
-            throw new ForbiddenResponse("Solo el reportador o un operador pueden editar los campos de la incidencia");
+        if (!(isReporter(editorId, incident) || isOperator(data))) {
+            throw new ForbiddenOperationException("Solo el reportador o el operador asociado pueden editar los campos de la incidencia");
         }
 
         if (isInState(incident, State.REPORTED)
-                && !(isReporter(data, incidentReporterId) || isOperatorAndReporter(data, incidentReporterId))) {
-            throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
+                && !(isReporter(editorId, incident) || isOperatorAndReporter(data, incident))) {
+            throw new ForbiddenOperationException("Solo el reportador puede editar los campos de la incidencia en estado: "
                     + incident.getState().toString());
         }
 
-        if (!isInState(incident, State.REPORTED) && !isOperator(data)) {
-            throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
+        if (!isInState(incident, State.REPORTED) && !isAssociatedOperator(editorId, incident)) {
+            throw new ForbiddenOperationException("Solo el operador asociado puede editar los campos de la incidencia en estado: "
                     + incident.getState().toString());
         }
 
@@ -120,8 +120,8 @@ public class IncidentManager {
         return incident;
     }
 
-    private static boolean isOperatorAndReporter(EditIncident data, Integer incidentReporterId) {
-        return isOperator(data) && isReporter(data, incidentReporterId);
+    private static boolean isOperatorAndReporter(EditIncident data, Incident incident) {
+        return isOperator(data) && isReporter(data.getEditorId(), incident);
     }
 
     private static boolean isInState(Incident incident, State state) {
@@ -132,8 +132,12 @@ public class IncidentManager {
         return data.getEditorRole().equals(Role.OPERATOR);
     }
 
-    private static boolean isReporter(EditIncident data, Integer incidentReporterId) {
-        return Objects.equals(data.getEditorId(), incidentReporterId);
+    private static boolean isReporter(Integer editorId, Incident incident) {
+        return Objects.equals(editorId, incident.getReportedBy().getId());
+    }
+
+    private static boolean isAssociatedOperator(Integer editorId, Incident incident) {
+        return incident.getOperator() == null || Objects.equals(editorId, incident.getOperator().getId());
     }
 
     private Incident performIncidentAction(Integer id, Consumer<Incident> action) throws StateTransitionException {
@@ -147,22 +151,34 @@ public class IncidentManager {
         return performIncidentAction(id, incident -> incident.setOperator(operator));
     }
 
-    public Incident assignEmployeeIncident(Integer id, String employee) throws StateTransitionException {
+    public Incident assignEmployeeIncident(Integer id, String employee, Integer operatorId) throws StateTransitionException {
+        if (!isAssociatedOperator(operatorId, incidentsRepository.getById(id)))
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
         return performIncidentAction(id, incident -> incident.assignEmployee(employee));
     }
 
-    public Incident confirmIncident(Integer id) throws StateTransitionException, IOException {
+    public Incident confirmIncident(Integer id, Integer operatorId) throws StateTransitionException, IOException {
         Incident incident = incidentsRepository.getById(id);
+
+        if (!isAssociatedOperator(operatorId, incident))
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
+
         var catalogCode = incident.getCatalogCode();
         inventoryService.setAccessibilityFeatureStatus(catalogCode, "inaccessible");
         return performIncidentAction(id, Incident::confirm);
     }
 
-    public Incident startProgressIncident(Integer id) throws StateTransitionException {
+    public Incident startProgressIncident(Integer id, Integer operatorId) throws StateTransitionException {
+        if (!isAssociatedOperator(operatorId, incidentsRepository.getById(id)))
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
+
         return performIncidentAction(id, Incident::startProgress);
     }
 
-    public Incident resolveIncident(Integer id) throws StateTransitionException, IOException {
+    public Incident resolveIncident(Integer id, Integer operatorId) throws StateTransitionException, IOException {
+        if (!isAssociatedOperator(operatorId, incidentsRepository.getById(id)))
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
+
         var incident = performIncidentAction(id, inc -> inc.resolveIncident(LocalDate.now()));
 
         var catalogCode = incident.getCatalogCode();
@@ -173,7 +189,10 @@ public class IncidentManager {
         return incident;
     }
 
-    public Incident dismissIncident(Integer id, String rejectedReason) throws StateTransitionException {
+    public Incident dismissIncident(Integer id, String rejectedReason, Integer operatorId) throws StateTransitionException {
+        if (!isAssociatedOperator(operatorId, incidentsRepository.getById(id)))
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
+
         return performIncidentAction(id, inc -> inc.dismiss(rejectedReason, LocalDate.now()));
     }
 
