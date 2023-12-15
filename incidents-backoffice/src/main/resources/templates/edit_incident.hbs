@@ -10,36 +10,45 @@
 </head>
 
 <body>
-    <header class="p-3 bg-dark text-white fixed-top">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;">
-                        <use xlink:href="#icon" />
-                    </svg>
-                </a>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <svg class="bi me-2" width="40" height="32" role="img" style="fill: orange;">
+                    <use xlink:href="#icon" />
+                </svg>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
-                    <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
-                    <li id="mis-incidencias" class="nav-item">
-                        <a class="nav-link px-2 text-white" href="/ui/incidents/my-incidents">Mis incidencias</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul id="navbar" class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Inicio</a>
                     </li>
-                    <li><a href="/ui/incidents/inaccessible-accessibility-features"
-                            class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ui/incidents">Incidencias</a>
+                    </li>
+                    <li id="mis-incidencias" class="nav-item">
+                        <a class="nav-link" href="/ui/incidents/my-incidents">Mis incidencias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ui/incidents/inaccessible-accessibility-features">Medidas de
+                            Accesibilidad</a>
+                    </li>
                     <li id="cargar-csv" class="nav-item">
-                        <a class="nav-link px-2 text-white" href="/ui/incidents/upload_csv">Cargar</a>
+                        <a class="nav-link" href="/ui/incidents/upload_csv">Cargar</a>
                     </li>
                 </ul>
-
-
                 <form id="auth" class="d-flex">
                     <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
                     <a type="button" href="/ui/incidents/register-user" class="btn me-2 btn-warning">Registrarse</a>
                 </form>
             </div>
         </div>
-    </header>
+    </nav>
 
     <div class="container mt-3">
         <div class="row justify-content-between pt-5">
@@ -123,7 +132,9 @@
     });
 
     const responseDataIncidencia = await responseIncidencia.json();
-    if (responseDataIncidencia.status !== 200) {
+    if (responseDataIncidencia.status === 403) {
+        alert(responseDataIncidencia.message);
+    } else if (responseDataIncidencia.status === 400) {
         alert(responseDataIncidencia.message);
     } else {
         alert("Incidencia editada con éxito");
