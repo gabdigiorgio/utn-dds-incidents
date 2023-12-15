@@ -123,7 +123,7 @@
     });
 
     const responseDataIncidencia = await responseIncidencia.json();
-    if (responseDataIncidencia.status === 403) {
+    if (responseDataIncidencia.status !== 200) {
         alert(responseDataIncidencia.message);
     } else {
         alert("Incidencia editada con éxito");
