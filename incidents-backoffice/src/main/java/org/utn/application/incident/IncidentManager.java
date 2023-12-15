@@ -97,20 +97,19 @@ public class IncidentManager {
 
     public Incident editIncident(Integer id, EditIncident data) throws InvalidDateException, OperationNotSupportedException {
         Incident incident = incidentsRepository.getById(id);
-        Integer incidentReporterId = incident.getReportedBy().getId();
 
-        if (!(isReporter(data, incidentReporterId) || isOperator(data))) {
-            throw new ForbiddenResponse("Solo el reportador o un operador pueden editar los campos de la incidencia");
+        if (!(isReporter(data, incident) || isOperator(data))) {
+            throw new ForbiddenResponse("Solo el reportador o el operador asociado pueden editar los campos de la incidencia");
         }
 
         if (isInState(incident, State.REPORTED)
-                && !(isReporter(data, incidentReporterId) || isOperatorAndReporter(data, incidentReporterId))) {
+                && !(isReporter(data, incident) || isOperatorAndReporter(data, incident))) {
             throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
                     + incident.getState().toString());
         }
 
-        if (!isInState(incident, State.REPORTED) && !isOperator(data)) {
-            throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
+        if (!isInState(incident, State.REPORTED) && !isAssociatedOperator(data, incident)) {
+            throw new ForbiddenResponse("Solo el operador asociado puede editar los campos de la incidencia en estado: "
                     + incident.getState().toString());
         }
 
@@ -120,8 +119,8 @@ public class IncidentManager {
         return incident;
     }
 
-    private static boolean isOperatorAndReporter(EditIncident data, Integer incidentReporterId) {
-        return isOperator(data) && isReporter(data, incidentReporterId);
+    private static boolean isOperatorAndReporter(EditIncident data, Incident incident) {
+        return isOperator(data) && isReporter(data, incident);
     }
 
     private static boolean isInState(Incident incident, State state) {
@@ -132,8 +131,12 @@ public class IncidentManager {
         return data.getEditorRole().equals(Role.OPERATOR);
     }
 
-    private static boolean isReporter(EditIncident data, Integer incidentReporterId) {
-        return Objects.equals(data.getEditorId(), incidentReporterId);
+    private static boolean isReporter(EditIncident data, Incident incident) {
+        return Objects.equals(data.getEditorId(), incident.getReportedBy().getId());
+    }
+
+    private static boolean isAssociatedOperator(EditIncident data, Incident incident) {
+        return Objects.equals(data.getEditorId(), incident.getOperator().getId());
     }
 
     private Incident performIncidentAction(Integer id, Consumer<Incident> action) throws StateTransitionException {
