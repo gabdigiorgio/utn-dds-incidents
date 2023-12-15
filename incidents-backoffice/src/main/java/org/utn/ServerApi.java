@@ -14,6 +14,7 @@ import io.javalin.config.JavalinConfig;
 import io.javalin.http.ForbiddenResponse;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.JavalinRenderer;
+import org.utn.application.incident.ForbiddenOperationException;
 import org.utn.application.users.exceptions.IncorrectPasswordException;
 import org.utn.application.users.exceptions.MissingUserFieldsException;
 import org.utn.application.users.exceptions.UserAlreadyExistsException;
@@ -58,6 +59,7 @@ public class ServerApi {
 
     private static void setupExceptions(Javalin server) {
         setupExceptionHandling(server, EntityNotFoundException.class, 404);
+        setupExceptionHandling(server, ForbiddenOperationException.class, 403);
         setupExceptionHandling(server, ForbiddenResponse.class, 403);
         setupExceptionHandling(server, IllegalArgumentException.class, 400);
         setupExceptionHandling(server, StateTransitionException.class, 400);

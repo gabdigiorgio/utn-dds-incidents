@@ -100,17 +100,17 @@ public class IncidentManager {
         Integer editorId = data.getEditorId();
 
         if (!(isReporter(editorId, incident) || isOperator(data))) {
-            throw new ForbiddenResponse("Solo el reportador o el operador asociado pueden editar los campos de la incidencia");
+            throw new ForbiddenOperationException("Solo el reportador o el operador asociado pueden editar los campos de la incidencia");
         }
 
         if (isInState(incident, State.REPORTED)
                 && !(isReporter(editorId, incident) || isOperatorAndReporter(data, incident))) {
-            throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
+            throw new ForbiddenOperationException("Solo el reportador puede editar los campos de la incidencia en estado: "
                     + incident.getState().toString());
         }
 
         if (!isInState(incident, State.REPORTED) && !isAssociatedOperator(editorId, incident)) {
-            throw new ForbiddenResponse("Solo el operador asociado puede editar los campos de la incidencia en estado: "
+            throw new ForbiddenOperationException("Solo el operador asociado puede editar los campos de la incidencia en estado: "
                     + incident.getState().toString());
         }
 
@@ -153,7 +153,7 @@ public class IncidentManager {
 
     public Incident assignEmployeeIncident(Integer id, String employee, Integer operatorId) throws StateTransitionException {
         if (!isAssociatedOperator(operatorId, incidentsRepository.getById(id)))
-            throw new ForbiddenResponse("Solo el operador asociado puede realizar el cambio de estado");
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
         return performIncidentAction(id, incident -> incident.assignEmployee(employee));
     }
 
@@ -161,7 +161,7 @@ public class IncidentManager {
         Incident incident = incidentsRepository.getById(id);
 
         if (!isAssociatedOperator(operatorId, incident))
-            throw new ForbiddenResponse("Solo el operador asociado puede realizar el cambio de estado");
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
 
         var catalogCode = incident.getCatalogCode();
         inventoryService.setAccessibilityFeatureStatus(catalogCode, "inaccessible");
@@ -170,14 +170,14 @@ public class IncidentManager {
 
     public Incident startProgressIncident(Integer id, Integer operatorId) throws StateTransitionException {
         if (!isAssociatedOperator(operatorId, incidentsRepository.getById(id)))
-            throw new ForbiddenResponse("Solo el operador asociado puede realizar el cambio de estado");
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
 
         return performIncidentAction(id, Incident::startProgress);
     }
 
     public Incident resolveIncident(Integer id, Integer operatorId) throws StateTransitionException, IOException {
         if (!isAssociatedOperator(operatorId, incidentsRepository.getById(id)))
-            throw new ForbiddenResponse("Solo el operador asociado puede realizar el cambio de estado");
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
 
         var incident = performIncidentAction(id, inc -> inc.resolveIncident(LocalDate.now()));
 
@@ -191,7 +191,7 @@ public class IncidentManager {
 
     public Incident dismissIncident(Integer id, String rejectedReason, Integer operatorId) throws StateTransitionException {
         if (!isAssociatedOperator(operatorId, incidentsRepository.getById(id)))
-            throw new ForbiddenResponse("Solo el operador asociado puede realizar el cambio de estado");
+            throw new ForbiddenOperationException("Solo el operador asociado puede realizar el cambio de estado");
 
         return performIncidentAction(id, inc -> inc.dismiss(rejectedReason, LocalDate.now()));
     }
