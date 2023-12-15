@@ -104,7 +104,7 @@ public class IncidentManager {
         }
 
         if (isInState(incident, State.REPORTED)
-                && !(isReporter(data, incidentReporterId) || (isOperator(data) && isReporter(data, incidentReporterId)))) {
+                && !(isReporter(data, incidentReporterId) || isOperatorAndReporter(data, incidentReporterId))) {
             throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
                     + incident.getState().toString());
         }
@@ -120,16 +120,16 @@ public class IncidentManager {
         return incident;
     }
 
+    private static boolean isOperatorAndReporter(EditIncident data, Integer incidentReporterId) {
+        return isOperator(data) && isReporter(data, incidentReporterId);
+    }
+
     private static boolean isInState(Incident incident, State state) {
         return incident.getState().equals(state);
     }
 
     private static boolean isOperator(EditIncident data) {
         return data.getEditorRole().equals(Role.OPERATOR);
-    }
-
-    private static boolean isUser(EditIncident data) {
-        return data.getEditorRole().equals(Role.USER);
     }
 
     private static boolean isReporter(EditIncident data, Integer incidentReporterId) {
