@@ -103,16 +103,15 @@ public class IncidentManager {
             throw new ForbiddenResponse("Solo el reportador o un operador pueden editar los campos de la incidencia");
         }
 
-        if (isInState(incident, State.REPORTED)) {
-            if (!(isReporter(data, incidentReporterId) || (isOperator(data) && isReporter(data, incidentReporterId)))) {
-                throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
-                        + incident.getState().toString());
-            }
-        } else {
-            if (!isOperator(data)) {
-                throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
-                        + incident.getState().toString());
-            }
+        if (isInState(incident, State.REPORTED)
+                && !(isReporter(data, incidentReporterId) || (isOperator(data) && isReporter(data, incidentReporterId)))) {
+            throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
+                    + incident.getState().toString());
+        }
+
+        if (!isInState(incident, State.REPORTED) && !isOperator(data)) {
+            throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
+                    + incident.getState().toString());
         }
 
         if (data.getReportDate() != null) incident.setReportDate(DateUtils.parseDate(data.getReportDate()));
