@@ -98,21 +98,42 @@ public class IncidentManager {
     public Incident editIncident(Integer id, EditIncident data) throws InvalidDateException, OperationNotSupportedException {
         Incident incident = incidentsRepository.getById(id);
         Integer incidentReporterId = incident.getReportedBy().getId();
-        if (!Objects.equals(data.getEditorId(), incidentReporterId) && !data.getEditorRole().equals(Role.OPERATOR))
-            throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia");
-        if (incident.getState().equals(State.REPORTED)) {
-            if (!data.getEditorRole().equals(Role.USER))
-                throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
-                        + incident.getState().toString());
-        } else {
-            if (!data.getEditorRole().equals(Role.OPERATOR))
-                throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
-                        + incident.getState().toString());
+
+        if (!(isReporter(data, incidentReporterId) || isOperator(data))) {
+            throw new ForbiddenResponse("Solo el reportador o un operador pueden editar los campos de la incidencia");
         }
+
+        if (isInState(incident, State.REPORTED)
+                && !(isReporter(data, incidentReporterId) || isOperatorAndReporter(data, incidentReporterId))) {
+            throw new ForbiddenResponse("Solo el reportador puede editar los campos de la incidencia en estado: "
+                    + incident.getState().toString());
+        }
+
+        if (!isInState(incident, State.REPORTED) && !isOperator(data)) {
+            throw new ForbiddenResponse("Solo el operador puede editar los campos de la incidencia en estado: "
+                    + incident.getState().toString());
+        }
+
         if (data.getReportDate() != null) incident.setReportDate(DateUtils.parseDate(data.getReportDate()));
         if (data.getDescription() != null) incident.setDescription(data.getDescription());
         incidentsRepository.update(incident);
         return incident;
+    }
+
+    private static boolean isOperatorAndReporter(EditIncident data, Integer incidentReporterId) {
+        return isOperator(data) && isReporter(data, incidentReporterId);
+    }
+
+    private static boolean isInState(Incident incident, State state) {
+        return incident.getState().equals(state);
+    }
+
+    private static boolean isOperator(EditIncident data) {
+        return data.getEditorRole().equals(Role.OPERATOR);
+    }
+
+    private static boolean isReporter(EditIncident data, Integer incidentReporterId) {
+        return Objects.equals(data.getEditorId(), incidentReporterId);
     }
 
     private Incident performIncidentAction(Integer id, Consumer<Incident> action) throws StateTransitionException {

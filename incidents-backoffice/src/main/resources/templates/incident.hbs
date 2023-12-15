@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <title>Incidencia</title>
     <meta charset="utf-8">
@@ -6,68 +7,84 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body>
-<header class="p-3 bg-dark text-white fixed-top">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" style="fill: #ff8800;"><use xlink:href="#icon"/></svg>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <svg class="bi me-2" width="40" height="32" role="img" style="fill: orange;">
+                    <use xlink:href="#icon" />
+                </svg>
             </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="/" class="nav-link px-2 text-secondary">Inicio</a></li>
-                <li><a href="/ui/incidents" class="nav-link px-2 text-white">Incidencias</a></li>
-                <li><a href="/ui/incidents/my-incidents" class="nav-link px-2 text-white">Mis incidencas</a></li>
-                <li><a href="/ui/incidents/inaccessible-accessibility-features" class="nav-link px-2 text-white">Medidas de accesibilidad</a></li>
-                <li id="cargar-csv" class="nav-item">
-                        <a class="nav-link px-2 text-white" href="/ui/incidents/upload_csv">Cargar</a>
-                </li>
-            </ul>
-
-            <form id="auth" class="d-flex">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul id="navbar" class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ui/incidents">Incidencias</a>
+                    </li>
+                    <li id="mis-incidencias" class="nav-item">
+                        <a class="nav-link" href="/ui/incidents/my-incidents">Mis incidencias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ui/incidents/inaccessible-accessibility-features">Medidas de
+                            Accesibilidad</a>
+                    </li>
+                    <li id="cargar-csv" class="nav-item">
+                        <a class="nav-link" href="/ui/incidents/upload_csv">Cargar</a>
+                    </li>
+                </ul>
+                <form id="auth" class="d-flex">
                     <a type="button" href="/ui/incidents/login" class="btn me-2 btn-outline-light">Ingresar</a>
                     <a type="button" href="/ui/incidents/register-user" class="btn me-2 btn-warning">Registrarse</a>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-</header>
+    </nav>
 
-<div class="container mt-3">
-    <div class="row justify-content-between pt-5">
-        <div class="col-10 pt-3">
-            <h2>Detalle de Incidencia {{id}}</h2>
-        </div>
-        <div class="col-2 pt-3">
-            <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
-        </div>
-        <table class="table table-hover">
-            <thead>
+    <div class="container mt-3">
+        <div class="row justify-content-between pt-5">
+            <div class="col-10 pt-3">
+                <h2>Detalle de Incidencia {{id}}</h2>
+            </div>
+            <div class="col-2 pt-3">
+                <a class="btn btn-outline-primary float-right" href="/ui/incidents">Volver</a>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-nowrap" scope="col">Código</th>
+                        <th class="text-nowrap" scope="col">Fecha</th>
+                        <th class="text-nowrap" scope="col">Descripcion</th>
+                        <th class="text-nowrap" scope="col">Operador</th>
+                        <th class="text-nowrap" scope="col">Reportó</th>
+                        <th class="text-nowrap" scope="col">Fecha Cierre</th>
+                        <th class="text-nowrap" scope="col">M. Rechazo</th>
+                        <th class="text-nowrap" scope="col">Estado</th>
+                        <th class="text-nowrap" scope="col">Empleado</th>
+                    </tr>
+                </thead>
                 <tr>
-                    <th class="text-nowrap" scope="col">Código</th>
-                    <th class="text-nowrap" scope="col">Fecha</th>
-                    <th class="text-nowrap" scope="col">Descripcion</th>
-                    <th class="text-nowrap" scope="col">Operador</th>
-                    <th class="text-nowrap" scope="col">Reportó</th>
-                    <th class="text-nowrap" scope="col">Fecha Cierre</th>
-                    <th class="text-nowrap" scope="col">M. Rechazo</th>
-                    <th class="text-nowrap" scope="col">Estado</th>
-                    <th class="text-nowrap" scope="col">Empleado</th>
+                    <td class="text-nowrap">{{incident.catalogCode}}</td>
+                    <td class="text-nowrap">{{incident.reportDate}}</td>
+                    <td>{{incident.description}}</td>
+                    <td>{{incident.operator}}</td>
+                    <td>{{incident.reporterEmail}}</td>
+                    <td class="text-nowrap">{{incident.closingDate}}</td>
+                    <td>{{incident.rejectedReason}}</td>
+                    <td class="text-nowrap estado">{{incident.state}}</td>
+                    <td>{{incident.employee}}</td>
                 </tr>
-            </thead>
-            <tr>
-                <td class="text-nowrap">{{incident.catalogCode}}</td>
-                <td class="text-nowrap">{{incident.reportDate}}</td>
-                <td>{{incident.description}}</td>
-                <td>{{incident.operator}}</td>
-                <td>{{incident.reporterEmail}}</td>
-                <td class="text-nowrap">{{incident.closingDate}}</td>
-                <td>{{incident.rejectedReason}}</td>
-                <td class="text-nowrap estado">{{incident.state}}</td>
-                <td>{{incident.employee}}</td>
-            </tr>
-        </table>
+            </table>
+        </div>
     </div>
-</div>
 </body>
 <script type="module" src="/user.js"></script>
 
@@ -76,21 +93,22 @@
     setUser();
 
     const estadoMapping = {
-    REPORTED: "Reportado",
-    ASSIGNED: "Asignado",
-    CONFIRMED: "Confirmado",
-    DISMISSED: "Desestimado",
-    IN_PROGRESS: "En Progreso",
-    RESOLVED: "Resuelto"
+        REPORTED: "Reportado",
+        ASSIGNED: "Asignado",
+        CONFIRMED: "Confirmado",
+        DISMISSED: "Desestimado",
+        IN_PROGRESS: "En Progreso",
+        RESOLVED: "Resuelto"
     };
 
     document.addEventListener('DOMContentLoaded', function () {
         const estadoElement = document.querySelector('.estado');
         const estado = estadoElement.textContent.trim();
-        
+
         if (estadoMapping.hasOwnProperty(estado)) {
             estadoElement.textContent = estadoMapping[estado];
         }
     });
 </script>
+
 </html>
