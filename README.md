@@ -10,6 +10,7 @@ Tecnologías principales:
 - Handlebars
 - Hibernate
 - PostgreSQL
+- AMQP
 - HTML, CSS y Jquery.
 
 Desarrollo una API REST para la gestión de creación, lectura, actualización y eliminación de estos tickets. Asimismo se desarrolló un microservicio aparte para la validación de creación de tickets en base a sus códigos de catálogo.
@@ -26,6 +27,7 @@ The main technologies utilized include:
 - Handlebars
 - Hibernate
 - PostgreSQL
+- AMQP
 - HTML, CSS, and jQuery.
 
 The implementation involves a REST API for managing the creation, reading, updating, and deletion of these tickets. Additionally, a separate microservice was developed for validating ticket creation based on their catalog codes.
